@@ -32,7 +32,7 @@ I am a Systems for Internet student with **2 years of solid experience in Qualit
 
 ### 📫 Connect with me
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264/) 
-[![Email](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:mfgo1105@gmail.com)
+[![Email])](mailto:mfgo1105@gmail.com)
 
 ---
 *"Quality is not an act, it is a habit."*
