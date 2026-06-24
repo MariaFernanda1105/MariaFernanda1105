@@ -1,37 +1,107 @@
-# Hi there, I'm Maria Fernanda! 👋 
+# Hi there, I'm Maria Fernanda! 👋
 
-**QA Engineer Junior | Software Quality Specialist | Native Portuguese & Fluent English**
+**QA Engineer | Test Automation | Product Owner | Systems Analyst**
 
-I am a Systems for Internet student with **2 years of solid experience in Quality Assurance** at the Information Technology Agency (ATI). I specialize in ensuring the reliability of high-criticality government systems through a "Shift-Left Testing" approach.
+I'm a Technology professional with experience in **Quality Assurance, Test Automation, Product Ownership, Requirements Analysis, and Digital Transformation Projects**.
 
----
-
-### 🚀 Professional Background
-- 💼 **2 Years of Experience:** Acting as a QA Intern at ATI-TO, managing the full STLC (Software Testing Life Cycle).
-- 🏆 **Focus:** Enhancing software reliability by identifying 100+ critical bugs and implementing automated regression suites.
-- 🗣️ **Communication:** Fluent English (C1 Cambridge Level) - ready for global collaboration.
+Currently working at the Information Technology Agency of the State of Tocantins (ATI), contributing to the development, validation, and quality assurance of government systems that support public services and digital initiatives.
 
 ---
 
-### 🛠️ My Tech Toolbox
+## 🚀 Professional Experience
 
-- **Web Automation:** Selenium WebDriver (Java), Cypress (JavaScript).
-- **API Testing:** Postman, Swagger, RestAssured.
-- **Unit Testing:** JUnit (I'm a QA who loves code!).
-- **Frameworks & Architecture:** Page Object Model (POM), Design Patterns.
-- **DevOps & Tools:** Git, Docker, Jira, Agile/Scrum.
-
----
-
-### 📊 What I'm working on
-- 🎯 Building a robust E2E testing framework for e-commerce and government platforms.
-- 🏗️ Deepening my knowledge in **Backend Development** and **Java Architecture**.
-- 🧪 Evangelizing Quality Culture: Test early, test often!
+* 💼 Experience in **Software Quality Assurance (QA)**, covering the entire Software Testing Life Cycle (STLC).
+* 🧪 Development and execution of automated tests using **Selenium, Playwright, and Cypress**.
+* 📋 Requirements gathering, business analysis, and validation of functional and non-functional requirements.
+* 🎯 Acting as **Product Owner** in strategic government projects.
+* 🏛️ Participation in digital transformation initiatives for public sector organizations.
+* 🎨 Development of 15+ prototypes and system interfaces using Figma.
+* 🌎 Fluent English (C1) and comfortable working in multicultural environments.
 
 ---
 
-### 📫 Connect with me
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264/) 
+## 🛠️ Tech Stack
+
+### Quality Assurance
+
+* Selenium WebDriver
+* Playwright
+* Cypress
+* Postman
+* Swagger
+* API Testing
+* Functional Testing
+* Regression Testing
+* Test Planning
+* Software Validation
+
+### Product & Analysis
+
+* Product Ownership
+* Requirements Engineering
+* User Stories
+* Backlog Management
+* Agile Methodologies
+* Scrum
+
+### Development
+
+* Java
+* JavaScript
+* HTML
+* CSS
+* Flask
+* SQL Server
+
+### Tools
+
+* Jira
+* Azure DevOps
+* Git
+* GitHub
+* Figma
+* Docker
 
 ---
-*"Quality is not an act, it is a habit."*
+
+## 📌 Featured Projects
+
+### GTM – Guia de Transporte de Minério
+
+Product Owner responsible for backlog prioritization, requirements refinement, sprint planning, and functional validation.
+
+### Consulta Popular
+
+Government platform designed to increase citizen participation and transparency in public decision-making.
+
+### Portal Sífilis
+
+Public health platform focused on information accessibility and digital services.
+
+### Amazon News Aggregator
+
+Award-winning project recognized by PPGCOM 2024 for promoting visibility and accessibility to regional journalism.
+
+---
+
+## 📚 Currently Learning
+
+* Advanced Test Automation
+* Backend Development with Java
+* Software Architecture
+* API Automation
+* CI/CD Integration for Automated Testing
+
+---
+
+## 📫 Let's Connect
+
+💼 LinkedIn:
+[www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264](http://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264)
+
+💻 GitHub:
+github.com/MariaFernanda1105
+
+---
+
+*"Quality is built into the process, not added at the end."*
