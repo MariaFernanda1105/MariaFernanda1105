@@ -8,6 +8,16 @@ Currently working at the Information Technology Agency of the State of Tocantins
 
 ---
 
+## 🌐 Portfolio
+
+Explore my projects, prototypes, case studies, and professional work:
+
+➡️ **Portfolio Website:** https://mariafernanda1105.github.io/MariaFernanda1105/
+
+The portfolio showcases interactive prototypes, system designs, development projects, and digital solutions focused on user experience, quality, and innovation.
+
+---
+
 ## 🚀 Professional Experience
 
 * 💼 Experience in **Software Quality Assurance (QA)**, covering the entire Software Testing Life Cycle (STLC).
@@ -101,6 +111,9 @@ Award-winning project recognized by PPGCOM 2024 for promoting visibility and acc
 
 💻 GitHub:
 github.com/MariaFernanda1105
+
+🌐 Portfolio:
+https://mariafernanda1105.github.io/MariaFernanda1105/
 
 ---
 
