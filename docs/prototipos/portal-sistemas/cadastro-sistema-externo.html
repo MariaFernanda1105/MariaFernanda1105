@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Sistema Externo — Portal de Sistemas</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,600;1,9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarelo:#F5C800;--azul:#044CB8;--azul-escuro:#042F7A;--azul-claro:#1976D2;
+  --cinza-bg:#F4F6FA;--cinza-card:#FFFFFF;--cinza-borda:#E2E8F0;
+  --texto-principal:#0D1B3E;--texto-secundario:#4A5568;--texto-terciario:#718096;
+  --verde:#10B981;--vermelho:#EF4444;--laranja:#F59E0B;
+  --sombra-card:0 4px 20px rgba(4,44,120,0.06);--sombra-elevada:0 10px 40px rgba(4,44,120,0.12);
+  --radius:12px;--radius-sm:8px;--sb-w:80px;--sb-exp:252px;
+  --tr:background-color .3s ease,color .3s ease,border-color .3s ease;
+}
+body.dark-theme{
+  --cinza-bg:#0F172A;--cinza-card:#1E293B;--cinza-borda:#334155;
+  --texto-principal:#F8FAFC;--texto-secundario:#CBD5E1;--texto-terciario:#94A3B8;
+  --sombra-card:0 4px 15px rgba(0,0,0,.3);--sombra-elevada:0 10px 40px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+*:focus-visible{outline:3px solid var(--amarelo);outline-offset:2px;}
+body{font-family:'DM Sans',sans-serif;background:var(--cinza-bg);color:var(--texto-principal);transition:var(--tr);display:flex;min-height:100vh;}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:var(--sb-w);background:var(--azul-escuro);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;padding:1.25rem 0;z-index:200;box-shadow:2px 0 12px rgba(0,0,0,.14);transition:width .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.sidebar:hover{width:var(--sb-exp);}
+.sidebar:hover~.main-area{margin-left:var(--sb-exp);}
+.main-area{margin-left:var(--sb-w);transition:margin-left .3s cubic-bezier(.4,0,.2,1);flex:1;display:flex;flex-direction:column;min-width:0;}
+.sb-logo{display:flex;align-items:center;gap:.85rem;padding:0 1.1rem;margin-bottom:1.75rem;text-decoration:none;overflow:hidden;}
+.sb-icon{width:42px;height:42px;min-width:42px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0;}
+.sb-logo-text strong{display:block;font-family:'Sora',sans-serif;font-weight:700;font-size:.82rem;color:#fff;white-space:nowrap;}
+.sb-logo-text span{font-size:.68rem;color:rgba(255,255,255,.4);white-space:nowrap;}
+.sb-section{padding:0 .75rem;margin-bottom:.2rem;}
+.sb-section-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28);padding:.75rem .5rem .3rem;white-space:nowrap;display:block;}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:.5rem .75rem;}
+.nav-item{display:flex;align-items:center;gap:.85rem;width:100%;height:42px;padding:0 .75rem;border-radius:9px;color:rgba(255,255,255,.5);text-decoration:none;transition:all .18s;white-space:nowrap;overflow:hidden;border-left:3px solid transparent;}
+.nav-item svg{width:19px;height:19px;fill:currentColor;flex-shrink:0;}
+.nav-label{font-size:.82rem;font-weight:600;opacity:0;transition:opacity .15s .05s;}
+.sidebar:hover .nav-label{opacity:1;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.09);}
+.nav-item.active{color:#fff;background:rgba(4,76,184,.3);border-left-color:var(--amarelo);}
+.sub-nav{overflow:hidden;max-height:0;transition:max-height .3s ease;background:rgba(0,0,0,.15);}
+.sub-nav.open{max-height:200px;}
+.sub-item{display:flex;align-items:center;gap:.75rem;padding:.55rem 1rem .55rem 2.5rem;color:rgba(255,255,255,.45);text-decoration:none;font-size:.8rem;font-weight:600;transition:.18s;white-space:nowrap;border-left:3px solid transparent;}
+.sub-item:hover{color:#fff;background:rgba(255,255,255,.05);}
+.sub-item.active{color:var(--amarelo);border-left-color:var(--amarelo);}
+
+/* ═══ HEADER ═══ */
+.admin-header{height:64px;background:var(--cinza-card);border-bottom:1px solid var(--cinza-borda);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:90;transition:var(--tr);}
+.h-left .breadcrumb{font-size:.75rem;color:var(--texto-terciario);}
+.h-left .breadcrumb a{color:var(--azul);text-decoration:none;}
+.h-left .h-title{font-family:'Sora',sans-serif;font-weight:700;font-size:.95rem;color:var(--texto-principal);}
+.h-right{display:flex;align-items:center;gap:1rem;}
+.btn-theme{background:transparent;border:1.5px solid var(--cinza-borda);color:var(--texto-secundario);border-radius:8px;padding:.38rem .75rem;cursor:pointer;font-weight:600;font-size:.78rem;font-family:'DM Sans',sans-serif;transition:.2s;}
+.btn-theme:hover{border-color:var(--azul);color:var(--azul);}
+.user-chip{display:flex;align-items:center;gap:.6rem;}
+.user-name{font-family:'Sora',sans-serif;font-weight:700;font-size:.8rem;color:var(--texto-principal);}
+.user-av{width:32px;height:32px;background:var(--azul-escuro);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:.68rem;font-weight:700;color:#fff;}
+
+/* ═══ FORM ═══ */
+.page-wrap{padding:2rem;max-width:960px;margin:0 auto;width:100%;}
+
+/* SECTION */
+.fsec{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:var(--radius);box-shadow:var(--sombra-card);padding:1.75rem;margin-bottom:1.25rem;transition:var(--tr);animation:fadeInUp .4s ease forwards;opacity:0;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fsec:nth-child(1){animation-delay:.05s}
+.fsec:nth-child(2){animation-delay:.1s}
+.fsec:nth-child(3){animation-delay:.15s}
+.fsec:nth-child(4){animation-delay:.2s}
+.sec-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;color:var(--azul-escuro);margin-bottom:1.35rem;padding-bottom:.65rem;border-bottom:2px solid var(--cinza-borda);display:flex;align-items:center;gap:.5rem;}
+body.dark-theme .sec-title{color:var(--azul-claro);border-bottom-color:var(--cinza-borda);}
+.sec-num{width:26px;height:26px;min-width:26px;background:var(--azul);color:#fff;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.15rem;}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+.g-full{grid-column:1/-1;}
+.g-2{grid-column:span 2;}
+@media(max-width:700px){.g-2,.g-full{grid-column:1/-1;}}
+
+.fg{display:flex;flex-direction:column;gap:.42rem;}
+.flabel{font-size:.8rem;font-weight:600;color:var(--texto-principal);display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;}
+.req{color:var(--vermelho);font-weight:700;}
+.fc{width:100%;padding:.65rem .9rem;border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);background:var(--cinza-bg);color:var(--texto-principal);font-family:'DM Sans',sans-serif;font-size:.87rem;transition:.18s;outline:none;}
+.fc:hover{border-color:var(--azul-claro);}
+.fc:focus{border-color:var(--azul);box-shadow:0 0 0 4px rgba(4,76,184,.1);background:var(--cinza-card);}
+.fc.err{border-color:var(--vermelho);box-shadow:0 0 0 3px rgba(239,68,68,.1);}
+textarea.fc{resize:vertical;min-height:76px;}
+select.fc{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.5rem;cursor:pointer;}
+.ferr{font-size:.73rem;color:var(--vermelho);font-weight:600;display:none;}
+.ferr.show{display:block;}
+.fnote{font-size:.72rem;color:var(--texto-terciario);}
+
+/* RICH EDITOR */
+.editor-wrap{border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);overflow:hidden;transition:.2s;}
+.editor-wrap:focus-within{border-color:var(--azul);box-shadow:0 0 0 4px rgba(4,76,184,.1);}
+.editor-wrap.err{border-color:var(--vermelho);}
+.etb{display:flex;flex-wrap:wrap;gap:.3rem;padding:.45rem .65rem;background:var(--cinza-bg);border-bottom:1px solid var(--cinza-borda);}
+.etb-btn{background:var(--cinza-card);border:1px solid var(--cinza-borda);padding:3px 9px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--texto-secundario);font-family:'DM Sans',sans-serif;transition:.14s;line-height:1.5;}
+.etb-btn:hover{background:var(--azul);color:#fff;border-color:var(--azul);}
+.etb-sep{width:1px;background:var(--cinza-borda);margin:0 1px;align-self:stretch;}
+.rich-ed{min-height:100px;padding:.75rem .9rem;color:var(--texto-principal);font-family:'DM Sans',sans-serif;font-size:.87rem;line-height:1.7;outline:none;background:var(--cinza-card);}
+.rich-ed:empty::before{content:attr(data-ph);color:var(--texto-terciario);font-style:italic;pointer-events:none;}
+.rich-ed ul,.rich-ed ol{padding-left:1.4rem;}
+
+/* OPTIONS */
+.opts-group{display:flex;flex-wrap:wrap;gap:.85rem;padding:.7rem;background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);}
+.olabel{display:flex;align-items:center;gap:.45rem;font-size:.88rem;color:var(--texto-secundario);cursor:pointer;padding:.3rem .6rem;border-radius:6px;transition:.15s;}
+.olabel:hover{background:rgba(4,76,184,.05);}
+.olabel input{accent-color:var(--azul);width:16px;height:16px;cursor:pointer;}
+
+/* TOOLTIP */
+.tip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tip-ico{width:17px;height:17px;border-radius:50%;background:var(--azul-claro);color:#fff;font-size:.65rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex-shrink:0;}
+.tip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--azul-escuro);color:#fff;font-size:.75rem;line-height:1.5;padding:.55rem .85rem;border-radius:8px;width:240px;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:none;opacity:0;transition:opacity .15s;white-space:normal;}
+.tip-wrap:hover .tip-box,.tip-wrap:focus-within .tip-box{opacity:1;}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--azul-escuro);}
+
+/* ESFERA BADGE */
+.esfera-pills{display:flex;flex-wrap:wrap;gap:.55rem;}
+.epill{display:flex;align-items:center;gap:.4rem;padding:.42rem .9rem;border-radius:20px;cursor:pointer;border:1.5px solid var(--cinza-borda);background:var(--cinza-bg);color:var(--texto-secundario);font-size:.82rem;font-weight:600;transition:all .18s;user-select:none;}
+.epill:hover{border-color:var(--azul-claro);color:var(--azul);}
+.epill.on{border-color:var(--azul);background:rgba(4,76,184,.08);color:var(--azul-escuro);}
+body.dark-theme .epill.on{color:#fff;}
+.epill input{display:none;}
+
+/* ACTIONS */
+.form-acts{display:flex;justify-content:flex-end;gap:.85rem;margin-top:.5rem;}
+.btn-cancel{background:transparent;border:1.5px solid var(--cinza-borda);color:var(--texto-secundario);padding:.7rem 1.4rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;transition:.18s;}
+.btn-cancel:hover{background:var(--cinza-bg);}
+.btn-submit{background:var(--azul-escuro);color:#fff;border:none;padding:.7rem 1.85rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:.18s;box-shadow:0 4px 12px rgba(4,47,122,.2);display:flex;align-items:center;gap:.5rem;}
+.btn-submit:hover{background:var(--azul);transform:translateY(-1px);}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.6rem;}
+.toast{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-left:4px solid var(--verde);border-radius:var(--radius-sm);padding:.9rem 1.1rem;box-shadow:var(--sombra-elevada);display:flex;align-items:center;gap:.65rem;min-width:280px;font-size:.88rem;color:var(--texto-principal);animation:slideInR .35s cubic-bezier(.34,1.56,.64,1);}
+.toast.err{border-left-color:var(--vermelho);}
+.toast.warn{border-left-color:var(--amarelo);}
+@keyframes slideInR{from{opacity:0;transform:translateX(100%);}to{opacity:1;transform:translateX(0);}}
+
+/* LOGO BADGE Sistemas Externos */
+.ext-badge-header{display:flex;align-items:center;gap:1rem;padding:1.5rem 1.75rem;background:linear-gradient(135deg,var(--azul-escuro) 0%,var(--azul) 100%);border-radius:var(--radius);margin-bottom:1.25rem;animation:fadeInUp .35s ease forwards;opacity:0;}
+.ext-badge-ico{width:52px;height:52px;min-width:52px;border-radius:12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.ext-badge-text strong{display:block;font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;}
+.ext-badge-text span{font-size:.82rem;color:rgba(255,255,255,.65);}
+
+/* HL */
+@keyframes hl{0%{background:rgba(245,200,0,.28);}100%{background:transparent;}}
+.hl{animation:hl 1.8s ease;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <a href="admin-dashboard.html" class="sb-logo">
+    <div class="sb-icon">PS</div>
+    <div class="sb-logo-text"><strong>Portal de Sistemas</strong><span>Gov. Tocantins</span></div>
+  </a>
+  <div class="sb-section">
+    <span class="sb-section-label">Principal</span>
+    <a href="admin-dashboard.html" class="nav-item" title="Dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="sistemas.html" class="nav-item" title="Sistemas">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <span class="nav-label">Sistemas</span>
+    </a>
+    <a href="admin-categoria.html" class="nav-item" title="Categorias">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+      <span class="nav-label">Categorias</span>
+    </a>
+    <a href="#" class="nav-item" title="Permissoes">
+      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+      <span class="nav-label">Permissoes</span>
+    </a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <span class="sb-section-label">Cadastros Base</span>
+    <a href="cadastro-sistemas.html" class="nav-item" title="Cadastrar Sistema">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span class="nav-label">Cad. Sistema</span>
+    </a>
+    <a href="#" class="nav-item" title="Frameworks Base">
+      <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+      <span class="nav-label">Frameworks</span>
+    </a>
+    <a href="cadastro-sistema-externo.html" class="nav-item active" title="Sistemas Externos">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96z"/></svg>
+      <span class="nav-label">Sist. Externos</span>
+    </a>
+    <div>
+      <a href="#" class="nav-item" title="Formularios" onclick="toggleSub(event,'sub-form')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span class="nav-label">Formularios ▾</span>
+      </a>
+      <div class="sub-nav" id="sub-form">
+        <a href="cadastro-formularios.html" class="sub-item">Cadastrar Formulario</a>
+        <a href="#" class="sub-item">Listar Formularios</a>
+      </div>
+    </div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <span class="sb-section-label">Conta</span>
+    <a href="admin-perfil.html" class="nav-item" title="Meu Perfil">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span class="nav-label">Meu Perfil</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main-area">
+  <header class="admin-header">
+    <div class="h-left">
+      <div class="breadcrumb"><a href="admin-dashboard.html">Início</a> › <a href="sistemas.html">Sistemas</a> › Sistemas Externos › Cadastrar</div>
+      <div class="h-title">Cadastrar Sistema Externo</div>
+    </div>
+    <div class="h-right">
+      <button class="btn-theme" id="themeToggle">🌙 Escuro</button>
+      <div class="user-chip"><span class="user-name">STEFAN</span><div class="user-av">ST</div></div>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+
+    <!-- BANNER TOPO -->
+    <div class="ext-badge-header">
+      <div class="ext-badge-ico">🌐</div>
+      <div class="ext-badge-text">
+        <strong>Sistema Externo</strong>
+        <span>Cadastre sistemas federais, de outros entes ou parceiros que se integram ao Portal de Sistemas do Tocantins.</span>
+      </div>
+    </div>
+
+    <form id="fFormExt" novalidate>
+
+      <!-- 1. INFORMAÇÕES BÁSICAS -->
+      <div class="fsec">
+        <h3 class="sec-title"><span class="sec-num">1</span> Informações Básicas</h3>
+        <div class="grid">
+
+          <!-- Sigla -->
+          <div class="fg">
+            <label class="flabel" for="fExtSigla">
+              Sigla <span class="req">*</span>
+              <span class="tip-wrap">
+                <span class="tip-ico" tabindex="0">?</span>
+                <span class="tip-box">Acrônimo oficial do sistema. Ex: SIAPE, e-Social, SIAFI.</span>
+              </span>
+            </label>
+            <input type="text" id="fExtSigla" name="sigla" class="fc" placeholder="Ex: SIAPE" maxlength="30" required>
+            <span class="ferr" id="errExtSigla">Campo obrigatório.</span>
+          </div>
+
+          <!-- Nome -->
+          <div class="fg g-2">
+            <label class="flabel" for="fExtNome">Nome Completo <span class="req">*</span></label>
+            <input type="text" id="fExtNome" name="nome" class="fc" placeholder="Ex: Sistema de Administração de Pessoal" required>
+            <span class="ferr" id="errExtNome">Campo obrigatório.</span>
+          </div>
+
+          <!-- Esfera -->
+          <div class="fg g-full">
+            <label class="flabel">Esfera <span class="req">*</span></label>
+            <div class="esfera-pills" id="esferaPills">
+              <label class="epill" data-v="federal"><input type="radio" name="esfera" value="federal">🇧🇷 Federal</label>
+              <label class="epill" data-v="estadual"><input type="radio" name="esfera" value="estadual">🏛️ Estadual</label>
+              <label class="epill" data-v="municipal"><input type="radio" name="esfera" value="municipal">🏙️ Municipal</label>
+              <label class="epill" data-v="internacional"><input type="radio" name="esfera" value="internacional">🌎 Internacional</label>
+              <label class="epill" data-v="privado"><input type="radio" name="esfera" value="privado">🏢 Privado / Parceiro</label>
+            </div>
+            <span class="ferr" id="errExtEsfera">Selecione a esfera do sistema.</span>
+          </div>
+
+          <!-- Órgão / Entidade Responsável -->
+          <div class="fg g-full">
+            <label class="flabel" for="fExtOrgao">Órgão / Entidade Responsável <span class="req">*</span></label>
+            <input type="text" id="fExtOrgao" name="orgao" class="fc" placeholder="Ex: Ministério da Gestão e da Inovação em Serviços Públicos" required>
+            <span class="ferr" id="errExtOrgao">Campo obrigatório.</span>
+          </div>
+
+          <!-- Link para Suporte -->
+          <div class="fg g-full">
+            <label class="flabel" for="fExtLinkSup">Link para Suporte</label>
+            <input type="url" id="fExtLinkSup" name="linkSuporte" class="fc" placeholder="https://suporte.sistema.gov.br">
+          </div>
+
+          <!-- URL de Acesso -->
+          <div class="fg g-full">
+            <label class="flabel" for="fExtUrl">URL de Acesso</label>
+            <input type="url" id="fExtUrl" name="url" class="fc" placeholder="https://sistema.gov.br">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 2. CONTATO E ACESSO -->
+      <div class="fsec">
+        <h3 class="sec-title"><span class="sec-num">2</span> Contato e Acesso</h3>
+        <div class="grid">
+
+          <div class="fg">
+            <label class="flabel" for="fExtTel">Telefone de Contato</label>
+            <input type="text" id="fExtTel" name="telefone" class="fc" placeholder="(61) 00000-0000">
+          </div>
+          <div class="fg">
+            <label class="flabel" for="fExtEmail">E-mail de Contato</label>
+            <input type="email" id="fExtEmail" name="email" class="fc" placeholder="suporte@orgao.gov.br">
+          </div>
+
+          <!-- Tipo de Integração -->
+          <div class="fg g-full">
+            <label class="flabel">Tipo de Integração utilizada</label>
+            <div class="opts-group">
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="api_rest"> API REST</label>
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="soap"> Web Service (SOAP)</label>
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="sftp"> SFTP / Arquivo</label>
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="banco"> Banco de Dados</label>
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="mensageria"> Mensageria / Fila</label>
+              <label class="olabel"><input type="checkbox" name="tipoInteg" value="outro"> Outro</label>
+            </div>
+          </div>
+
+          <!-- Autenticação -->
+          <div class="fg g-full">
+            <label class="flabel">Mecanismo de Autenticação</label>
+            <div class="opts-group">
+              <label class="olabel"><input type="radio" name="autenticacao" value="oauth2"> OAuth 2.0</label>
+              <label class="olabel"><input type="radio" name="autenticacao" value="jwt"> JWT</label>
+              <label class="olabel"><input type="radio" name="autenticacao" value="apikey"> API Key</label>
+              <label class="olabel"><input type="radio" name="autenticacao" value="basica"> Autenticação Básica</label>
+              <label class="olabel"><input type="radio" name="autenticacao" value="certificado"> Certificado Digital</label>
+              <label class="olabel"><input type="radio" name="autenticacao" value="nenhuma"> Nenhuma</label>
+            </div>
+          </div>
+
+          <!-- Link da documentação -->
+          <div class="fg g-full">
+            <label class="flabel" for="fExtDoc">Link da Documentação / API</label>
+            <input type="url" id="fExtDoc" name="urlDoc" class="fc" placeholder="https://docs.sistema.gov.br ou Swagger...">
+          </div>
+
+        </div>
+
+        <!-- Informações Adicionais para Sistemas Externos -->
+        <div class="fg g-full" style="margin-top:1.2rem; padding:1.2rem; background:rgba(245,200,0,0.06); border:1px dashed rgba(245,200,0,0.25); border-radius:12px;">
+          <div style="font-size:.85rem; font-weight:700; color:var(--texto-principal); margin-bottom:1rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--amarelo)" style="vertical-align:middle; margin-right:.4rem;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Informações Complementares (Obrigatório para Sistemas Externos)
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
+            <div class="fg">
+              <label class="flabel">Servidor Responsável pela INFRA <span class="req">*</span></label>
+              <input type="text" name="servidorResponsavel" class="fc" placeholder="Nome do servidor responsável pela infraestrutura" required>
+            </div>
+            <div class="fg">
+              <label class="flabel">Órgão de Origem</label>
+              <input type="text" name="orgaoOrigem" class="fc" placeholder="Ex: SERPRO, Dataprev, Receita Federal">
+            </div>
+            <div class="fg">
+              <label class="flabel">Forma de Acesso</label>
+              <select name="formaAcesso" class="fc">
+                <option value="">Selecione...</option>
+                <option value="web">Acesso Web Público</option>
+                <option value="web_cert">Acesso Web com Certificado</option>
+                <option value="vpn">VPN</option>
+                <option value="rede_gov">Rede Gov</option>
+                <option value="api">API / WebService</option>
+                <option value="sede">Presencial / Sede</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label class="flabel">Possui Integração com Sistemas Tocantins?</label>
+              <select name="integracaoTO" class="fc" onchange="document.getElementById('intTODetails').style.display=this.value==='sim'?'block':'none';">
+                <option value="">Selecione...</option>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+              <div id="intTODetails" style="display:none; margin-top:.5rem;">
+                <input type="text" name="integracaoTODetalhes" class="fc" placeholder="Quais sistemas e tipo de integração">
+              </div>
+            </div>
+            <div class="fg g-full">
+              <label class="flabel">Requisitos Técnicos / Observações</label>
+              <textarea name="reqTecnicos" class="fc" rows="2" placeholder="VPN, certificado digital, IP liberado, etc."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══ DARK THEME ═══ */
+const tt=document.getElementById('themeToggle');
+if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-theme');tt.textContent='☀️ Claro';}
+tt.addEventListener('click',()=>{
+  document.body.classList.toggle('dark-theme');
+  const d=document.body.classList.contains('dark-theme');
+  localStorage.setItem('theme',d?'dark':'light');tt.textContent=d?'☀️ Claro':'🌙 Escuro';
+});
+function toggleSub(e,id){e.preventDefault();document.getElementById(id)?.classList.toggle('open');}
+
+/* ═══ RICH EDITOR ═══ */
+function rc(id,cmd){document.getElementById('ed-'+id).focus();document.execCommand(cmd,false,null);}
+function insLink(id){const u=prompt('URL:');if(u){document.getElementById('ed-'+id).focus();document.execCommand('createLink',false,u);}}
+
+/* ═══ ESFERA PILLS ═══ */
+document.querySelectorAll('.epill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.epill').forEach(x=>x.classList.remove('on'));
+    p.querySelector('input').checked=true;
+    p.classList.add('on');
+    document.getElementById('errExtEsfera').classList.remove('show');
+  });
+});
+
+/* ═══ DESC COUNTER ═══ */
+document.getElementById('fExtDescCurta').addEventListener('input',function(){
+  const len=this.value.length;
+  document.getElementById('extDescCounter').textContent=len+' / 200';
+  document.getElementById('extDescCounter').style.color=len>180?'var(--vermelho)':len>140?'var(--laranja)':'var(--texto-terciario)';
+});
+
+/* ═══ PHONE MASK ═══ */
+document.getElementById('fExtTel').addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);
+  if(v.length>9)v=v.slice(0,9)+'-'+v.slice(9);
+  this.value=v;
+});
+
+/* ═══ VALIDATE ═══ */
+function req(id,errId){
+  const el=document.getElementById(id);
+  const ok=el.value.trim()!=='';
+  el.classList.toggle('err',!ok);
+  document.getElementById(errId)?.classList.toggle('show',!ok);
+  return ok;
+}
+function valR(name,errId){
+  const ok=!!document.querySelector(`input[name="${name}"]:checked`);
+  document.getElementById(errId)?.classList.toggle('show',!ok);
+  return ok;
+}
+
+/* ═══ SUBMIT ═══ */
+document.getElementById('fFormExt').addEventListener('submit',function(e){
+  e.preventDefault();
+  // sync rich editors
+  ['abr','qpu','cu'].forEach(id=>{
+    const ed=document.getElementById('ed-'+id);
+    const inp=document.getElementById('inp-'+id);
+    if(ed&&inp)inp.value=ed.innerHTML;
+  });
+  let ok=true;
+  if(!req('fExtSigla','errExtSigla'))ok=false;
+  if(!req('fExtNome','errExtNome'))ok=false;
+  if(!req('fExtOrgao','errExtOrgao'))ok=false;
+  if(!req('fExtDescCurta','errExtDesc'))ok=false;
+  if(!document.querySelector('input[name="esfera"]:checked')){
+    document.getElementById('errExtEsfera').classList.add('show');ok=false;
+  }
+  if(!valR('situacao','errExtSit'))ok=false;
+  if(!valR('visibilidade','errExtVis'))ok=false;
+  if(!ok){toast('Preencha os campos obrigatórios.','err');return;}
+  toast('Sistema externo cadastrado com sucesso! ✅','ok');
+});
+
+/* ═══ TOAST ═══ */
+function toast(msg,type='ok'){
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');t.className='toast'+(type==='err'?' err':type==='warn'?' warn':'');
+  const icons={ok:'✓',err:'✕',warn:'⚠'};
+  t.innerHTML=`<span>${icons[type]||'•'}</span> ${msg}`;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.animation='slideInR .3s ease reverse';setTimeout(()=>t.remove(),300);},4000);
+}
+</script>
+</body>
+</html>

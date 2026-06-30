@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Administrativo — Portal de Sistemas</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --amarelo: #F5C800;
+  --azul: #044CB8;
+  --azul-escuro: #042F7A;
+  --azul-claro: #1976D2;
+  --cinza-bg: #F0F4FA;
+  --cinza-card: #FFFFFF;
+  --cinza-borda: #DDE4EF;
+  --texto-principal: #0D1B3E;
+  --texto-secundario: #4A5568;
+  --texto-terciario: #718096;
+  --verde: #10B981;
+  --laranja: #F59E0B;
+  --vermelho: #EF4444;
+  --roxo: #7C3AED;
+  --sombra: 0 2px 16px rgba(4,44,120,0.07);
+  --sombra-md: 0 6px 24px rgba(4,44,120,0.11);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --sb-w: 72px;
+  --sb-exp: 248px;
+  --transition: all 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+body.dark {
+  --cinza-bg: #0B1120;
+  --cinza-card: #131C2E;
+  --cinza-borda: #1E2D44;
+  --texto-principal: #EDF2F7;
+  --texto-secundario: #A0AEC0;
+  --texto-terciario: #718096;
+  --sombra: 0 2px 16px rgba(0,0,0,0.35);
+  --sombra-md: 0 6px 24px rgba(0,0,0,0.45);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+*:focus-visible { outline: 2px solid var(--amarelo); outline-offset:2px; }
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--cinza-bg);
+  color:var(--texto-principal);
+  display:flex;
+  min-height:100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ══════ SIDEBAR ══════ */
+.sidebar {
+  width:var(--sb-w); background:var(--azul-escuro);
+  position:fixed; top:0; left:0; height:100vh;
+  display:flex; flex-direction:column; padding:1.25rem 0;
+  z-index:200; box-shadow:2px 0 16px rgba(0,0,0,.18);
+  transition:width .3s cubic-bezier(.4,0,.2,1); overflow:hidden;
+}
+.sidebar:hover { width:var(--sb-exp); }
+.sb-logo { display:flex; align-items:center; gap:.85rem; padding:0 1rem; margin-bottom:1.5rem; text-decoration:none; overflow:hidden; }
+.sb-icon { width:40px; height:40px; min-width:40px; background:rgba(245,200,0,.15); border:1.5px solid rgba(245,200,0,.35); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; font-weight:800; font-size:.78rem; color:var(--amarelo); flex-shrink:0; letter-spacing:.03em; }
+.sb-logo-text strong { display:block; font-family:'Sora',sans-serif; font-weight:700; font-size:.8rem; color:#fff; white-space:nowrap; }
+.sb-logo-text span { font-size:.66rem; color:rgba(255,255,255,.38); white-space:nowrap; }
+.sb-sec { padding:0 .65rem; margin-bottom:.15rem; }
+.sb-label { font-size:.58rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.25); padding:.7rem .5rem .25rem; white-space:nowrap; display:block; }
+.sb-div { height:1px; background:rgba(255,255,255,.06); margin:.4rem .65rem; }
+.nav-item { display:flex; align-items:center; gap:.8rem; width:100%; height:40px; padding:0 .65rem; border-radius:9px; color:rgba(255,255,255,.45); text-decoration:none; transition:var(--transition); white-space:nowrap; overflow:hidden; border-left:3px solid transparent; cursor:pointer; background:transparent; border-top:none; border-right:none; border-bottom:none; font-family:inherit; }
+.nav-item svg { width:18px; height:18px; fill:currentColor; flex-shrink:0; }
+.nav-label { font-size:.8rem; font-weight:600; opacity:0; transition:opacity .15s .04s; }
+.sidebar:hover .nav-label { opacity:1; }
+.nav-item:hover { color:#fff; background:rgba(255,255,255,.08); }
+.nav-item.active { color:#fff; background:rgba(4,76,184,.35); border-left-color:var(--amarelo); }
+.sub-nav { overflow:hidden; max-height:0; transition:max-height .3s ease; background:rgba(0,0,0,.18); }
+.sub-nav.open { max-height:200px; }
+.sub-item { display:flex; align-items:center; gap:.7rem; padding:.5rem 1rem .5rem 2.4rem; color:rgba(255,255,255,.42); text-decoration:none; font-size:.78rem; font-weight:600; transition:.18s; white-space:nowrap; border-left:3px solid transparent; }
+.sub-item:hover { color:#fff; background:rgba(255,255,255,.05); }
+
+/* ══════ MAIN ══════ */
+.main-area { margin-left:var(--sb-w); transition:margin-left .3s cubic-bezier(.4,0,.2,1); flex:1; display:flex; flex-direction:column; min-width:0; }
+.sidebar:hover ~ .main-area { margin-left:var(--sb-exp); }
+
+/* ══════ HEADER ══════ */
+.admin-header { background:var(--cinza-card); position:sticky; top:0; z-index:90; border-bottom:1px solid var(--cinza-borda); box-shadow:0 1px 8px rgba(0,0,0,.05); transition:background .3s, border-color .3s; }
+.header-inner { display:flex; align-items:center; justify-content:space-between; padding:.7rem 2rem; }
+.header-left { display:flex; flex-direction:column; }
+.header-title { font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:700; color:var(--texto-principal); }
+.header-sub { font-size:.74rem; color:var(--texto-terciario); }
+.header-actions { display:flex; align-items:center; gap:1rem; }
+.btn-theme { background:transparent; border:1.5px solid var(--cinza-borda); color:var(--texto-secundario); border-radius:8px; padding:.38rem .75rem; cursor:pointer; font-size:.78rem; font-family:'DM Sans',sans-serif; font-weight:600; transition:var(--transition); }
+.btn-theme:hover { border-color:var(--azul); color:var(--azul); }
+.user-chip { display:flex; align-items:center; gap:.6rem; background:var(--cinza-bg); border:1px solid var(--cinza-borda); border-radius:100px; padding:.3rem .75rem .3rem .35rem; }
+.u-avatar { width:28px; height:28px; background:linear-gradient(135deg,var(--azul),var(--amarelo)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; font-weight:800; font-size:.65rem; color:#fff; position:relative; }
+.u-avatar::after { content:''; position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; background:#10B981; border:2px solid var(--cinza-card); border-radius:50%; }
+.u-name { font-family:'Sora',sans-serif; font-weight:700; font-size:.75rem; color:var(--texto-principal); letter-spacing:.06em; text-transform:uppercase; }
+
+/* ══════ CONTENT ══════ */
+.content { padding:1.75rem 2rem 3rem; max-width:1480px; margin:0 auto; width:100%; }
+
+/* ══════ KPI STRIP ══════ */
+.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.75rem; }
+.kpi-card { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); padding:1.25rem 1.5rem; box-shadow:var(--sombra); position:relative; overflow:hidden; transition:var(--transition); }
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--kpi-color,var(--azul)); }
+.kpi-card:hover { box-shadow:var(--sombra-md); transform:translateY(-2px); }
+.kpi-label { font-size:.73rem; font-weight:600; color:var(--texto-terciario); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.5rem; }
+.kpi-value { font-family:'Sora',sans-serif; font-weight:800; font-size:2.1rem; color:var(--texto-principal); line-height:1; margin-bottom:.3rem; }
+.kpi-sub { font-size:.75rem; color:var(--texto-terciario); display:flex; align-items:center; gap:.35rem; }
+.kpi-badge { display:inline-flex; align-items:center; gap:.25rem; font-size:.68rem; font-weight:700; padding:.15rem .5rem; border-radius:100px; }
+.kpi-badge.up { background:rgba(16,185,129,.12); color:#059669; }
+.kpi-badge.down { background:rgba(239,68,68,.1); color:#DC2626; }
+.kpi-icon { position:absolute; right:1.25rem; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.35rem; }
+
+/* ══════ HERO CHARTS (Situação + Tipos) ══════ */
+.hero-section { display:grid; grid-template-columns:1fr 1.6fr; gap:1.25rem; margin-bottom:1.25rem; }
+.hero-card { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); padding:1.5rem; box-shadow:var(--sombra); transition:var(--transition); }
+.hero-card:hover { box-shadow:var(--sombra-md); }
+.chart-hdr { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.25rem; }
+.chart-title-wrap { }
+.chart-title { font-family:'Sora',sans-serif; font-weight:700; font-size:1.05rem; color:var(--texto-principal); }
+.chart-subtitle { font-size:.74rem; color:var(--texto-terciario); margin-top:.2rem; }
+.btn-sm { background:transparent; border:1px solid var(--cinza-borda); color:var(--texto-secundario); padding:.25rem .65rem; border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-weight:600; font-size:.72rem; cursor:pointer; text-decoration:none; transition:var(--transition); display:inline-block; }
+.btn-sm:hover { background:var(--cinza-bg); color:var(--azul); border-color:var(--azul); }
+.chart-area { position:relative; width:100%; }
+.hero-doughnut { height:280px; display:flex; align-items:center; justify-content:center; position:relative; }
+.doughnut-center { position:absolute; text-align:center; pointer-events:none; }
+.doughnut-center-num { font-family:'Sora',sans-serif; font-weight:800; font-size:2.2rem; color:var(--texto-principal); line-height:1; }
+.doughnut-center-lbl { font-size:.7rem; color:var(--texto-terciario); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+.hero-bar { height:280px; }
+
+/* Situação legend */
+.sit-legend { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
+.sit-item { display:flex; align-items:center; justify-content:space-between; }
+.sit-left { display:flex; align-items:center; gap:.6rem; }
+.sit-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.sit-name { font-size:.8rem; font-weight:600; color:var(--texto-secundario); }
+.sit-bar-wrap { flex:1; margin:0 .75rem; height:5px; background:var(--cinza-borda); border-radius:10px; overflow:hidden; }
+.sit-bar-fill { height:100%; border-radius:10px; transition:width .8s cubic-bezier(.4,0,.2,1); }
+.sit-count { font-family:'Sora',sans-serif; font-weight:700; font-size:.82rem; color:var(--texto-principal); min-width:28px; text-align:right; }
+
+/* Tipos legend chips */
+.tipos-chips { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.85rem; }
+.tipo-chip { display:flex; align-items:center; gap:.4rem; padding:.3rem .65rem; border-radius:100px; background:var(--cinza-bg); border:1px solid var(--cinza-borda); font-size:.74rem; font-weight:600; color:var(--texto-secundario); transition:var(--transition); }
+.tipo-chip-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.tipo-chip:hover { border-color:currentColor; }
+
+/* ══════ SECONDARY CHARTS ══════ */
+.secondary-section { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; margin-bottom:1.75rem; }
+.sec-card { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); padding:1.25rem 1.5rem; box-shadow:var(--sombra); transition:var(--transition); }
+.sec-card:hover { box-shadow:var(--sombra-md); }
+.sec-chart-area { height:180px; position:relative; margin-top:.75rem; }
+
+/* ══════ FILTROS AVANÇADOS ══════ */
+.filters-section { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); padding:1.5rem; box-shadow:var(--sombra); margin-bottom:1.5rem; transition:var(--transition); }
+.filters-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:.75rem; }
+.filters-title { font-family:'Sora',sans-serif; font-weight:700; font-size:1rem; color:var(--texto-principal); display:flex; align-items:center; gap:.6rem; }
+.filters-title svg { width:18px; height:18px; fill:var(--azul); }
+.filter-actions { display:flex; align-items:center; gap:.6rem; }
+.active-filters-count { font-size:.74rem; font-weight:700; color:var(--azul); background:rgba(4,76,184,.1); padding:.2rem .6rem; border-radius:100px; display:none; }
+.active-filters-count.visible { display:inline; }
+
+/* Barra busca principal */
+.search-bar { position:relative; margin-bottom:1.25rem; }
+.search-input { width:100%; background:var(--cinza-bg); border:1.5px solid var(--cinza-borda); border-radius:10px; padding:.7rem 1rem .7rem 2.8rem; font-family:'DM Sans',sans-serif; font-size:.88rem; color:var(--texto-principal); transition:var(--transition); }
+.search-input::placeholder { color:var(--texto-terciario); }
+.search-input:focus { border-color:var(--azul); background:var(--cinza-card); box-shadow:0 0 0 3px rgba(4,76,184,.1); outline:none; }
+.search-icon { position:absolute; left:.85rem; top:50%; transform:translateY(-50%); }
+.search-icon svg { width:18px; height:18px; fill:var(--texto-terciario); }
+.search-clear { position:absolute; right:.75rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--texto-terciario); display:none; padding:.2rem; border-radius:50%; transition:var(--transition); }
+.search-clear:hover { color:var(--vermelho); background:rgba(239,68,68,.1); }
+.search-clear.visible { display:block; }
+
+/* Grupos de filtros */
+.filter-groups { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
+.filter-group { display:flex; flex-direction:column; gap:.4rem; }
+.filter-group-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--texto-terciario); }
+.filter-select { background:var(--cinza-bg); border:1.5px solid var(--cinza-borda); border-radius:var(--radius-sm); padding:.5rem .85rem; font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--texto-principal); cursor:pointer; transition:var(--transition); appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23718096' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right .75rem center; padding-right:2rem; }
+.filter-select:focus { border-color:var(--azul); box-shadow:0 0 0 3px rgba(4,76,184,.1); outline:none; }
+.filter-select.active { border-color:var(--azul); background-color:rgba(4,76,184,.05); color:var(--azul); }
+
+/* ══════ IP FILTER ══════ */
+.ip-filter-section { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); padding:1.5rem; box-shadow:var(--sombra); margin-bottom:1.5rem; transition:var(--transition); }
+.ip-filter-hdr { display:flex; align-items:center; gap:.6rem; margin-bottom:1.1rem; }
+.ip-filter-hdr svg { width:18px; height:18px; fill:var(--azul); flex-shrink:0; }
+.ip-filter-title { font-family:'Sora',sans-serif; font-weight:700; font-size:1rem; color:var(--texto-principal); }
+.ip-filter-subtitle { font-size:.74rem; color:var(--texto-terciario); margin-top:.15rem; }
+.ip-input-row { display:flex; gap:.75rem; align-items:flex-end; flex-wrap:wrap; }
+.ip-input-group { display:flex; flex-direction:column; gap:.4rem; flex:1; min-width:220px; }
+.ip-input-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--texto-terciario); }
+.ip-input-wrap { position:relative; display:flex; align-items:center; }
+.ip-input { width:100%; background:var(--cinza-bg); border:1.5px solid var(--cinza-borda); border-radius:var(--radius-sm); padding:.55rem 2.6rem .55rem .9rem; font-family:'DM Sans',sans-serif; font-size:.88rem; color:var(--texto-principal); letter-spacing:.04em; transition:var(--transition); }
+.ip-input::placeholder { color:var(--texto-terciario); letter-spacing:normal; }
+.ip-input:focus { border-color:var(--azul); background:var(--cinza-card); box-shadow:0 0 0 3px rgba(4,76,184,.1); outline:none; }
+.ip-input.valid   { border-color:#10B981; background:rgba(16,185,129,.04); }
+.ip-input.invalid { border-color:#EF4444; background:rgba(239,68,68,.04); }
+.ip-status-icon { position:absolute; right:.75rem; font-size:.95rem; pointer-events:none; opacity:0; transition:opacity .2s; }
+.ip-status-icon.show { opacity:1; }
+.ip-hint { font-size:.7rem; color:var(--texto-terciario); margin-top:.3rem; min-height:1rem; transition:color .2s; }
+.ip-hint.err { color:#EF4444; }
+.ip-hint.ok  { color:#10B981; }
+.ip-btn-row { display:flex; gap:.6rem; }
+.ip-btn { border:none; border-radius:var(--radius-sm); padding:.55rem 1.15rem; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:700; cursor:pointer; transition:var(--transition); }
+.ip-btn-search { background:var(--azul); color:#fff; }
+.ip-btn-search:hover { background:var(--azul-escuro); }
+.ip-btn-search:disabled { opacity:.45; cursor:not-allowed; }
+.ip-btn-clear { background:var(--cinza-bg); color:var(--texto-secundario); border:1.5px solid var(--cinza-borda); }
+.ip-btn-clear:hover { border-color:var(--vermelho); color:var(--vermelho); background:rgba(239,68,68,.06); }
+.ip-results { margin-top:1.1rem; display:none; }
+.ip-results.show { display:block; }
+.ip-results-title { font-size:.76rem; font-weight:700; color:var(--texto-terciario); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.65rem; }
+.ip-results-list { display:flex; flex-direction:column; gap:.5rem; }
+.ip-result-item { display:flex; align-items:center; justify-content:space-between; padding:.7rem 1rem; background:var(--cinza-bg); border:1px solid var(--cinza-borda); border-radius:var(--radius-sm); gap:.75rem; flex-wrap:wrap; }
+.ip-result-name { font-weight:700; font-size:.85rem; color:var(--texto-principal); }
+.ip-result-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.ip-result-ip { font-family:'Sora',sans-serif; font-size:.75rem; font-weight:600; color:var(--azul); background:rgba(4,76,184,.09); padding:.15rem .55rem; border-radius:100px; letter-spacing:.04em; }
+.ip-no-result { text-align:center; padding:1.5rem; color:var(--texto-terciario); font-size:.85rem; font-weight:600; }
+
+/* Tags filtros ativos */
+.active-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:1rem; min-height:0; }
+.filter-tag { display:inline-flex; align-items:center; gap:.35rem; background:rgba(4,76,184,.1); border:1px solid rgba(4,76,184,.25); color:var(--azul); padding:.2rem .55rem .2rem .65rem; border-radius:100px; font-size:.74rem; font-weight:600; animation:tagIn .2s ease; }
+@keyframes tagIn { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:scale(1); } }
+.tag-remove { background:none; border:none; cursor:pointer; color:var(--azul); line-height:1; font-size:.9rem; padding:0 .1rem; opacity:.65; transition:opacity .15s; }
+.tag-remove:hover { opacity:1; }
+
+/* Resultados count */
+.results-bar { display:flex; align-items:center; justify-content:space-between; padding:.6rem 1rem; background:var(--cinza-bg); border:1px solid var(--cinza-borda); border-radius:var(--radius-sm); margin-top:.85rem; font-size:.8rem; }
+.results-count { font-weight:700; color:var(--texto-principal); }
+.results-count span { color:var(--azul); }
+.btn-clear-all { background:none; border:none; cursor:pointer; font-size:.78rem; font-weight:600; color:var(--vermelho); font-family:'DM Sans',sans-serif; transition:var(--transition); padding:.1rem .4rem; border-radius:4px; }
+.btn-clear-all:hover { background:rgba(239,68,68,.08); }
+
+/* ══════ TABLE ══════ */
+.table-section { background:var(--cinza-card); border:1px solid var(--cinza-borda); border-radius:var(--radius); box-shadow:var(--sombra); overflow:hidden; transition:var(--transition); }
+.table-hdr { padding:1.25rem 1.5rem; border-bottom:1px solid var(--cinza-borda); display:flex; align-items:center; justify-content:space-between; }
+.table-title { font-family:'Sora',sans-serif; font-weight:700; font-size:.95rem; color:var(--texto-principal); }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:.82rem; }
+thead th { padding:.75rem 1.25rem; text-align:left; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--texto-terciario); background:var(--cinza-bg); border-bottom:1px solid var(--cinza-borda); white-space:nowrap; }
+tbody tr { border-bottom:1px solid var(--cinza-borda); transition:background .15s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:rgba(4,76,184,.03); }
+tbody td { padding:.85rem 1.25rem; color:var(--texto-secundario); vertical-align:middle; }
+.td-name { font-weight:700; color:var(--texto-principal); font-size:.85rem; }
+.badge-status { display:inline-flex; align-items:center; gap:.35rem; padding:.22rem .65rem; border-radius:100px; font-size:.72rem; font-weight:700; }
+.badge-status::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.s-ativo { background:rgba(16,185,129,.1); color:#059669; }
+.s-inativo { background:rgba(239,68,68,.09); color:#DC2626; }
+.s-dev { background:rgba(245,158,11,.1); color:#D97706; }
+.badge-tipo { display:inline-block; padding:.18rem .55rem; border-radius:5px; font-size:.7rem; font-weight:700; background:rgba(4,76,184,.1); color:var(--azul); }
+.no-results { text-align:center; padding:3rem; color:var(--texto-terciario); }
+.no-results svg { width:48px; height:48px; fill:var(--cinza-borda); margin-bottom:1rem; display:block; margin:0 auto .75rem; }
+.no-results p { font-size:.88rem; font-weight:600; margin-bottom:.35rem; color:var(--texto-secundario); }
+.no-results small { font-size:.78rem; }
+
+/* Paginação */
+.pagination { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border-top:1px solid var(--cinza-borda); font-size:.8rem; }
+.pag-info { color:var(--texto-terciario); }
+.pag-btns { display:flex; gap:.4rem; }
+.pag-btn { background:transparent; border:1px solid var(--cinza-borda); color:var(--texto-secundario); width:32px; height:32px; border-radius:7px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.8rem; transition:var(--transition); display:flex; align-items:center; justify-content:center; }
+.pag-btn:hover:not(:disabled) { border-color:var(--azul); color:var(--azul); background:rgba(4,76,184,.05); }
+.pag-btn.active { background:var(--azul); border-color:var(--azul); color:#fff; font-weight:700; }
+.pag-btn:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ══════ ANIMAÇÕES ══════ */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.kpi-card { animation:fadeUp .5s ease both; }
+.kpi-card:nth-child(1){animation-delay:.05s} .kpi-card:nth-child(2){animation-delay:.1s}
+.kpi-card:nth-child(3){animation-delay:.15s} .kpi-card:nth-child(4){animation-delay:.2s}
+.hero-card { animation:fadeUp .5s ease .25s both; }
+.hero-card:nth-child(2){animation-delay:.3s}
+
+/* ══════ RESPONSIVE ══════ */
+@media(max-width:1200px){
+  .hero-section{grid-template-columns:1fr;}
+  .kpi-strip{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:900px){
+  .secondary-section{grid-template-columns:1fr;}
+  .filter-groups{grid-template-columns:repeat(2,1fr);}
+  .ip-input-row{flex-direction:column;}
+}
+@media(max-width:768px){
+  .sidebar{width:0;padding:0;overflow:hidden;}
+  .main-area{margin-left:0;}
+  .sidebar:hover~.main-area{margin-left:0;}
+  .content{padding:1rem;}
+  .kpi-strip{grid-template-columns:repeat(2,1fr);}
+  .header-inner{padding:.65rem 1rem;}
+}
+@media(max-width:500px){
+  .kpi-strip{grid-template-columns:1fr;}
+  .filter-groups{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <a href="#" class="sb-logo">
+    <div class="sb-icon">PS</div>
+    <div class="sb-logo-text"><strong>Portal de Sistemas</strong><span>Gov. Tocantins</span></div>
+  </a>
+
+  <div class="sb-sec">
+    <span class="sb-label">Principal</span>
+    <button class="nav-item active" title="Dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </button>
+    <a href="sistemas.html" class="nav-item" title="Sistemas">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <span class="nav-label">Sistemas</span>
+    </a>
+    <a href="#" class="nav-item" title="Categorias">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+      <span class="nav-label">Categorias</span>
+    </a>
+    <a href="#" class="nav-item" title="Permissões">
+      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+      <span class="nav-label">Permissões</span>
+    </a>
+  </div>
+
+  <div class="sb-div"></div>
+  <div class="sb-sec">
+    <span class="sb-label">Cadastros</span>
+    <a href="cadastro-sistemas.html" class="nav-item" title="Cadastrar Sistema">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span class="nav-label">Cad. Sistema</span>
+    </a>
+    <div>
+      <button class="nav-item" title="Formulários" onclick="this.nextElementSibling.classList.toggle('open')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span class="nav-label">Formulários ▾</span>
+      </button>
+      <div class="sub-nav">
+        <a href="#" class="sub-item">Cadastrar Formulário</a>
+        <a href="#" class="sub-item">Listar Formulários</a>
+      </div>
+    </div>
+    <a href="cadastro-sistema-externo.html" class="nav-item" title="Sistemas Externos">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+      <span class="nav-label">Sistemas Externos</span>
+    </a>
+  </div>
+
+  <div class="sb-div"></div>
+  <div class="sb-sec">
+    <span class="sb-label">Conta</span>
+    <a href="#" class="nav-item" title="Meu Perfil">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span class="nav-label">Meu Perfil</span>
+    </a>
+  </div>
+</aside>
+
+<main class="main-area">
+  <header class="admin-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="header-title">Dashboard Analítico</div>
+        <div class="header-sub">Portal de Sistemas — Gov. Tocantins</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-theme" id="themeToggle">🌙 Modo Escuro</button>
+        <div class="user-chip">
+          <div class="u-avatar">ST</div>
+          <span class="u-name">Stefan</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="kpi-strip">
+      <div class="kpi-card" style="--kpi-color:#044CB8">
+        <div class="kpi-label">Total de Sistemas</div>
+        <div class="kpi-value" id="kpiTotal">250</div>
+        <div class="kpi-sub"><span class="kpi-badge up">↑ +12 este mês</span></div>
+        <div class="kpi-icon" style="background:rgba(4,76,184,.08)">🖥️</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:#10B981">
+        <div class="kpi-label">Sistemas Ativos</div>
+        <div class="kpi-value" id="kpiAtivos">210</div>
+        <div class="kpi-sub"><span class="kpi-badge up">84% do total</span></div>
+        <div class="kpi-icon" style="background:rgba(16,185,129,.08)">✅</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:#EF4444">
+        <div class="kpi-label">Sistemas Inativos</div>
+        <div class="kpi-value" id="kpiInativos">25</div>
+        <div class="kpi-sub"><span class="kpi-badge down">10% do total</span></div>
+        <div class="kpi-icon" style="background:rgba(239,68,68,.08)">⚠️</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:#F59E0B">
+        <div class="kpi-label">Em Desenvolvimento</div>
+        <div class="kpi-value" id="kpiDev">15</div>
+        <div class="kpi-sub"><span class="kpi-badge up">6% do total</span></div>
+        <div class="kpi-icon" style="background:rgba(245,158,11,.08)">🔧</div>
+      </div>
+    </div>
+
+    <div class="hero-section">
+      <!-- Gráfico de Situação: apenas Ativos e Inativos -->
+      <div class="hero-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title">Situação Geral</div>
+            <div class="chart-subtitle">Distribuição por status operacional</div>
+          </div>
+          <a href="#" class="btn-sm">Detalhes →</a>
+        </div>
+        <div class="hero-doughnut">
+          <canvas id="chartSituacao"></canvas>
+          <div class="doughnut-center">
+            <div class="doughnut-center-num" id="totalDonut">250</div>
+            <div class="doughnut-center-lbl">Sistemas</div>
+          </div>
+        </div>
+        <div class="sit-legend" id="sitLegend"></div>
+      </div>
+
+      <div class="hero-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title">Tipos de Sistemas</div>
+            <div class="chart-subtitle">Distribuição por natureza tecnológica</div>
+          </div>
+          <a href="#" class="btn-sm">Detalhes →</a>
+        </div>
+        <div class="chart-area hero-bar">
+          <canvas id="chartTipos"></canvas>
+        </div>
+        <div class="tipos-chips" id="tiposChips"></div>
+      </div>
+    </div>
+
+    <div class="secondary-section">
+      <div class="sec-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title" style="font-size:.9rem">Sistemas por Categoria</div>
+          </div>
+          <a href="#" class="btn-sm">Ver →</a>
+        </div>
+        <div class="sec-chart-area"><canvas id="chartCategoria"></canvas></div>
+      </div>
+      <div class="sec-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title" style="font-size:.9rem">Top 5 Órgãos</div>
+          </div>
+          <a href="#" class="btn-sm">Ver →</a>
+        </div>
+        <div class="sec-chart-area"><canvas id="chartOrgao"></canvas></div>
+      </div>
+      <div class="sec-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title" style="font-size:.9rem">Sistemas por Esfera</div>
+          </div>
+          <a href="#" class="btn-sm">Ver →</a>
+        </div>
+        <div class="sec-chart-area"><canvas id="chartEsfera"></canvas></div>
+      </div>
+      <div class="sec-card">
+        <div class="chart-hdr">
+          <div class="chart-title-wrap">
+            <div class="chart-title" style="font-size:.9rem">Sistemas por Ambiente</div>
+          </div>
+          <a href="#" class="btn-sm">Ver →</a>
+        </div>
+        <div class="sec-chart-area"><canvas id="chartAmbiente"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ══ FILTROS AVANÇADOS ══ -->
+    <div class="filters-section">
+      <div class="filters-hdr">
+        <div class="filters-title">
+          <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+          Busca e Filtros Avançados
+          <span class="active-filters-count" id="activeFiltersCount">0 filtros</span>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-sm btn-clear-all" id="btnClearAll" onclick="clearAllFilters()" style="color:var(--vermelho);border-color:var(--vermelho)">✕ Limpar Filtros</button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <input type="text" class="search-input" id="searchMain" placeholder="Buscar por nome, responsável, tecnologia, integração..." oninput="handleSearch()">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+
+      <div class="filter-groups">
+        <div class="filter-group">
+          <label class="filter-group-label">Tipo de Sistema</label>
+          <select class="filter-select" id="f-tipo" onchange="applyFilter('tipo',this)">
+            <option value="">Todos os Tipos</option>
+            <option value="Web">Web</option>
+            <option value="Hotsite">Hotsite</option>
+            <option value="API">API</option>
+            <option value="Barramento">Barramento</option>
+            <option value="Desktop">Desktop</option>
+            <option value="Mobile">Mobile</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Status / Situação</label>
+          <select class="filter-select" id="f-status" onchange="applyFilter('status',this)">
+            <option value="">Todos os Status</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+            <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Linguagem</label>
+          <select class="filter-select" id="f-linguagem" onchange="applyFilter('linguagem',this)">
+            <option value="">Todas</option>
+            <option value="Java">Java</option>
+            <option value="PHP">PHP</option>
+            <option value="Python">Python</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="C#">.NET / C#</option>
+            <option value="Delphi">Delphi</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Framework</label>
+          <select class="filter-select" id="f-framework" onchange="applyFilter('framework',this)">
+            <option value="">Todos</option>
+            <option value="Spring Boot">Spring Boot</option>
+            <option value="Laravel">Laravel</option>
+            <option value="Django">Django</option>
+            <option value="Angular">Angular</option>
+            <option value="React">React</option>
+            <option value="Vue">Vue.js</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Banco de Dados</label>
+          <select class="filter-select" id="f-banco" onchange="applyFilter('banco',this)">
+            <option value="">Todos</option>
+            <option value="PostgreSQL">PostgreSQL</option>
+            <option value="MySQL">MySQL</option>
+            <option value="Oracle">Oracle</option>
+            <option value="SQL Server">SQL Server</option>
+            <option value="MongoDB">MongoDB</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Manutenção</label>
+          <select class="filter-select" id="f-manutencao" onchange="applyFilter('manutencao',this)">
+            <option value="">Todas</option>
+            <option value="Equipe Interna">Equipe Interna</option>
+            <option value="Empresa Terceirizada">Empresa Terceirizada</option>
+            <option value="Mista">Mista</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Visibilidade</label>
+          <select class="filter-select" id="f-visibilidade" onchange="applyFilter('visibilidade',this)">
+            <option value="">Todas</option>
+            <option value="Público">Público</option>
+            <option value="Interno">Interno</option>
+            <option value="Restrito">Restrito</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Hospedagem</label>
+          <select class="filter-select" id="f-hospedagem" onchange="applyFilter('hospedagem',this)">
+            <option value="">Todas</option>
+            <option value="On-Premise">On-Premise</option>
+            <option value="Nuvem Pública">Nuvem Pública</option>
+            <option value="Nuvem Privada">Nuvem Privada</option>
+            <option value="Híbrida">Híbrida</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Ambiente</label>
+          <select class="filter-select" id="f-ambiente" onchange="applyFilter('ambiente',this)">
+            <option value="">Todos</option>
+            <option value="Produção">Produção</option>
+            <option value="Homologação">Homologação</option>
+            <option value="Teste">Teste</option>
+            <option value="Desenvolvimento">Desenvolvimento</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Esfera</label>
+          <select class="filter-select" id="f-esfera" onchange="applyFilter('esfera',this)">
+            <option value="">Todas</option>
+            <option value="Estadual">Estadual</option>
+            <option value="Federal">Federal</option>
+            <option value="Municipal">Municipal</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-group-label">Sistema Legado</label>
+          <select class="filter-select" id="f-legado" onchange="applyFilter('legado',this)">
+            <option value="">Todos</option>
+            <option value="Sim">Sim (Legado)</option>
+            <option value="Não">Não (Moderno)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="active-tags" id="activeTags"></div>
+
+      <div class="results-bar">
+        <div class="results-count">Exibindo <span id="resultsShown">0</span> de <span id="resultsTotal">0</span> sistemas</div>
+        <button class="btn-clear-all" onclick="clearAllFilters()">Limpar tudo</button>
+      </div>
+    </div>
+
+    <!-- ══ BUSCA POR IP ══ -->
+    <div class="ip-filter-section">
+      <div class="ip-filter-hdr">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        <div>
+          <div class="ip-filter-title">Busca por Endereço IP</div>
+          <div class="ip-filter-subtitle">Localize sistemas pelo IP do servidor ou endereço de rede</div>
+        </div>
+      </div>
+
+      <div class="ip-input-row">
+        <div class="ip-input-group">
+          <label class="ip-input-label">Endereço IP</label>
+          <div class="ip-input-wrap">
+            <input
+              type="text"
+              class="ip-input"
+              id="ipInput"
+              placeholder="Ex.: 192.168.1.10 ou 10.0.0."
+              maxlength="15"
+              oninput="handleIpInput(this)"
+              onkeydown="if(event.key==='Enter') searchByIp()"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="ip-status-icon" id="ipStatusIcon"></span>
+          </div>
+          <div class="ip-hint" id="ipHint">Digite um IP completo (ex.: 192.168.1.10) ou parcial para busca por prefixo</div>
+        </div>
+        <div class="ip-btn-row">
+          <button class="ip-btn ip-btn-search" id="ipSearchBtn" onclick="searchByIp()" disabled>
+            🔍 Buscar IP
+          </button>
+          <button class="ip-btn ip-btn-clear" onclick="clearIpSearch()">
+            ✕ Limpar
+          </button>
+        </div>
+      </div>
+
+      <div class="ip-results" id="ipResults">
+        <div class="ip-results-title" id="ipResultsTitle"></div>
+        <div class="ip-results-list" id="ipResultsList"></div>
+      </div>
+    </div>
+
+    <!-- ══ TABELA ══ -->
+    <div class="table-section">
+      <div class="table-hdr">
+        <div class="table-title">Sistemas Cadastrados</div>
+        <a href="#" class="btn-sm">+ Novo Sistema</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome do Sistema</th>
+              <th>Tipo</th>
+              <th>Status</th>
+              <th>Linguagem</th>
+              <th>Banco</th>
+              <th>Manutenção</th>
+              <th>Hospedagem</th>
+              <th>Responsável</th>
+            </tr>
+          </thead>
+          <tbody id="systemsTable"></tbody>
+        </table>
+        <div id="noResults" class="no-results" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M11 19c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-18C4.48 1 0 5.48 0 11s4.48 10 10 10c2.125 0 4.078-.665 5.68-1.784l3.55 3.55 1.414-1.414-3.55-3.55A9.938 9.938 0 0 0 20 11c0-5.52-4.48-10-10-10z"/></svg>
+          <p>Nenhum sistema encontrado</p>
+          <small>Tente ajustar os filtros ou a busca</small>
+        </div>
+      </div>
+      <div class="pagination">
+        <div class="pag-info" id="pagInfo"></div>
+        <div class="pag-btns" id="pagBtns"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ════════════════════════════════════════════
+//  DADOS SIMULADOS — IP adicionado a cada sistema
+// ════════════════════════════════════════════
+const SYSTEMS_DATA = [
+  {nome:"SIGAF — Sistema Integrado de Gestão Financeira",tipo:"Web",status:"Ativo",linguagem:"Java",framework:"Spring Boot",banco:"Oracle",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Carlos Mendes",ip:"10.1.0.11"},
+  {nome:"Portal Transparência TO",tipo:"Web",status:"Ativo",linguagem:"PHP",framework:"Laravel",banco:"PostgreSQL",manutencao:"Empresa Terceirizada",visibilidade:"Público",hospedagem:"Nuvem Pública",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Ana Lima",ip:"200.152.38.5"},
+  {nome:"SEI — Sistema Eletrônico de Informações",tipo:"Web",status:"Ativo",linguagem:"PHP",framework:"Laravel",banco:"MySQL",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Federal",legado:"Não",responsavel:"João Costa",ip:"10.1.0.22"},
+  {nome:"SISPAF — Pagamento Funcional",tipo:"Desktop",status:"Ativo",linguagem:"Delphi",framework:"—",banco:"Oracle",manutencao:"Empresa Terceirizada",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Sim",responsavel:"Marcos Reis",ip:"10.1.1.5"},
+  {nome:"App Cidadão TO",tipo:"Mobile",status:"Ativo",linguagem:"JavaScript",framework:"React",banco:"MongoDB",manutencao:"Empresa Terceirizada",visibilidade:"Público",hospedagem:"Nuvem Pública",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Priscila Mota",ip:"200.152.38.20"},
+  {nome:"API Gateway Integração",tipo:"API",status:"Ativo",linguagem:"Java",framework:"Spring Boot",banco:"PostgreSQL",manutencao:"Equipe Interna",visibilidade:"Restrito",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Thiago Souza",ip:"10.1.0.50"},
+  {nome:"Barramento de Serviços GOVTO",tipo:"Barramento",status:"Ativo",linguagem:"Java",framework:"Spring Boot",banco:"PostgreSQL",manutencao:"Equipe Interna",visibilidade:"Restrito",hospedagem:"On-Premise",ambiente:"Teste",esfera:"Estadual",legado:"Não",responsavel:"Rafael Braga",ip:"10.1.0.51"},
+  {nome:"Hotsite SEGURANÇA NO TRÂNSITO",tipo:"Hotsite",status:"Inativo",linguagem:"PHP",framework:"WordPress",banco:"MySQL",manutencao:"Empresa Terceirizada",visibilidade:"Público",hospedagem:"Nuvem Pública",ambiente:"Produção",esfera:"Estadual",legado:"Sim",responsavel:"Letícia Neves",ip:"200.152.39.8"},
+  {nome:"SIEDU — Gestão Escolar",tipo:"Web",status:"Ativo",linguagem:"Python",framework:"Django",banco:"PostgreSQL",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Fernanda Rocha",ip:"10.2.0.15"},
+  {nome:"SAUDETOC — Saúde Digital",tipo:"Web",status:"Em Desenvolvimento",linguagem:"JavaScript",framework:"Angular",banco:"MongoDB",manutencao:"Empresa Terceirizada",visibilidade:"Interno",hospedagem:"Nuvem Privada",ambiente:"Homologação",esfera:"Estadual",legado:"Não",responsavel:"Diego Alves",ip:"172.16.5.30"},
+  {nome:"SIGA Rural — Agricultura",tipo:"Web",status:"Ativo",linguagem:"PHP",framework:"Laravel",banco:"MySQL",manutencao:"Empresa Terceirizada",visibilidade:"Público",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Renata Campos",ip:"10.2.1.8"},
+  {nome:"GRH — Gestão de Recursos Humanos",tipo:"Web",status:"Ativo",linguagem:"Java",framework:"Spring Boot",banco:"Oracle",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Pedro Vasconcelos",ip:"10.1.0.33"},
+  {nome:"Consulta IPVA TO",tipo:"Hotsite",status:"Ativo",linguagem:"PHP",framework:"Laravel",banco:"MySQL",manutencao:"Equipe Interna",visibilidade:"Público",hospedagem:"Nuvem Pública",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Marcela Ferreira",ip:"200.152.38.44"},
+  {nome:"API NFS-e Municipal",tipo:"API",status:"Em Desenvolvimento",linguagem:"C#",framework:"ASP.NET",banco:"SQL Server",manutencao:"Empresa Terceirizada",visibilidade:"Restrito",hospedagem:"Nuvem Privada",ambiente:"Desenvolvimento",esfera:"Municipal",legado:"Não",responsavel:"Antônio Castro",ip:"172.16.5.55"},
+  {nome:"SISAM — Sistema Ambiental",tipo:"Web",status:"Ativo",linguagem:"Python",framework:"Django",banco:"PostgreSQL",manutencao:"Equipe Interna",visibilidade:"Público",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Isabela Martins",ip:"10.2.0.22"},
+  {nome:"SICOP — Obras Públicas",tipo:"Desktop",status:"Inativo",linguagem:"Delphi",framework:"—",banco:"SQL Server",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Sim",responsavel:"Leonardo Prado",ip:"10.1.1.9"},
+  {nome:"Integração SIAFI Federal",tipo:"Barramento",status:"Ativo",linguagem:"Java",framework:"Spring Boot",banco:"Oracle",manutencao:"Equipe Interna",visibilidade:"Restrito",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Federal",legado:"Não",responsavel:"Eduardo Cunha",ip:"10.1.0.70"},
+  {nome:"App Policial TO",tipo:"Mobile",status:"Em Desenvolvimento",linguagem:"JavaScript",framework:"React",banco:"MongoDB",manutencao:"Empresa Terceirizada",visibilidade:"Restrito",hospedagem:"Nuvem Privada",ambiente:"Homologação",esfera:"Estadual",legado:"Não",responsavel:"Gabriel Santos",ip:"172.16.5.41"},
+  {nome:"SICAM — Controle de Ativos",tipo:"Web",status:"Ativo",linguagem:"PHP",framework:"Laravel",banco:"MySQL",manutencao:"Equipe Interna",visibilidade:"Interno",hospedagem:"On-Premise",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Vanessa Torres",ip:"10.2.1.17"},
+  {nome:"BOLETIM Digital Segurança Pública",tipo:"Web",status:"Ativo",linguagem:"C#",framework:"ASP.NET",banco:"SQL Server",manutencao:"Empresa Terceirizada",visibilidade:"Público",hospedagem:"Nuvem Pública",ambiente:"Produção",esfera:"Estadual",legado:"Não",responsavel:"Rodrigo Lima",ip:"200.152.38.61"}
+];
+
+// ════════════════════════════════════════════
+//  ESTADO DOS FILTROS
+// ════════════════════════════════════════════
+let activeFilters = {};
+let searchQuery = '';
+let currentPage = 1;
+const PAGE_SIZE = 8;
+let filteredData = [...SYSTEMS_DATA];
+
+function getFilteredData() {
+  return SYSTEMS_DATA.filter(s => {
+    const search = searchQuery.toLowerCase();
+    if (search && !Object.values(s).some(v => String(v).toLowerCase().includes(search))) return false;
+    for (const [key, val] of Object.entries(activeFilters)) {
+      if (val && s[key] !== val) return false;
+    }
+    return true;
+  });
+}
+
+function applyFilter(key, sel) {
+  const val = sel.value;
+  if (val) { activeFilters[key] = val; sel.classList.add('active'); }
+  else { delete activeFilters[key]; sel.classList.remove('active'); }
+  currentPage = 1;
+  render();
+}
+
+function handleSearch() {
+  const input = document.getElementById('searchMain');
+  searchQuery = input.value;
+  document.getElementById('searchClear').classList.toggle('visible', searchQuery.length > 0);
+  currentPage = 1;
+  render();
+}
+
+function clearSearch() {
+  document.getElementById('searchMain').value = '';
+  searchQuery = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  currentPage = 1;
+  render();
+}
+
+function clearAllFilters() {
+  activeFilters = {};
+  searchQuery = '';
+  document.getElementById('searchMain').value = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  document.querySelectorAll('.filter-select').forEach(s => { s.value = ''; s.classList.remove('active'); });
+  currentPage = 1;
+  render();
+}
+
+function render() {
+  filteredData = getFilteredData();
+  renderActiveTags();
+  renderTable();
+  renderPagination();
+  updateKPIs();
+  updateCharts();
+  const count = Object.keys(activeFilters).length + (searchQuery ? 1 : 0);
+  const badge = document.getElementById('activeFiltersCount');
+  badge.textContent = count + (count === 1 ? ' filtro ativo' : ' filtros ativos');
+  badge.classList.toggle('visible', count > 0);
+}
+
+function renderActiveTags() {
+  const container = document.getElementById('activeTags');
+  const labels = {tipo:'Tipo',status:'Status',linguagem:'Linguagem',framework:'Framework',banco:'Banco',manutencao:'Manutenção',visibilidade:'Visibilidade',hospedagem:'Hospedagem',ambiente:'Ambiente',esfera:'Esfera',legado:'Legado'};
+  let html = '';
+  if (searchQuery) html += `<span class="filter-tag">🔍 "${searchQuery}" <button class="tag-remove" onclick="clearSearch()">✕</button></span>`;
+  for (const [k, v] of Object.entries(activeFilters)) {
+    html += `<span class="filter-tag">${labels[k]||k}: ${v} <button class="tag-remove" onclick="removeFilter('${k}')">✕</button></span>`;
+  }
+  container.innerHTML = html;
+}
+
+function removeFilter(key) {
+  delete activeFilters[key];
+  const sel = document.getElementById('f-' + key);
+  if (sel) { sel.value = ''; sel.classList.remove('active'); }
+  currentPage = 1;
+  render();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('systemsTable');
+  const noRes = document.getElementById('noResults');
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page = filteredData.slice(start, start + PAGE_SIZE);
+  document.getElementById('resultsShown').textContent = filteredData.length;
+  document.getElementById('resultsTotal').textContent = SYSTEMS_DATA.length;
+  if (filteredData.length === 0) { tbody.innerHTML = ''; noRes.style.display = 'block'; return; }
+  noRes.style.display = 'none';
+  tbody.innerHTML = page.map(s => {
+    const statusCls = s.status === 'Ativo' ? 's-ativo' : s.status === 'Inativo' ? 's-inativo' : 's-dev';
+    return `<tr>
+      <td class="td-name">${s.nome}</td>
+      <td><span class="badge-tipo">${s.tipo}</span></td>
+      <td><span class="badge-status ${statusCls}">${s.status}</span></td>
+      <td>${s.linguagem}</td>
+      <td>${s.banco}</td>
+      <td>${s.manutencao}</td>
+      <td>${s.hospedagem}</td>
+      <td>${s.responsavel}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  const info = document.getElementById('pagInfo');
+  const btns = document.getElementById('pagBtns');
+  const start = (currentPage - 1) * PAGE_SIZE + 1;
+  const end = Math.min(currentPage * PAGE_SIZE, filteredData.length);
+  info.textContent = filteredData.length ? `${start}–${end} de ${filteredData.length}` : '';
+  let html = `<button class="pag-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= totalPages; i++) html += `<button class="pag-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  html += `<button class="pag-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages||!totalPages?'disabled':''}>›</button>`;
+  btns.innerHTML = html;
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+  renderPagination();
+}
+
+// ════════════════════════════════════════════
+//  KPIs DINÂMICOS
+// ════════════════════════════════════════════
+function updateKPIs() {
+  const data = filteredData;
+  document.getElementById('kpiTotal').textContent = data.length;
+  document.getElementById('kpiAtivos').textContent = data.filter(s=>s.status==='Ativo').length;
+  document.getElementById('kpiInativos').textContent = data.filter(s=>s.status==='Inativo').length;
+  document.getElementById('kpiDev').textContent = data.filter(s=>s.status==='Em Desenvolvimento').length;
+}
+
+// ════════════════════════════════════════════
+//  BUSCA POR IP
+// ════════════════════════════════════════════
+// Valida/testa IP parcial ou completo
+function isValidIpOrPrefix(val) {
+  if (!val) return false;
+  // aceita prefixos: "10", "10.1", "10.1.0.", "192.168.1.10"
+  const clean = val.trim();
+  // IP completo
+  const fullRe = /^(\d{1,3}\.){3}\d{1,3}$/;
+  if (fullRe.test(clean)) {
+    return clean.split('.').every(o => +o >= 0 && +o <= 255);
+  }
+  // Prefixo parcial (termina com dígito ou com ponto)
+  const partialRe = /^(\d{1,3}\.){0,3}\d{0,3}$/;
+  return partialRe.test(clean) && clean.length > 0;
+}
+
+function handleIpInput(input) {
+  const val = input.value.trim();
+  const icon = document.getElementById('ipStatusIcon');
+  const hint = document.getElementById('ipHint');
+  const btn  = document.getElementById('ipSearchBtn');
+
+  // Formata: permite apenas dígitos e pontos, máx 15 chars
+  let formatted = input.value.replace(/[^0-9.]/g, '');
+  // Evita pontos duplos
+  formatted = formatted.replace(/\.{2,}/g, '.');
+  if (input.value !== formatted) input.value = formatted;
+
+  if (!formatted) {
+    input.className = 'ip-input';
+    icon.textContent = ''; icon.className = 'ip-status-icon';
+    hint.textContent = 'Digite um IP completo (ex.: 192.168.1.10) ou parcial para busca por prefixo';
+    hint.className = 'ip-hint';
+    btn.disabled = true;
+    return;
+  }
+
+  const valid = isValidIpOrPrefix(formatted);
+  if (valid) {
+    input.className = 'ip-input valid';
+    icon.textContent = '✓'; icon.className = 'ip-status-icon show'; icon.style.color = '#10B981';
+    const isPartial = !/^(\d{1,3}\.){3}\d{1,3}$/.test(formatted);
+    hint.textContent = isPartial
+      ? `Buscando sistemas com IP iniciando em "${formatted}"`
+      : `Buscando sistemas com IP exato "${formatted}"`;
+    hint.className = 'ip-hint ok';
+    btn.disabled = false;
+  } else {
+    input.className = 'ip-input invalid';
+    icon.textContent = '✗'; icon.className = 'ip-status-icon show'; icon.style.color = '#EF4444';
+    hint.textContent = 'Formato inválido — use apenas números (0–255) separados por pontos';
+    hint.className = 'ip-hint err';
+    btn.disabled = true;
+  }
+}
+
+function searchByIp() {
+  const query = document.getElementById('ipInput').value.trim();
+  if (!query || !isValidIpOrPrefix(query)) return;
+
+  const matches = SYSTEMS_DATA.filter(s => s.ip && s.ip.startsWith(query));
+
+  const resultsEl = document.getElementById('ipResults');
+  const titleEl   = document.getElementById('ipResultsTitle');
+  const listEl    = document.getElementById('ipResultsList');
+
+  resultsEl.classList.add('show');
+
+  if (matches.length === 0) {
+    titleEl.textContent = `Nenhum sistema encontrado para o IP "${query}"`;
+    listEl.innerHTML = `<div class="ip-no-result">🔍 Nenhum registro com esse endereço IP na base de dados.</div>`;
+    return;
+  }
+
+  titleEl.textContent = `${matches.length} sistema${matches.length > 1 ? 's' : ''} encontrado${matches.length > 1 ? 's' : ''} para "${query}"`;
+
+  listEl.innerHTML = matches.map(s => {
+    const statusCls = s.status === 'Ativo' ? 's-ativo' : s.status === 'Inativo' ? 's-inativo' : 's-dev';
+    return `<div class="ip-result-item">
+      <div>
+        <div class="ip-result-name">${s.nome}</div>
+        <div style="font-size:.76rem;color:var(--texto-terciario);margin-top:.2rem">${s.tipo} · ${s.hospedagem} · ${s.responsavel}</div>
+      </div>
+      <div class="ip-result-meta">
+        <span class="ip-result-ip">🌐 ${s.ip}</span>
+        <span class="badge-status ${statusCls}">${s.status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearIpSearch() {
+  const input = document.getElementById('ipInput');
+  input.value = '';
+  input.className = 'ip-input';
+  document.getElementById('ipStatusIcon').className = 'ip-status-icon';
+  document.getElementById('ipHint').textContent = 'Digite um IP completo (ex.: 192.168.1.10) ou parcial para busca por prefixo';
+  document.getElementById('ipHint').className = 'ip-hint';
+  document.getElementById('ipSearchBtn').disabled = true;
+  document.getElementById('ipResults').classList.remove('show');
+}
+
+// ════════════════════════════════════════════
+//  CHARTS
+// ════════════════════════════════════════════
+const isDarkFn = () => document.body.classList.contains('dark');
+const textColor = () => isDarkFn() ? '#A0AEC0' : '#4A5568';
+const gridColor = () => isDarkFn() ? '#1E2D44' : '#DDE4EF';
+
+// SITUAÇÃO: apenas Ativos e Inativos (removido Em Desenvolvimento)
+const SITUACAO_COLORS = ['#10B981','#EF4444'];
+const SITUACAO_LABELS = ['Ativos','Inativos'];
+
+let chartSit, chartTipos, chartCat, chartOrg, chartEsf, chartAmb;
+
+function buildSituacaoData(data) {
+  return [
+    data.filter(s=>s.status==='Ativo').length,
+    data.filter(s=>s.status==='Inativo').length
+  ];
+}
+
+function buildTiposData(data) {
+  return ['Web','Hotsite','API','Barramento','Desktop','Mobile'].map(t => data.filter(s=>s.tipo===t).length);
+}
+
+const TIPOS_COLORS = ['#044CB8','#F5C800','#10B981','#7C3AED','#F59E0B','#EF4444'];
+
+function initCharts() {
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  const data = filteredData;
+
+  // ── Situação Geral (Doughnut) — apenas Ativos e Inativos ──
+  const sitData = buildSituacaoData(data);
+  chartSit = new Chart(document.getElementById('chartSituacao').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: SITUACAO_LABELS,
+      datasets: [{ data: sitData, backgroundColor: SITUACAO_COLORS, borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '70%',
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} sistemas` } } }
+    }
+  });
+  renderSitLegend(sitData);
+  document.getElementById('totalDonut').textContent = data.length;
+
+  // ── Tipos de Sistemas ──
+  const tipos = ['Web','Hotsite','API','Barramento','Desktop','Mobile'];
+  chartTipos = new Chart(document.getElementById('chartTipos').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: tipos,
+      datasets: [{ label:'Sistemas', data: buildTiposData(data), backgroundColor: TIPOS_COLORS, borderRadius: 8, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => { const t=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0); const p=t?((ctx.parsed.y/t)*100).toFixed(1):0; return ` ${ctx.parsed.y} sistemas (${p}%)`; } } } },
+      scales: { x: { grid: { display:false }, ticks: { color:textColor(), font:{weight:'600',size:12} } }, y: { grid: { color:gridColor() }, ticks: { color:textColor(), precision:0 }, beginAtZero:true } }
+    }
+  });
+  renderTiposChips(tipos, buildTiposData(data));
+
+  // ── Categoria ──
+  chartCat = new Chart(document.getElementById('chartCategoria').getContext('2d'), {
+    type:'bar',
+    data:{ labels:['Governança','Corporativo','Pesquisa','Segurança','Rural','Saúde'], datasets:[{data:[47,24,17,25,46,29],backgroundColor:'#044CB8',borderRadius:5,borderSkipped:false}] },
+    options:{ responsive:true,maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{color:textColor(),font:{size:10}}}, y:{grid:{color:gridColor()},ticks:{color:textColor(),precision:0},beginAtZero:true} } }
+  });
+
+  // ── Top 5 Órgãos ──
+  chartOrg = new Chart(document.getElementById('chartOrgao').getContext('2d'), {
+    type:'bar',
+    data:{ labels:['SEDUC','SECIH','Naturatins','AGETO','SEAGRO'], datasets:[{data:[16,18,7,8,3],backgroundColor:'#F5C800',borderRadius:5,borderSkipped:false}] },
+    options:{ indexAxis:'y',responsive:true,maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{color:gridColor()},ticks:{color:textColor(),precision:0}}, y:{grid:{display:false},ticks:{color:textColor(),font:{size:10}}} } }
+  });
+
+  // ── Esfera ──
+  chartEsf = new Chart(document.getElementById('chartEsfera').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:['Estadual','Federal','Municipal','Privado'], datasets:[{data:[195,45,5,5],backgroundColor:['#044CB8','#1976D2','#F5C800','#64748b'],borderWidth:0,hoverOffset:4}] },
+    options:{ responsive:true,maintainAspectRatio:false,cutout:'60%', plugins:{legend:{position:'right',labels:{color:textColor(),font:{size:11},boxWidth:12,padding:12}}} }
+  });
+
+  // ── Ambiente ──
+  chartAmb = new Chart(document.getElementById('chartAmbiente').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:['Produção','Homologação','Teste','Desenvolvimento'], datasets:[{data:[165,45,15,25],backgroundColor:['#10B981','#044CB8','#F59E0B','#EF4444'],borderWidth:0,hoverOffset:4}] },
+    options:{ responsive:true,maintainAspectRatio:false,cutout:'60%', plugins:{legend:{position:'right',labels:{color:textColor(),font:{size:11},boxWidth:12,padding:12}}} }
+  });
+}
+
+function renderSitLegend(vals) {
+  const total = vals.reduce((a,b)=>a+b,0)||1;
+  document.getElementById('sitLegend').innerHTML = SITUACAO_LABELS.map((lbl,i)=>`
+    <div class="sit-item">
+      <div class="sit-left"><div class="sit-dot" style="background:${SITUACAO_COLORS[i]}"></div><span class="sit-name">${lbl}</span></div>
+      <div class="sit-bar-wrap"><div class="sit-bar-fill" style="width:${(vals[i]/total*100).toFixed(1)}%;background:${SITUACAO_COLORS[i]}"></div></div>
+      <div class="sit-count">${vals[i]}</div>
+    </div>`).join('');
+}
+
+function renderTiposChips(tipos, vals) {
+  const total = vals.reduce((a,b)=>a+b,0)||1;
+  document.getElementById('tiposChips').innerHTML = tipos.map((t,i)=>`
+    <span class="tipo-chip" style="color:${TIPOS_COLORS[i]};border-color:${TIPOS_COLORS[i]}22">
+      <span class="tipo-chip-dot" style="background:${TIPOS_COLORS[i]}"></span>
+      ${t}: <strong>${vals[i]}</strong> <span style="opacity:.6">(${(vals[i]/total*100).toFixed(0)}%)</span>
+    </span>`).join('');
+}
+
+function updateCharts() {
+  const data = filteredData;
+  const sitVals = buildSituacaoData(data);
+  chartSit.data.datasets[0].data = sitVals;
+  chartSit.update();
+  renderSitLegend(sitVals);
+  document.getElementById('totalDonut').textContent = data.length;
+
+  const tiposVals = buildTiposData(data);
+  chartTipos.data.datasets[0].data = tiposVals;
+  chartTipos.update();
+  renderTiposChips(['Web','Hotsite','API','Barramento','Desktop','Mobile'], tiposVals);
+}
+
+// ════════════════════════════════════════════
+//  TEMA
+// ════════════════════════════════════════════
+const themeBtn = document.getElementById('themeToggle');
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.classList.add('dark');
+  themeBtn.textContent = '☀️ Modo Claro';
+}
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  themeBtn.textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+  [chartSit,chartTipos,chartCat,chartOrg,chartEsf,chartAmb].forEach(ch => {
+    if (!ch) return;
+    if (ch.options.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = textColor();
+    if (ch.options.scales?.x) { ch.options.scales.x.ticks.color = textColor(); ch.options.scales.x.grid.color = gridColor(); }
+    if (ch.options.scales?.y) { ch.options.scales.y.ticks.color = textColor(); ch.options.scales.y.grid.color = gridColor(); }
+    ch.update();
+  });
+});
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  render();
+});
+</script>
+</body>
+</html>

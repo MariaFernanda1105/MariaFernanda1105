@@ -1,0 +1,2592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Sistema — Portal de Sistemas</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,600;1,9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root{
+  --amarelo:#F5C800;--azul:#044CB8;--azul-escuro:#042F7A;--azul-claro:#1976D2;
+  --cinza-bg:#F4F6FA;--cinza-card:#FFFFFF;--cinza-borda:#E2E8F0;
+  --texto-principal:#0D1B3E;--texto-secundario:#4A5568;--texto-terciario:#718096;
+  --verde:#10B981;--vermelho:#EF4444;--laranja:#F59E0B;--roxo:#7C3AED;
+  --sombra-card:0 4px 20px rgba(4,44,120,0.06);--sombra-elevada:0 10px 40px rgba(4,44,120,0.12);
+  --radius:12px;--radius-sm:8px;--sb-w:80px;--sb-exp:252px;
+  --tr:background-color .3s ease,color .3s ease,border-color .3s ease;
+}
+body.dark-theme{
+  --cinza-bg:#0F172A;--cinza-card:#1E293B;--cinza-borda:#334155;
+  --texto-principal:#F8FAFC;--texto-secundario:#CBD5E1;--texto-terciario:#94A3B8;
+  --sombra-card:0 4px 15px rgba(0,0,0,.3);--sombra-elevada:0 10px 40px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+*:focus-visible{outline:3px solid var(--amarelo);outline-offset:2px;}
+body{font-family:'DM Sans',sans-serif;background:var(--cinza-bg);color:var(--texto-principal);transition:var(--tr);display:flex;min-height:100vh;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sb-w);background:var(--azul-escuro);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;padding:1.25rem 0;z-index:200;box-shadow:2px 0 12px rgba(0,0,0,.14);transition:width .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.sidebar:hover{width:var(--sb-exp);}
+.sidebar:hover~.main-area{margin-left:var(--sb-exp);}
+.main-area{margin-left:var(--sb-w);transition:margin-left .3s cubic-bezier(.4,0,.2,1);flex:1;display:flex;flex-direction:column;min-width:0;}
+.sb-logo{display:flex;align-items:center;gap:.85rem;padding:0 1.1rem;margin-bottom:1.75rem;text-decoration:none;overflow:hidden;}
+.sb-icon{width:42px;height:42px;min-width:42px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0;}
+.sb-logo-text strong{display:block;font-family:'Sora',sans-serif;font-weight:700;font-size:.82rem;color:#fff;white-space:nowrap;}
+.sb-logo-text span{font-size:.68rem;color:rgba(255,255,255,.4);white-space:nowrap;}
+.sb-section{padding:0 .75rem;margin-bottom:.2rem;}
+.sb-section-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28);padding:.75rem .5rem .3rem;white-space:nowrap;display:block;}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:.5rem .75rem;}
+.nav-item{display:flex;align-items:center;gap:.85rem;width:100%;height:42px;padding:0 .75rem;border-radius:9px;color:rgba(255,255,255,.5);text-decoration:none;transition:all .18s;white-space:nowrap;overflow:hidden;border-left:3px solid transparent;}
+.nav-item svg{width:19px;height:19px;fill:currentColor;flex-shrink:0;}
+.nav-label{font-size:.82rem;font-weight:600;opacity:0;transition:opacity .15s .05s;}
+.sidebar:hover .nav-label{opacity:1;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.09);}
+.nav-item.active{color:#fff;background:rgba(4,76,184,.3);border-left-color:var(--amarelo);}
+
+/* ══ HEADER ══ */
+.admin-header{height:64px;background:var(--cinza-card);border-bottom:1px solid var(--cinza-borda);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:90;transition:var(--tr);}
+.h-left .breadcrumb{font-size:.75rem;color:var(--texto-terciario);}
+.h-left .breadcrumb a{color:var(--azul);text-decoration:none;}
+.h-left .h-title{font-family:'Sora',sans-serif;font-weight:700;font-size:.95rem;color:var(--texto-principal);}
+.h-right{display:flex;align-items:center;gap:1rem;}
+.btn-theme{background:transparent;border:1.5px solid var(--cinza-borda);color:var(--texto-secundario);border-radius:8px;padding:.38rem .75rem;cursor:pointer;font-weight:600;font-size:.78rem;font-family:'DM Sans',sans-serif;transition:.2s;}
+.btn-theme:hover{border-color:var(--azul);color:var(--azul);}
+.user-chip{display:flex;align-items:center;gap:.6rem;}
+.user-name{font-family:'Sora',sans-serif;font-weight:700;font-size:.8rem;color:var(--texto-principal);}
+.user-av{width:32px;height:32px;background:var(--azul-escuro);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:.68rem;font-weight:700;color:#fff;}
+.page-wrap{padding:2rem;max-width:1200px;margin:0 auto;width:100%;}
+
+/* ══ FORM TABS ══ */
+.form-tabs-bar{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:var(--radius);box-shadow:var(--sombra-card);margin-bottom:1.5rem;padding:.5rem;display:flex;gap:.35rem;flex-wrap:wrap;position:sticky;top:64px;z-index:80;}
+.ftab{display:flex;align-items:center;gap:.5rem;padding:.5rem 1.1rem;border-radius:8px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--texto-terciario);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.ftab:hover{background:var(--cinza-bg);color:var(--texto-principal);}
+.ftab.active{background:var(--azul-escuro);color:#fff;}
+.ftab .ftab-num{width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.15);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;}
+.ftab:not(.active) .ftab-num{background:var(--cinza-borda);color:var(--texto-secundario);}
+.ftab .ftab-check{width:16px;height:16px;border-radius:50%;background:var(--verde);color:#fff;display:none;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;}
+.ftab.done .ftab-check{display:inline-flex;}
+.ftab.done .ftab-num{display:none;}
+
+/* Tab panes */
+.form-tab-pane{display:none;}
+.form-tab-pane.active{display:block;}
+
+/* Tab navigation footer */
+.tab-nav-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:var(--radius);gap:1rem;}
+.tab-progress{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--texto-terciario);}
+.tab-progress-dots{display:flex;gap:.3rem;}
+.tab-dot{width:8px;height:8px;border-radius:50%;background:var(--cinza-borda);transition:.2s;}
+.tab-dot.active{background:var(--azul);width:20px;border-radius:4px;}
+.tab-dot.done{background:var(--verde);}
+.tab-nav-btns{display:flex;gap:.65rem;}
+.btn-prev{background:transparent;border:1.5px solid var(--cinza-borda);color:var(--texto-secundario);padding:.65rem 1.25rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:.45rem;}
+.btn-prev:hover{border-color:var(--azul-claro);color:var(--azul);}
+.btn-next{background:var(--azul);color:#fff;border:none;padding:.65rem 1.5rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:.45rem;box-shadow:0 3px 10px rgba(4,76,184,.25);}
+.btn-next:hover{background:var(--azul-escuro);}
+.btn-submit-final{background:var(--azul-escuro);color:#fff;border:none;padding:.7rem 1.85rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:.18s;box-shadow:0 4px 12px rgba(4,47,122,.2);display:flex;align-items:center;gap:.5rem;}
+.btn-submit-final:hover{background:var(--azul);transform:translateY(-1px);}
+
+/* ══ CARDS DE SEÇÃO ══ */
+.nature-card{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:var(--radius);box-shadow:var(--sombra-card);padding:1.75rem;margin-bottom:1.25rem;transition:var(--tr);animation:fadeInUp .4s ease forwards;}
+.nature-card-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;color:var(--azul-escuro);margin-bottom:.3rem;padding-bottom:.65rem;border-bottom:2px solid var(--cinza-borda);display:flex;align-items:center;gap:.5rem;}
+body.dark-theme .nature-card-title{color:var(--azul-claro);}
+.nature-card-sub{font-size:.82rem;color:var(--texto-terciario);margin-top:.75rem;margin-bottom:1.35rem;}
+.npills{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.35rem;}
+.npill{display:flex;align-items:center;gap:.45rem;padding:.5rem 1rem;border-radius:24px;cursor:pointer;border:2px solid var(--cinza-borda);background:var(--cinza-bg);color:var(--texto-secundario);font-size:.82rem;font-weight:600;transition:all .18s;user-select:none;}
+.npill:hover{border-color:var(--azul-claro);background:rgba(4,76,184,.04);color:var(--azul);}
+.npill.on{border-color:var(--amarelo);background:rgba(245,200,0,.12);color:var(--azul-escuro);}
+body.dark-theme .npill.on{color:#fff;}
+.npill input{display:none;}
+.tipo-row{display:flex;flex-wrap:wrap;gap:.55rem;}
+.tpill{display:flex;align-items:center;gap:.4rem;padding:.38rem .8rem;border-radius:16px;cursor:pointer;border:1.5px solid var(--cinza-borda);background:var(--cinza-bg);color:var(--texto-secundario);font-size:.78rem;font-weight:600;transition:all .18s;user-select:none;}
+.tpill:hover{border-color:var(--azul-claro);color:var(--azul);}
+.tpill.on{border-color:#22C55E;background:rgba(34,197,94,.1);color:#15803d;}
+body.dark-theme .tpill.on{color:#4ade80;}
+.tpill input{display:none;}
+.status-pills{display:flex;flex-wrap:wrap;gap:.6rem;}
+.spill{display:flex;align-items:center;gap:.45rem;padding:.48rem 1.05rem;border-radius:24px;cursor:pointer;border:2px solid var(--cinza-borda);background:var(--cinza-bg);color:var(--texto-secundario);font-size:.82rem;font-weight:600;transition:all .18s;user-select:none;}
+.spill:hover{border-color:var(--azul-claro);color:var(--azul);}
+.spill input{display:none;}
+.spill[data-v="ativo"].on{border-color:#22C55E;background:rgba(34,197,94,.1);color:#15803d;}
+.spill[data-v="inativo"].on{border-color:var(--vermelho);background:rgba(239,68,68,.08);color:var(--vermelho);}
+.spill[data-v="desenvolvimento_ati"].on{border-color:var(--azul);background:rgba(4,76,184,.09);color:var(--azul-escuro);}
+.spill[data-v="desenvolvimento_orgao"].on{border-color:var(--roxo);background:rgba(124,58,237,.09);color:var(--roxo);}
+.spill[data-v="consulta"].on{border-color:var(--azul-claro);background:rgba(25,118,210,.09);color:var(--azul);}
+body.dark-theme .spill[data-v="ativo"].on{color:#4ade80;}
+body.dark-theme .spill[data-v="inativo"].on{color:#f87171;}
+body.dark-theme .spill[data-v="desenvolvimento_ati"].on{color:#7AB3FF;}
+body.dark-theme .spill[data-v="desenvolvimento_orgao"].on{color:#c4b5fd;}
+body.dark-theme .spill[data-v="consulta"].on{color:#7AB3FF;}
+.eco-section{margin-top:1.35rem;padding-top:1.25rem;border-top:1.5px dashed var(--cinza-borda);}
+.eco-title{font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--azul-escuro);margin-bottom:.25rem;display:flex;align-items:center;gap:.45rem;}
+body.dark-theme .eco-title{color:var(--azul-claro);}
+.eco-desc{font-size:.78rem;color:var(--texto-terciario);margin-bottom:.9rem;}
+.eco-info-box{background:rgba(4,76,184,.05);border:1px solid rgba(4,76,184,.15);border-radius:8px;padding:.7rem 1rem;margin-bottom:.9rem;font-size:.8rem;color:var(--texto-secundario);display:flex;align-items:flex-start;gap:.5rem;}
+body.dark-theme .eco-info-box{background:rgba(4,76,184,.12);border-color:rgba(4,76,184,.3);}
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+@media(max-width:640px){.eco-grid{grid-template-columns:1fr;}}
+.fsec{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:var(--radius);box-shadow:var(--sombra-card);padding:1.75rem;margin-bottom:1.25rem;transition:var(--tr);animation:fadeInUp .4s ease forwards;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.sec-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;color:var(--azul-escuro);margin-bottom:1.35rem;padding-bottom:.65rem;border-bottom:2px solid var(--cinza-borda);display:flex;align-items:center;gap:.5rem;}
+body.dark-theme .sec-title{color:var(--azul-claro);}
+.sec-num{width:26px;height:26px;min-width:26px;background:var(--azul);color:#fff;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.15rem;}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+.g-full{grid-column:1/-1;}
+.g-2{grid-column:span 2;}
+@media(max-width:700px){.g-2,.g-full{grid-column:1/-1;}}
+.fg{display:flex;flex-direction:column;gap:.42rem;}
+.flabel{font-size:.8rem;font-weight:600;color:var(--texto-principal);display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;}
+.req{color:var(--vermelho);font-weight:700;}
+.fc{width:100%;padding:.65rem .9rem;border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);background:var(--cinza-bg);color:var(--texto-principal);font-family:'DM Sans',sans-serif;font-size:.87rem;transition:.18s;outline:none;}
+.fc:hover{border-color:var(--azul-claro);}
+.fc:focus{border-color:var(--azul);box-shadow:0 0 0 4px rgba(4,76,184,.1);background:var(--cinza-card);}
+.fc.err{border-color:var(--vermelho);box-shadow:0 0 0 3px rgba(239,68,68,.1);}
+textarea.fc{resize:vertical;min-height:76px;}
+select.fc{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.5rem;cursor:pointer;}
+.ferr{font-size:.73rem;color:var(--vermelho);font-weight:600;display:none;}
+.ferr.show{display:block;}
+.fnote{font-size:.72rem;color:var(--texto-terciario);}
+.opts-group{display:flex;flex-wrap:wrap;gap:.85rem;padding:.7rem;background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);}
+.opts-group.err{border-color:var(--vermelho);}
+.olabel{display:flex;align-items:center;gap:.45rem;font-size:.88rem;color:var(--texto-secundario);cursor:pointer;padding:.3rem .6rem;border-radius:6px;transition:.15s;}
+.olabel:hover{background:rgba(4,76,184,.05);}
+.olabel input{accent-color:var(--azul);width:16px;height:16px;cursor:pointer;}
+.editor-wrap{border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);overflow:hidden;transition:.2s;}
+.editor-wrap:focus-within{border-color:var(--azul);box-shadow:0 0 0 4px rgba(4,76,184,.1);}
+.etb{display:flex;flex-wrap:wrap;gap:.3rem;padding:.45rem .65rem;background:var(--cinza-bg);border-bottom:1px solid var(--cinza-borda);}
+.etb-btn{background:var(--cinza-card);border:1px solid var(--cinza-borda);padding:3px 9px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--texto-secundario);font-family:'DM Sans',sans-serif;transition:.14s;line-height:1.5;}
+.etb-btn:hover{background:var(--azul);color:#fff;border-color:var(--azul);}
+.etb-sep{width:1px;background:var(--cinza-borda);margin:0 1px;align-self:stretch;}
+.rich-ed{min-height:100px;padding:.75rem .9rem;color:var(--texto-principal);font-family:'DM Sans',sans-serif;font-size:.87rem;line-height:1.7;outline:none;background:var(--cinza-card);}
+.rich-ed:empty::before{content:attr(data-ph);color:var(--texto-terciario);font-style:italic;pointer-events:none;}
+.rich-ed ul,.rich-ed ol{padding-left:1.4rem;}
+.rich-ed h4{font-family:'Sora',sans-serif;font-size:.92rem;font-weight:700;color:var(--azul-escuro);margin:.65rem 0 .35rem;}
+body.dark-theme .rich-ed h4{color:var(--azul-claro);}
+.rich-ed .rt-passo{display:flex;gap:.65rem;align-items:flex-start;margin:.55rem 0;}
+.rich-ed .rt-passo-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--azul);color:#fff;font-weight:700;font-size:.74rem;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;}
+.rich-ed .rt-passo-body{flex:1;}
+.rich-ed .rt-card{display:inline-block;min-width:190px;max-width:100%;vertical-align:top;margin:.4rem .5rem .4rem 0;padding:.65rem .9rem;border-radius:8px;background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);}
+.rich-ed .rt-card strong{display:block;margin-bottom:.2rem;color:var(--azul-escuro);font-family:'Sora',sans-serif;font-size:.84rem;}
+body.dark-theme .rich-ed .rt-card strong{color:var(--azul-claro);}
+.rich-ed .rt-nota{margin:.55rem 0;padding:.6rem .9rem;background:rgba(25,118,210,.06);border-left:3px solid var(--azul-claro);border-radius:6px;font-size:.85rem;color:var(--texto-secundario);}
+body.dark-theme .rich-ed .rt-nota{background:rgba(25,118,210,.14);}
+.tip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tip-ico{width:17px;height:17px;border-radius:50%;background:var(--azul-claro);color:#fff;font-size:.65rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex-shrink:0;}
+.tip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--azul-escuro);color:#fff;font-size:.75rem;line-height:1.5;padding:.55rem .85rem;border-radius:8px;width:260px;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:none;opacity:0;transition:opacity .15s;white-space:normal;}
+.tip-wrap:hover .tip-box,.tip-wrap:focus-within .tip-box{opacity:1;}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--azul-escuro);}
+.integ-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem;}
+@media(max-width:680px){.integ-grid{grid-template-columns:1fr;}}
+.integ-box{border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);overflow:hidden;}
+.integ-head{display:flex;align-items:center;gap:.5rem;padding:.62rem .9rem;font-size:.8rem;font-weight:700;background:var(--cinza-bg);border-bottom:1px solid var(--cinza-borda);color:var(--texto-principal);}
+.ibadge{font-size:.62rem;padding:1px 7px;border-radius:9px;font-weight:700;}
+.ibadge-int{background:rgba(16,185,129,.12);color:var(--verde);}
+.ibadge-ext{background:rgba(245,158,11,.12);color:var(--laranja);}
+.integ-search{width:100%;padding:.5rem .75rem;border:none;border-bottom:1px solid var(--cinza-borda);background:var(--cinza-card);color:var(--texto-principal);font-size:.82rem;font-family:'DM Sans',sans-serif;outline:none;}
+.integ-list{max-height:180px;overflow-y:auto;}
+.integ-list::-webkit-scrollbar{width:4px;}
+.integ-list::-webkit-scrollbar-thumb{background:var(--cinza-borda);border-radius:9px;}
+.iitem{display:flex;align-items:center;gap:.6rem;padding:.44rem .9rem;cursor:pointer;border-bottom:1px solid var(--cinza-borda);transition:.13s;}
+.iitem:last-child{border-bottom:none;}
+.iitem:hover{background:var(--cinza-bg);}
+.iitem input[type=checkbox]{accent-color:var(--azul);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.iitem-label{font-size:.8rem;color:var(--texto-secundario);flex:1;}
+.iitem.portal-registered{background:rgba(4,76,184,.03);}
+body.dark-theme .iitem.portal-registered{background:rgba(4,76,184,.1);}
+.iitem.portal-registered .iitem-label{color:var(--texto-principal);}
+.portal-badge{display:inline-flex;align-items:center;gap:.22rem;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:5px;background:rgba(4,76,184,.1);color:var(--azul);white-space:nowrap;flex-shrink:0;}
+body.dark-theme .portal-badge{background:rgba(4,76,184,.25);color:#7AB3FF;}
+.portal-badge svg{width:9px;height:9px;fill:currentColor;}
+.integ-legend{display:flex;align-items:center;gap:1rem;padding:.45rem .9rem;font-size:.72rem;color:var(--texto-terciario);border-top:1px solid var(--cinza-borda);background:var(--cinza-bg);}
+.leg-item{display:flex;align-items:center;gap:.3rem;}
+.leg-dot{width:8px;height:8px;border-radius:2px;}
+.leg-dot-portal{background:var(--azul);opacity:.6;}
+.leg-dot-outros{background:var(--cinza-borda);}
+.integ-tags{display:flex;flex-wrap:wrap;gap:.35rem;padding:.55rem .7rem;min-height:34px;border-top:1px solid var(--cinza-borda);background:var(--cinza-bg);}
+.itag{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .55rem;border-radius:10px;font-size:.72rem;font-weight:600;}
+.itag.int{background:rgba(16,185,129,.12);color:var(--verde);}
+.itag.ext{background:rgba(245,158,11,.12);color:var(--laranja);}
+.itag button{background:none;border:none;cursor:pointer;color:inherit;font-size:.85rem;line-height:1;opacity:.7;}
+.itag button:hover{opacity:1;}
+.sgd-chart-wrap{background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:var(--radius-sm);padding:1.25rem;margin-top:1rem;}
+.sgd-chart-title{font-family:'Sora',sans-serif;font-size:.82rem;font-weight:700;color:var(--texto-principal);margin-bottom:.75rem;display:flex;align-items:center;gap:.45rem;}
+.sgd-flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:.5rem;}
+.sgd-node{display:flex;flex-direction:column;align-items:center;min-width:120px;}
+.sgd-box{background:var(--cinza-card);border:2px solid var(--cinza-borda);border-radius:10px;padding:.65rem .85rem;text-align:center;font-size:.78rem;font-weight:700;font-family:'Sora',sans-serif;color:var(--texto-principal);transition:.2s;}
+.sgd-box.active-node{border-color:var(--azul);background:rgba(4,76,184,.06);color:var(--azul-escuro);}
+body.dark-theme .sgd-box.active-node{background:rgba(4,76,184,.2);color:#7AB3FF;}
+.sgd-box.sgd-hub{border-color:var(--amarelo);background:rgba(245,200,0,.1);color:var(--azul-escuro);}
+body.dark-theme .sgd-box.sgd-hub{background:rgba(245,200,0,.15);color:#fff;}
+.sgd-box-sub{font-size:.65rem;font-weight:400;color:var(--texto-terciario);margin-top:3px;}
+.sgd-arrow{display:flex;align-items:center;padding:0 .35rem;color:var(--texto-terciario);font-size:1.1rem;flex-shrink:0;align-self:center;}
+.sgd-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem;margin-top:1rem;}
+.sgd-stat-card{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:8px;padding:.75rem .85rem;}
+.sgd-stat-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--texto-terciario);margin-bottom:.3rem;}
+.sgd-stat-value{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:800;color:var(--texto-principal);}
+.sgd-stat-sub{font-size:.72rem;color:var(--texto-terciario);}
+.amb-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.1rem;}
+.apill{display:flex;align-items:center;gap:.4rem;padding:.48rem 1rem;border-radius:20px;cursor:pointer;border:2px solid var(--cinza-borda);background:var(--cinza-bg);color:var(--texto-secundario);font-size:.82rem;font-weight:600;transition:all .18s;user-select:none;}
+.apill:hover{border-color:var(--azul-claro);color:var(--azul);}
+.apill.on{border-color:var(--azul);background:rgba(4,76,184,.07);color:var(--azul-escuro);}
+body.dark-theme .apill.on{background:rgba(4,76,184,.25);color:#fff;}
+.apill input{display:none;}
+.amb-env-block{background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:10px;padding:1.25rem;margin-bottom:.85rem;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.amb-env-title{font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--texto-principal);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;}
+.amb-badge{font-size:.68rem;padding:2px 8px;border-radius:8px;font-weight:700;}
+.amb-prod{background:rgba(16,185,129,.12);color:var(--verde);}
+.amb-hmg{background:rgba(245,158,11,.12);color:var(--laranja);}
+.amb-dev{background:rgba(124,58,237,.12);color:#7C3AED;}
+.amb-tst{background:rgba(239,68,68,.12);color:var(--vermelho);}
+.amb-env-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.85rem;}
+.empresa-block{background:var(--cinza-bg);border:1.5px dashed var(--cinza-borda);border-radius:10px;padding:1rem;margin-top:.85rem;display:none;animation:fadeIn .25s ease;}
+.empresa-block.show{display:block;}
+.dyn-field.hidden{display:none;}
+.multi-item{display:flex;align-items:center;gap:.55rem;margin-bottom:.5rem;}
+.multi-item .fc{flex:1;}
+.btn-rm-item{background:none;border:1.5px solid var(--cinza-borda);border-radius:6px;color:var(--texto-terciario);cursor:pointer;padding:.38rem .65rem;font-size:.82rem;transition:.15s;flex-shrink:0;}
+.btn-rm-item:hover{border-color:var(--vermelho);color:var(--vermelho);background:rgba(239,68,68,.05);}
+.btn-add-item{display:flex;align-items:center;gap:.45rem;background:transparent;border:1.5px dashed var(--cinza-borda);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;padding:.5rem 1rem;cursor:pointer;transition:.18s;margin-top:.25rem;color:var(--azul);}
+.btn-add-item:hover{border-color:var(--azul);background:rgba(4,76,184,.04);}
+.btn-add-item.purple{color:var(--roxo);}
+.btn-add-item.purple:hover{border-color:var(--roxo);background:rgba(124,58,237,.04);}
+.btn-add-item.verde{color:var(--verde);}
+.btn-add-item.verde:hover{border-color:var(--verde);background:rgba(16,185,129,.04);}
+.btn-add-item.solid{border-style:solid;background:var(--azul);color:#fff;}
+.btn-add-item.solid:hover{background:var(--azul-escuro);border-color:var(--azul-escuro);}
+.tech-row{background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:10px;padding:.85rem 1rem;margin-bottom:.65rem;animation:fadeIn .2s ease;}
+.tech-row-grid{display:grid;grid-template-columns:1fr 1.2fr .7fr auto;gap:.65rem;align-items:end;}
+@media(max-width:700px){.tech-row-grid{grid-template-columns:1fr 1fr;}}
+.licenca-block{background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:10px;padding:1rem 1.25rem;margin-bottom:.75rem;animation:fadeIn .25s ease;}
+.licenca-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;}
+.licenca-num{font-family:'Sora',sans-serif;font-size:.75rem;font-weight:700;color:var(--roxo);text-transform:uppercase;letter-spacing:.05em;}
+.btn-remove-lic{background:none;border:1.5px solid var(--cinza-borda);border-radius:6px;color:var(--texto-terciario);cursor:pointer;padding:.22rem .65rem;font-size:.8rem;transition:.15s;}
+.btn-remove-lic:hover{border-color:var(--vermelho);color:var(--vermelho);background:rgba(239,68,68,.05);}
+.lgpd-section{background:rgba(245,200,0,.04);border:1.5px solid rgba(245,200,0,.3);border-radius:10px;padding:1.15rem 1.25rem;margin-top:1rem;}
+.lgpd-section-title{font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--azul-escuro);margin-bottom:.75rem;display:flex;align-items:center;gap:.45rem;}
+body.dark-theme .lgpd-section-title{color:#fde68a;}
+.lgpd-cadastros-list{display:flex;flex-direction:column;gap:.5rem;max-height:220px;overflow-y:auto;margin-bottom:.75rem;}
+.lgpd-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .85rem;background:var(--cinza-card);border:1px solid var(--cinza-borda);border-radius:8px;cursor:pointer;transition:.15s;}
+.lgpd-item:hover{border-color:var(--amarelo);}
+.lgpd-item.selected{border-color:var(--amarelo);background:rgba(245,200,0,.07);}
+.lgpd-item input[type=checkbox]{accent-color:var(--amarelo);width:15px;height:15px;flex-shrink:0;}
+.lgpd-item-info{flex:1;}
+.lgpd-item-nome{font-size:.83rem;font-weight:700;color:var(--texto-principal);}
+.lgpd-item-desc{font-size:.72rem;color:var(--texto-terciario);}
+.lgpd-badge{font-size:.62rem;padding:2px 7px;border-radius:8px;font-weight:700;flex-shrink:0;}
+.lgpd-badge-ativo{background:rgba(16,185,129,.12);color:var(--verde);}
+.lgpd-badge-pendente{background:rgba(245,158,11,.12);color:var(--laranja);}
+.sub-sec{margin-top:1.5rem;padding-top:1.25rem;border-top:1.5px dashed var(--cinza-borda);}
+.sub-sec-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--texto-terciario);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem;}
+.alert-ati{display:none;margin-bottom:1.25rem;border-radius:var(--radius);overflow:hidden;border:1.5px solid;animation:fadeInUp .35s ease forwards;}
+.alert-ati.show{display:block;}
+.alert-ati.bloqueado{border-color:#EF4444;background:rgba(239,68,68,.04);}
+.alert-ati.aviso{border-color:#F59E0B;background:rgba(245,158,11,.04);}
+.alert-ati.info{border-color:var(--azul-claro);background:rgba(25,118,210,.04);}
+body.dark-theme .alert-ati.bloqueado{background:rgba(239,68,68,.1);}
+body.dark-theme .alert-ati.aviso{background:rgba(245,158,11,.1);}
+body.dark-theme .alert-ati.info{background:rgba(25,118,210,.1);}
+.alert-ati-header{display:flex;align-items:center;gap:.7rem;padding:.9rem 1.15rem;font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;}
+.alert-ati.bloqueado .alert-ati-header{color:#DC2626;}
+.alert-ati.aviso .alert-ati-header{color:#B45309;}
+.alert-ati.info .alert-ati-header{color:var(--azul);}
+.alert-ati-body{padding:.85rem 1.15rem 1rem;font-size:.82rem;color:var(--texto-secundario);line-height:1.6;}
+.alert-ati-body strong{color:var(--texto-principal);}
+.alert-ati-footer{padding:.65rem 1.15rem;border-top:1px dashed;font-size:.75rem;color:var(--texto-terciario);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.alert-ati.bloqueado .alert-ati-footer{border-color:rgba(239,68,68,.25);}
+.alert-ati.aviso .alert-ati-footer{border-color:rgba(245,158,11,.25);}
+.alert-ati.info .alert-ati-footer{border-color:rgba(25,118,210,.25);}
+.alert-notif-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.65rem;}
+.notif-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border-radius:20px;font-size:.72rem;font-weight:600;border:1px solid;}
+.notif-chip.usuario{background:rgba(4,76,184,.07);border-color:rgba(4,76,184,.2);color:var(--azul);}
+.notif-chip.infra{background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.2);color:var(--roxo);}
+.notif-chip.atl{background:rgba(16,185,129,.07);border-color:rgba(16,185,129,.2);color:var(--verde);}
+.loja-link-row{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem;}
+.loja-link-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .65rem;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.loja-android{background:rgba(34,197,94,.1);color:#16a34a;}
+.loja-ios{background:rgba(99,102,241,.1);color:#4f46e5;}
+
+/* ══ OVERLAY & MODAL ══ */
+.overlay{position:fixed;inset:0;background:rgba(13,27,62,.6);backdrop-filter:blur(3px);z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.modal-box{background:var(--cinza-card);border-radius:var(--radius);padding:1.85rem;max-width:460px;width:90%;box-shadow:var(--sombra-elevada);transform:scale(.95) translateY(12px);transition:transform .22s cubic-bezier(.34,1.56,.64,1);border:1px solid var(--cinza-borda);}
+.overlay.show .modal-box{transform:scale(1) translateY(0);}
+.modal-ico{font-size:2rem;margin-bottom:.75rem;}
+.modal-title{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:var(--texto-principal);margin-bottom:.6rem;}
+.modal-body{font-size:.87rem;color:var(--texto-secundario);line-height:1.6;margin-bottom:1.35rem;}
+.modal-body strong{color:var(--texto-principal);}
+.modal-acts{display:flex;justify-content:flex-end;gap:.75rem;}
+.btn-sec{background:transparent;border:1px solid var(--cinza-borda);color:var(--texto-secundario);padding:.58rem 1.1rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;}
+.btn-pri{background:var(--azul-escuro);color:#fff;border:none;padding:.58rem 1.25rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:.18s;}
+.btn-pri:hover{background:var(--azul);}
+
+/* ══ MODAL ER ══ */
+.modal-er{max-width:1000px;width:96vw;max-height:93vh;overflow-y:auto;}
+.er-header{background:linear-gradient(135deg,var(--azul-escuro) 0%,var(--azul) 100%);border-radius:var(--radius) var(--radius) 0 0;padding:1.5rem 1.85rem;margin:-1.85rem -1.85rem 1.5rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.er-header-info{flex:1;}
+.er-header-title{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.25rem;}
+.er-header-sub{font-size:.8rem;color:rgba(255,255,255,.65);}
+.er-header-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem;}
+.er-meta-chip{display:inline-flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:.25rem .7rem;font-size:.72rem;color:rgba(255,255,255,.85);font-weight:600;}
+.er-tabs{display:flex;border-bottom:2px solid var(--cinza-borda);margin-bottom:1.5rem;gap:0;overflow-x:auto;}
+.er-tab{padding:.6rem 1.25rem;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.85rem;color:var(--texto-terciario);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.18s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;}
+.er-tab:hover{color:var(--texto-principal);}
+.er-tab.active{color:var(--azul);border-bottom-color:var(--azul);}
+.er-panel{display:none;}
+.er-panel.active{display:block;}
+.er-main-entity{background:var(--azul-escuro);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.er-main-entity::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(245,200,0,.07);border-radius:50%;}
+.er-entity-crown{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amarelo);margin-bottom:.35rem;}
+.er-entity-name{font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:.35rem;}
+.er-entity-sigla{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.85rem;}
+.er-entity-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+.er-entity-tag{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .65rem;border-radius:12px;font-size:.72rem;font-weight:700;}
+.ertag-nat{background:rgba(245,200,0,.18);color:var(--amarelo);}
+.ertag-org{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);}
+.ertag-vis{background:rgba(16,185,129,.2);color:#4ade80;}
+.ertag-ver{background:rgba(124,58,237,.3);color:#ddd6fe;}
+.er-attr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+.er-attr-card{background:var(--cinza-bg);border:1px solid var(--cinza-borda);border-radius:8px;padding:.85rem 1rem;}
+.er-attr-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--texto-terciario);margin-bottom:.25rem;}
+.er-attr-value{font-size:.85rem;font-weight:600;color:var(--texto-principal);}
+.er-attr-value.empty{color:var(--texto-terciario);font-style:italic;font-weight:400;}
+.er-attr-value a{color:var(--azul-claro);text-decoration:underline;font-size:.82rem;}
+.er-rel-section{margin-bottom:1.25rem;}
+.er-rel-title{font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;color:var(--texto-principal);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
+.er-rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.65rem;}
+.er-rel-card{border-radius:8px;padding:.75rem 1rem;border:1.5px solid;position:relative;}
+.er-rel-card.int{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.05);}
+.er-rel-card.ext{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.05);}
+.er-rel-card.eco{border-color:rgba(4,76,184,.3);background:rgba(4,76,184,.05);}
+body.dark-theme .er-rel-card.int{background:rgba(16,185,129,.08);}
+body.dark-theme .er-rel-card.ext{background:rgba(245,158,11,.08);}
+body.dark-theme .er-rel-card.eco{background:rgba(4,76,184,.12);}
+.er-rel-type{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
+.er-rel-type.int{color:var(--verde);}
+.er-rel-type.ext{color:var(--laranja);}
+.er-rel-type.eco{color:var(--azul-claro);}
+.er-rel-name{font-size:.85rem;font-weight:600;color:var(--texto-principal);}
+.er-rel-card-role{font-size:.72rem;color:var(--texto-terciario);margin-top:.2rem;}
+.er-rel-cardinality{position:absolute;top:.5rem;right:.65rem;font-size:.68rem;font-weight:700;color:var(--texto-terciario);font-family:'Sora',sans-serif;}
+.er-empty{text-align:center;padding:2rem;color:var(--texto-terciario);font-size:.85rem;}
+.er-diagram-wrap{background:var(--cinza-bg);border:1px solid var(--cinza-borda);border-radius:10px;padding:1.5rem;overflow:auto;}
+.er-footer{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--cinza-borda);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.er-footer-meta{font-size:.75rem;color:var(--texto-terciario);}
+.er-footer-acts{display:flex;gap:.65rem;}
+.btn-download{display:flex;align-items:center;gap:.4rem;background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);color:var(--texto-secundario);padding:.52rem 1rem;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;transition:.18s;}
+.btn-download:hover{border-color:var(--azul);color:var(--azul);}
+.sgd-er-wrap{background:var(--cinza-bg);border:1.5px solid rgba(4,76,184,.2);border-radius:10px;padding:1.25rem;}
+.sgd-er-title{font-family:'Sora',sans-serif;font-size:.9rem;font-weight:700;color:var(--azul-escuro);margin-bottom:1rem;display:flex;align-items:center;gap:.45rem;}
+body.dark-theme .sgd-er-title{color:var(--azul-claro);}
+.ver-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:.75rem;}
+.ver-table th{background:var(--cinza-bg);color:var(--texto-terciario);font-weight:700;padding:.5rem .85rem;text-align:left;border-bottom:1px solid var(--cinza-borda);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;}
+.ver-table td{padding:.55rem .85rem;border-bottom:1px solid var(--cinza-borda);color:var(--texto-secundario);}
+.ver-table tr:last-child td{border-bottom:none;}
+.ver-current{background:rgba(16,185,129,.05);}
+.ver-current td{color:var(--texto-principal);font-weight:600;}
+
+/* ══ ECOSSISTEMA PANEL — novo visual ══ */
+.eco-panel-hero{background:linear-gradient(135deg,var(--azul-escuro) 0%,#1565C0 100%);border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.eco-panel-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(245,200,0,.08);border-radius:50%;}
+.eco-panel-hero::after{content:'';position:absolute;bottom:-30px;left:30px;width:100px;height:100px;background:rgba(255,255,255,.04);border-radius:50%;}
+.eco-panel-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--amarelo);margin-bottom:.4rem;}
+.eco-panel-name{font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:.2rem;}
+.eco-panel-count{font-size:.8rem;color:rgba(255,255,255,.55);}
+.eco-members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;margin-bottom:1rem;}
+.eco-member-card{border:2px solid;border-radius:10px;padding:.9rem 1rem;position:relative;transition:.2s;}
+.eco-member-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);}
+.eco-member-card.card-existing{border-color:rgba(4,76,184,.3);background:rgba(4,76,184,.04);}
+.eco-member-card.card-new{border-color:var(--amarelo);background:rgba(245,200,0,.06);}
+body.dark-theme .eco-member-card.card-existing{background:rgba(4,76,184,.15);}
+body.dark-theme .eco-member-card.card-new{background:rgba(245,200,0,.08);}
+.eco-member-badge{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:.45rem;}
+.eco-member-badge.badge-existing{background:rgba(16,185,129,.12);color:var(--verde);}
+.eco-member-badge.badge-new{background:rgba(245,200,0,.2);color:#92610a;}
+body.dark-theme .eco-member-badge.badge-new{color:var(--amarelo);}
+.eco-member-name{font-family:'Sora',sans-serif;font-size:.92rem;font-weight:700;color:var(--texto-principal);margin-bottom:.2rem;}
+.eco-member-nat{font-size:.75rem;color:var(--texto-terciario);}
+.eco-member-star{position:absolute;top:.6rem;right:.75rem;font-size:.8rem;}
+.eco-flow-wrap{background:var(--cinza-bg);border:1.5px solid var(--cinza-borda);border-radius:10px;padding:1.1rem 1.25rem;}
+.eco-flow-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--texto-terciario);margin-bottom:.85rem;}
+.eco-flow-nodes{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;}
+.eco-flow-node{display:flex;flex-direction:column;align-items:center;gap:.25rem;}
+.eco-flow-box{padding:.5rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;font-family:'Sora',sans-serif;text-align:center;border:2px solid;}
+.eco-flow-box.node-existing{border-color:rgba(4,76,184,.4);background:rgba(4,76,184,.07);color:var(--azul-escuro);}
+body.dark-theme .eco-flow-box.node-existing{color:#7AB3FF;}
+.eco-flow-box.node-new{border-color:var(--amarelo);background:rgba(245,200,0,.1);color:#6b4a00;}
+body.dark-theme .eco-flow-box.node-new{color:var(--amarelo);}
+.eco-flow-label{font-size:.62rem;color:var(--texto-terciario);text-align:center;}
+.eco-flow-sep{color:var(--cinza-borda);font-size:1.2rem;align-self:center;padding:0 .2rem;}
+
+/* ══ TOAST ══ */
+.toast-wrap{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.6rem;}
+.toast{background:var(--cinza-card);border:1px solid var(--cinza-borda);border-left:4px solid var(--verde);border-radius:var(--radius-sm);padding:.9rem 1.1rem;box-shadow:var(--sombra-elevada);display:flex;align-items:center;gap:.65rem;min-width:280px;font-size:.88rem;color:var(--texto-principal);animation:slideInR .35s cubic-bezier(.34,1.56,.64,1);}
+.toast.err{border-left-color:var(--vermelho);}
+.toast.warn{border-left-color:var(--amarelo);}
+@keyframes slideInR{from{opacity:0;transform:translateX(100%);}to{opacity:1;transform:translateX(0);}}
+@keyframes hl{0%{background:rgba(245,200,0,.28);}100%{background:transparent;}}
+.hl{animation:hl 1.8s ease;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <a href="admin-dashboard.html" class="sb-logo">
+    <div class="sb-icon">PS</div>
+    <div class="sb-logo-text"><strong>Portal de Sistemas</strong><span>Gov. Tocantins</span></div>
+  </a>
+  <div class="sb-section">
+    <span class="sb-section-label">Principal</span>
+    <a href="admin-dashboard.html" class="nav-item" title="Dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="sistemas.html" class="nav-item" title="Sistemas">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <span class="nav-label">Sistemas</span>
+    </a>
+    <a href="admin-categoria.html" class="nav-item" title="Categorias">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+      <span class="nav-label">Categorias</span>
+    </a>
+    <a href="#" class="nav-item" title="Permissoes">
+      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+      <span class="nav-label">Permissoes</span>
+    </a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <span class="sb-section-label">Cadastros Base</span>
+    <a href="cadastro-sistemas.html" class="nav-item active" title="Cadastrar Sistema">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span class="nav-label">Cad. Sistema</span>
+    </a>
+    <a href="#" class="nav-item" title="Frameworks Base">
+      <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+      <span class="nav-label">Frameworks</span>
+    </a>
+    <a href="cadastro-sistema-externo.html" class="nav-item" title="Sistemas Externos">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96z"/></svg>
+      <span class="nav-label">Sist. Externos</span>
+    </a>
+    <div>
+      <a href="#" class="nav-item" title="Formularios" onclick="toggleSub(event,'sub-form')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span class="nav-label">Formularios ▾</span>
+      </a>
+    </div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <span class="sb-section-label">Conta</span>
+    <a href="admin-perfil.html" class="nav-item" title="Meu Perfil">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span class="nav-label">Meu Perfil</span>
+    </a>
+  </div>
+</aside>
+
+<main class="main-area">
+  <header class="admin-header">
+    <div class="h-left">
+      <div class="breadcrumb"><a href="#">Início</a> › <a href="#">Sistemas</a> › Cadastrar</div>
+      <div class="h-title">Cadastrar Novo Sistema</div>
+    </div>
+    <div class="h-right">
+      <button class="btn-theme" id="themeToggle">🌙 Escuro</button>
+      <div class="user-chip"><span class="user-name">STEFAN</span><div class="user-av">ST</div></div>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+
+  <div class="alert-ati" id="alertAti">
+    <div class="alert-ati-header"><span id="alertAtiIco">⚠️</span><span id="alertAtiTitulo">Verificação ATI</span></div>
+    <div class="alert-ati-body" id="alertAtiBody"></div>
+    <div class="alert-ati-footer">
+      <div class="alert-notif-row" id="alertNotifRow"></div>
+      <span id="alertAtiRef" style="font-style:italic;"></span>
+    </div>
+  </div>
+
+  <nav class="form-tabs-bar" id="formTabsBar">
+    <button class="ftab active" data-tab="0" onclick="goTab(0)">
+      <span class="ftab-check">✓</span><span class="ftab-num">1</span> 🧩 Natureza &amp; Situação
+    </button>
+    <button class="ftab" data-tab="1" onclick="goTab(1)">
+      <span class="ftab-check">✓</span><span class="ftab-num">2</span> 📋 Informações Básicas
+    </button>
+    <button class="ftab" data-tab="2" onclick="goTab(2)">
+      <span class="ftab-check">✓</span><span class="ftab-num">3</span> 🔒 Dados Internos &amp; LGPD
+    </button>
+    <button class="ftab" data-tab="3" onclick="goTab(3)">
+      <span class="ftab-check">✓</span><span class="ftab-num">4</span> 🌐 Ambientes
+    </button>
+    <button class="ftab" data-tab="4" onclick="goTab(4)">
+      <span class="ftab-check">✓</span><span class="ftab-num">5</span> ⚙️ Técnico
+    </button>
+    <button class="ftab" data-tab="5" onclick="goTab(5)">
+      <span class="ftab-check">✓</span><span class="ftab-num">6</span> 🛡️ Controle
+    </button>
+    <button class="ftab" data-tab="6" onclick="goTab(6)">
+      <span class="ftab-check">✓</span><span class="ftab-num">7</span> 📋 Auditoria
+    </button>
+  </nav>
+
+  <form id="fForm" novalidate>
+
+  <div class="form-tab-pane active" id="pane-0">
+    <div class="nature-card">
+      <div class="nature-card-title"><span class="sec-num">1</span> 🧩 Natureza da Solução &amp; Tipo do Sistema</div>
+      <div class="nature-card-sub">Selecione a natureza — os campos se adaptam automaticamente.</div>
+      <div class="npills" id="naturezaPills">
+        <label class="npill" data-v="web"><input type="radio" name="natureza" value="web"><span>🌐 Web</span></label>
+        <label class="npill" data-v="mobile"><input type="radio" name="natureza" value="mobile"><span>📱 Mobile</span></label>
+        <label class="npill" data-v="desktop"><input type="radio" name="natureza" value="desktop"><span>🖥️ Desktop</span></label>
+        <label class="npill" data-v="api"><input type="radio" name="natureza" value="api"><span>🔌 API / Serviço</span></label>
+        <label class="npill" data-v="barramento"><input type="radio" name="natureza" value="barramento"><span>🔄 Barramento</span></label>
+        <label class="npill" data-v="hotsite"><input type="radio" name="natureza" value="hotsite"><span>📢 Hotsite</span></label>
+        <label class="npill" data-v="bi"><input type="radio" name="natureza" value="bi"><span>📊 BI / Analytics</span></label>
+      </div>
+      <div style="font-size:.72rem;opacity:.6;margin-bottom:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Tipo do Sistema</div>
+      <div class="tipo-row" style="margin-bottom:1.35rem;">
+        <label class="tpill"><input type="checkbox" name="tipoSistema" value="estrutural">Estrutural</label>
+        <label class="tpill"><input type="checkbox" name="tipoSistema" value="finalistico">Finalístico</label>
+        <label class="tpill"><input type="checkbox" name="tipoSistema" value="corporativo">Corporativo</label>
+        <label class="tpill"><input type="checkbox" name="tipoSistema" value="outro">Tipo Cadastrável</label>
+      </div>
+
+      <div style="padding-top:1.1rem;border-top:1.5px dashed var(--cinza-borda);">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--texto-terciario);margin-bottom:.65rem;">
+          Situação do Sistema <span class="req">*</span>
+        </div>
+        <div class="status-pills" id="situacaoPills" onchange="if(document.querySelector('input[name=\'situacaoSistema\']:checked')?.value==='consulta'){showConsultaBIDialog();}">
+          <label class="spill" data-v="ativo"><input type="radio" name="situacaoSistema" value="ativo"><span>✅ Ativo</span></label>
+          <label class="spill" data-v="inativo"><input type="radio" name="situacaoSistema" value="inativo"><span>🔴 Inativo</span></label>
+          <label class="spill" data-v="consulta"><input type="radio" name="situacaoSistema" value="consulta"><span>🔍 Apenas Consulta</span></label>
+        </div>
+        <div id="consultaNote" style="display:none;margin-top:.6rem;font-size:.79rem;color:var(--azul-claro);padding:.5rem .85rem;background:rgba(25,118,210,.06);border-radius:6px;border-left:3px solid var(--azul-claro);">
+          ℹ️ Sistemas marcados como <strong>Apenas Consulta</strong> permitem somente leitura de dados.
+        </div>
+        <span class="ferr" id="errSituacao">Selecione a situação do sistema.</span>
+      </div>
+       <label class="flabel" for="fApenasBd">
+        É apenas o Banco de Dados?
+        <span class="tip-wrap">
+          <span class="tip-ico" tabindex="0">?</span>
+          <span class="tip-box">Indique se este cadastro representa apenas uma base de dados isolada, sem interface visual ou aplicação acoplada.</span>
+        </span>
+      </label>
+      <select id="fApenasBd" name="apenasBd" class="fc">
+        <option value="nao">Não (Possui aplicação/interface)</option>
+        <option value="sim">Sim (Apenas Base de Dados)</option>
+      </select>
+    </div>
+      <div class="eco-section">
+        <div class="eco-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--azul-claro)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          Ecossistema
+        </div>
+        <div class="fg">
+     
+        <div class="eco-desc">Agrupa aplicações do mesmo projeto (ex: Portal do Servidor Web + Mobile + API).</div>
+        <div class="eco-info-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--azul-claro)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          Vincular ao ecossistema permite que o diagrama ER exiba os sistemas irmãos automaticamente.
+        </div>
+        <div class="eco-grid">
+          <div class="fg">
+            <label class="flabel" for="fEcossistema">Ecossistema Relacionado</label>
+            <select id="fEcossistema" class="fc" onchange="onEcossistemaChange()">
+              <option value="">— Nenhum (sistema independente) —</option>
+            </select>
+          </div>
+        </div>
+        <div id="ecoPreview" style="display:none;margin-top:.75rem;padding:.7rem 1rem;background:rgba(4,76,184,.05);border:1px solid rgba(4,76,184,.15);border-radius:8px;font-size:.8rem;color:var(--texto-secundario);"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-1">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">2</span> Informações Básicas</h3>
+      <div class="grid">
+        <div class="fg g-2">
+          <label class="flabel" for="fNome">Nome do Sistema <span class="req">*</span></label>
+          <input type="text" id="fNome" class="fc" placeholder="Ex: Sistema Integrado de Administração Financeira" required oninput="debounceAtiCheck()">
+          <span class="ferr" id="errNome">Campo obrigatório.</span>
+        </div>
+        <div class="fg">
+          <label class="flabel" for="fSigla">Sigla <span class="req">*</span></label>
+          <input type="text" id="fSigla" class="fc" placeholder="Ex: SIAFTO" required oninput="debounceAtiCheck()">
+        </div>
+        <div class="fg">
+          <label class="flabel" for="fVersao">Versão Atual
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Informe a versão atual em formato semântico (ex: 2.1.0). O cadastro é versionado a cada atualização.</span></span>
+          </label>
+          <input type="text" id="fVersao" name="versao" class="fc" placeholder="Ex: 1.0.0, 2.3.1">
+        </div>
+        <div class="fg">
+          <label class="flabel" for="fLinkVersao">Link de Versionamento / Changelog
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">URL da página de releases ou changelog. Aparece como link clicável na tela de detalhes e no documento ER.</span></span>
+          </label>
+          <input type="url" id="fLinkVersao" name="linkVersao" class="fc" placeholder="https://gitlab.to.gov.br/projeto/releases">
+        </div>
+        <div class="fg">
+          <label class="flabel" for="fServidor">Servidor Responsável
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Nome do servidor público responsável pelo sistema. Aparece no histórico de versões do documento ER.</span></span>
+          </label>
+          <input type="text" id="fServidor" name="servidor" class="fc" placeholder="Nome do servidor / responsável">
+        </div>
+        <div class="fg g-full">
+          <label class="flabel" style="justify-content:space-between;width:100%;gap:.5rem;">
+            <span style="display:flex;align-items:center;gap:.35rem;">
+              Programas Governamentais Relacionados
+              <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Programa(s) Governamental(is) (PG) ao qual este sistema está vinculado, conforme orçamento e planejamento governamental.</span></span>
+            </span>
+            <button type="button" class="btn-add-item solid" style="margin:0;padding:.4rem .85rem;font-size:.75rem;flex-shrink:0;" onclick="openCadastroPrograma()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Cadastrar programa
+            </button>
+          </label>
+          <div id="progContainer">
+            <div class="multi-item">
+              <input type="text" class="fc" name="programaGoverno[]" list="programasGovList" placeholder="Ex: Programa Tocantins Digital — PG 2024.0012">
+              <button type="button" class="btn-rm-item" onclick="rmMulti(this,'progContainer')" title="Remover">✕</button>
+            </div>
+          </div>
+          <datalist id="programasGovList"></datalist>
+          <button type="button" class="btn-add-item" onclick="addMulti('progContainer','programaGoverno[]','Ex: Programa Tocantins Digital — PG 2024.0013')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar programa
+          </button>
+        </div>
+        <div class="fg g-full">
+          <label class="flabel" for="fDescCurta">Descrição Curta <span class="req">*</span>
+            <span id="descCurtaCounter" style="margin-left:auto;font-size:.72rem;font-weight:600;color:var(--texto-terciario);">0 / 200</span>
+          </label>
+          <textarea id="fDescCurta" name="descCurta" class="fc" placeholder="Descreva brevemente o propósito do sistema" required maxlength="200" rows="2"></textarea>
+          <div style="height:3px;border-radius:3px;background:var(--cinza-borda);margin-top:3px;overflow:hidden;">
+            <div id="descCurtaProgress" style="height:100%;width:0%;background:var(--verde);border-radius:3px;transition:width .2s,background .2s;"></div>
+          </div>
+        </div>
+        <div class="fg g-full">
+          <label class="flabel">Descrição Detalhada <span class="req">*</span></label>
+          <div class="editor-wrap">
+            <div class="etb">
+              <button type="button" class="etb-btn" onclick="rc('desc','bold')" title="Negrito"><b>N</b></button>
+              <button type="button" class="etb-btn" onclick="rc('desc','italic')" title="Itálico"><i>I</i></button>
+              <button type="button" class="etb-btn" onclick="rc('desc','underline')" title="Sublinhado"><u>S</u></button>
+              <span class="etb-sep"></span>
+              <button type="button" class="etb-btn" onclick="setBlock('desc','H4')" title="Título de seção">H4</button>
+              <button type="button" class="etb-btn" onclick="setBlock('desc','P')" title="Parágrafo normal">¶</button>
+              <span class="etb-sep"></span>
+              <button type="button" class="etb-btn" onclick="rc('desc','insertUnorderedList')" title="Lista com marcadores">• Lista</button>
+              <button type="button" class="etb-btn" onclick="rc('desc','insertOrderedList')" title="Lista numerada">1. Lista</button>
+              <span class="etb-sep"></span>
+              <button type="button" class="etb-btn" onclick="insPasso('desc')" title="Inserir passo numerado">🔢 Passo</button>
+              <button type="button" class="etb-btn" onclick="insCard('desc')" title="Inserir cartão (título + descrição)">🗂️ Cartão</button>
+              <button type="button" class="etb-btn" onclick="insNota('desc')" title="Inserir nota / aviso">💡 Nota</button>
+              <span class="etb-sep"></span>
+              <button type="button" class="etb-btn" onclick="insLink('desc')" title="Inserir link">🔗 Link</button>
+              <button type="button" class="etb-btn" onclick="rc('desc','removeFormat')" title="Limpar formatação">⌫</button>
+            </div>
+            <div id="ed-desc" class="rich-ed" contenteditable="true" data-ph="Descreva detalhadamente o sistema..."></div>
+          </div>
+          <input type="hidden" id="inp-desc" name="descricao">
+          <span class="ferr" id="errDesc">Campo obrigatório.</span>
+        </div>
+        <div class="fg g-full"><label class="flabel" for="fKw">Palavras-chave</label><input type="text" id="fKw" class="fc" placeholder="Separe por vírgulas"></div>
+        <div class="fg">
+          <label class="flabel" for="fCat">Categoria <span class="req">*</span></label>
+          <select id="fCat" class="fc" required>
+            <option value="">Selecione...</option>
+            <option value="gov">Governança e Gestão</option>
+            <option value="edu">Pesquisa e Educação</option>
+            <option value="sau">Saúde</option>
+            <option value="faz">Fazendário</option>
+            <option value="seg">Segurança Pública</option>
+            <option value="rur">Rural e Ambiental</option>
+          </select>
+        </div>
+        <div class="fg g-full dyn-field" id="df-url"><label class="flabel" for="fUrl">URL do Sistema</label><input type="url" id="fUrl" class="fc" placeholder="https://sistema.to.gov.br"></div>
+        <div class="fg">
+          <label class="flabel" for="fOrgao">Órgão <span class="req">*</span></label>
+          <select id="fOrgao" class="fc" required>
+            <option value="">Selecione...</option>
+            <option value="ati">ATI — Agência de Tecnologia da Informação</option>
+            <option value="seduc">SEDUC — Secretaria da Educação</option>
+            <option value="sefaz">SEFAZ — Secretaria da Fazenda</option>
+            <option value="secad">SECAD — Secretaria de Administração</option>
+            <option value="ssp">SSP — Secretaria de Segurança Pública</option>
+            <option value="sesau">SESAU — Secretaria da Saúde</option>
+            <option value="semarh">SEMARH — Secretaria do Meio Ambiente</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flabel" for="fDepto">Departamento(s) <span class="req">*</span></label><input type="text" id="fDepto" class="fc" placeholder="Ex: Diretoria de Sistemas" required></div>
+        <div class="fg"><label class="flabel" for="fTel">Telefone <span class="req">*</span></label><input type="text" id="fTel" class="fc" placeholder="(63) 00000-0000" required></div>
+        <div class="fg"><label class="flabel" for="fEmail">E-mail</label><input type="email" id="fEmail" class="fc" placeholder="contato@orgao.to.gov.br"></div>
+        <div class="fg g-full"><label class="flabel">Abrangência
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Descreva a cobertura geográfica, o órgão responsável e o público-alvo. Use Títulos (H4) para separar tópicos e Notas para observações importantes.</span></span>
+          </label>
+          <div class="editor-wrap"><div class="etb">
+            <button type="button" class="etb-btn" onclick="rc('abr','bold')" title="Negrito"><b>N</b></button>
+            <button type="button" class="etb-btn" onclick="rc('abr','italic')" title="Itálico"><i>I</i></button>
+            <button type="button" class="etb-btn" onclick="rc('abr','underline')" title="Sublinhado"><u>S</u></button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="setBlock('abr','H4')" title="Título de seção">H4</button>
+            <button type="button" class="etb-btn" onclick="setBlock('abr','P')" title="Parágrafo normal">¶</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="rc('abr','insertUnorderedList')" title="Lista com marcadores">• Lista</button>
+            <button type="button" class="etb-btn" onclick="rc('abr','insertOrderedList')" title="Lista numerada">1. Lista</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insCard('abr')" title="Inserir cartão (ex: Cobertura, Órgão, Público-alvo)">🗂️ Cartão</button>
+            <button type="button" class="etb-btn" onclick="insNota('abr')" title="Inserir nota / aviso">💡 Nota</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insLink('abr')" title="Inserir link">🔗 Link</button>
+            <button type="button" class="etb-btn" onclick="rc('abr','removeFormat')" title="Limpar formatação">⌫</button>
+          </div><div id="ed-abr" class="rich-ed" contenteditable="true" data-ph="Descreva a abrangência... use 'Cartão' para Cobertura Geográfica, Órgão Responsável e Público-alvo." style="min-height:72px;"></div></div>
+          <input type="hidden" id="inp-abr" name="abrangencia">
+        </div>
+        <div class="fg g-full"><label class="flabel">Quem pode usar
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Descreva os perfis de usuário e o que cada um pode fazer. Use 'Cartão' para cada perfil (ex: Servidor, Gestor, Administrador).</span></span>
+          </label>
+          <div class="editor-wrap"><div class="etb">
+            <button type="button" class="etb-btn" onclick="rc('qpu','bold')" title="Negrito"><b>N</b></button>
+            <button type="button" class="etb-btn" onclick="rc('qpu','italic')" title="Itálico"><i>I</i></button>
+            <button type="button" class="etb-btn" onclick="rc('qpu','underline')" title="Sublinhado"><u>S</u></button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="setBlock('qpu','H4')" title="Título de seção">H4</button>
+            <button type="button" class="etb-btn" onclick="setBlock('qpu','P')" title="Parágrafo normal">¶</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="rc('qpu','insertUnorderedList')" title="Lista com marcadores">• Lista</button>
+            <button type="button" class="etb-btn" onclick="rc('qpu','insertOrderedList')" title="Lista numerada">1. Lista</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insCard('qpu')" title="Inserir cartão de perfil de usuário">🗂️ Cartão</button>
+            <button type="button" class="etb-btn" onclick="insNota('qpu')" title="Inserir nota / aviso">💡 Nota</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insLink('qpu')" title="Inserir link">🔗 Link</button>
+            <button type="button" class="etb-btn" onclick="rc('qpu','removeFormat')" title="Limpar formatação">⌫</button>
+          </div><div id="ed-qpu" class="rich-ed" contenteditable="true" data-ph="Descreva os perfis de usuário... use 'Cartão' para cada perfil." style="min-height:72px;"></div></div>
+          <input type="hidden" id="inp-qpu" name="quemPodeUsar">
+        </div>
+        <div class="fg g-full"><label class="flabel">Como usar
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Descreva o passo a passo de utilização. Use 'Passo' para criar etapas numeradas (1, 2, 3...).</span></span>
+          </label>
+          <div class="editor-wrap"><div class="etb">
+            <button type="button" class="etb-btn" onclick="rc('cu','bold')" title="Negrito"><b>N</b></button>
+            <button type="button" class="etb-btn" onclick="rc('cu','italic')" title="Itálico"><i>I</i></button>
+            <button type="button" class="etb-btn" onclick="rc('cu','underline')" title="Sublinhado"><u>S</u></button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="setBlock('cu','H4')" title="Título de seção">H4</button>
+            <button type="button" class="etb-btn" onclick="setBlock('cu','P')" title="Parágrafo normal">¶</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="rc('cu','insertUnorderedList')" title="Lista com marcadores">• Lista</button>
+            <button type="button" class="etb-btn" onclick="rc('cu','insertOrderedList')" title="Lista numerada">1. Lista</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insPasso('cu')" title="Inserir passo numerado">🔢 Passo</button>
+            <button type="button" class="etb-btn" onclick="insNota('cu')" title="Inserir nota / aviso">💡 Nota</button>
+            <span class="etb-sep"></span>
+            <button type="button" class="etb-btn" onclick="insLink('cu')" title="Inserir link">🔗 Link</button>
+            <button type="button" class="etb-btn" onclick="rc('cu','removeFormat')" title="Limpar formatação">⌫</button>
+          </div><div id="ed-cu" class="rich-ed" contenteditable="true" data-ph="Instruções de acesso e uso... use 'Passo' para criar o passo a passo numerado." style="min-height:72px;"></div></div>
+          <input type="hidden" id="inp-cu" name="comoUsar">
+        </div>
+        <div class="fg g-full"><label class="flabel" for="fLinkSup">Link para Suporte</label><input type="url" id="fLinkSup" name="linkSuporte" class="fc" placeholder="https://chamados.ati.to.gov.br"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-2">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">3</span> Dados Internos e Propriedades</h3>
+      <div class="grid">
+        <div class="fg">
+          <label class="flabel" for="fOrigem">Forma de Obtenção <span class="req">*</span></label>
+          <select id="fOrigem" class="fc" required>
+            <option value="">Selecione...</option>
+            <option value="interno">Desenvolvimento ATI</option>
+            <option value="interno_orgao">Desenvolvimento Órgão</option>
+            <option value="terceirizado">Terceirizado / Fábrica de Software</option>
+            <option value="software_livre">Software Livre</option>
+            <option value="aquisicao">Aquisição (Produto de Prateleira)</option>
+            <option value="doacao">Doação</option>
+            <option value="sec">Secretaria de Estado (Sec)</option>
+            <option value="cessao">Cessão de Uso</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flabel">Artefatos de Entrega
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Selecione os artefatos entregues junto ao sistema.</span></span>
+          </label>
+          <div class="opts-group" style="flex-direction:column;gap:.4rem;align-items:flex-start;">
+            <label class="olabel"><input type="checkbox" name="artefato" value="executavel"> 💾 Executável / Binário</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="codigo_fonte"> 📦 Código Fonte</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="documentacao"> 📄 Documentação Técnica</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="manual"> 📖 Manual do Usuário</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="scripts_bd"> 🗄️ Scripts de Banco de Dados</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="infra"> 🏗️ Especificação de Infraestrutura</label>
+            <label class="olabel"><input type="checkbox" name="artefato" value="outro_artefato" onchange="togArtefatoOutro()"> 📋 Outro</label>
+          </div>
+          <div id="artefatoOutroWrap" style="display:none;margin-top:.45rem;">
+            <input type="text" class="fc" name="artefatoOutro" placeholder="Descreva o artefato...">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flabel" for="fDeOndeVeio">De onde veio / Origem
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Procedência: fornecedor, ente federativo, comunidade open-source, etc.</span></span>
+          </label>
+          <input type="text" id="fDeOndeVeio" name="deOndeVeio" class="fc" placeholder="Ex: Min. da Saúde, Fornecedor XYZ, comunidade Apache...">
+        </div>
+        <div class="fg g-full">
+          <label class="flabel">Regras de Uso
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Informe as regras de uso do sistema, termos de uso, políticas de acesso e suas versões.</span></span>
+          </label>
+          <div id="regrasUsoContainer"></div>
+          <button type="button" class="btn-add-item" onclick="addRegraUso()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar regra de uso
+          </button>
+        </div>
+        <script>
+        function addRegraUso(){
+          const c=document.getElementById('regrasUsoContainer');
+          const div=document.createElement('div');div.style.cssText='display:grid;grid-template-columns:1fr .5fr auto;gap:.65rem;align-items:end;margin-bottom:.5rem;';
+          div.innerHTML=`<div class="fg"><input type="text" class="fc" name="regraUsoNome[]" placeholder="Ex: Termo de Uso, Política de Privacidade, SLA..."></div>
+          <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--texto-terciario);cursor:pointer;font-size:1.1rem;">&times;</button>`;
+          c.appendChild(div);
+        }
+        </script>
+
+        <div class="fg g-full">
+          <label class="flabel">Tipo de Acesso <span class="req">*</span></label>
+          <div class="opts-group" style="flex-direction:column;gap:.75rem;align-items:flex-start;">
+            <div style="display:flex;gap:1.25rem;flex-wrap:wrap;">
+              <label class="olabel" style="font-size:.88rem;font-weight:600;"><input type="radio" name="tipoAcesso" value="publico" onchange="updAcessoFields()"><span>🌍 <strong>Público</strong></span></label>
+              <label class="olabel" style="font-size:.88rem;font-weight:600;"><input type="radio" name="tipoAcesso" value="privado" onchange="updAcessoFields()"><span>🔒 <strong>Privado</strong></span></label>
+            </div>
+            <div id="acessoPublicoDetail" style="display:none;width:100%;padding:.85rem 1rem;border:1.5px solid rgba(25,118,210,.2);border-radius:8px;background:rgba(25,118,210,.03);">
+              <div style="font-size:.75rem;font-weight:700;color:var(--azul);margin-bottom:.65rem;text-transform:uppercase;letter-spacing:.06em;">📋 Detalhes do Acesso Público</div>
+              <div class="grid" style="gap:.75rem;">
+                <div class="fg"><label class="flabel" for="fEntePub">Ente responsável</label><input type="text" id="fEntePub" name="entePub" class="fc" placeholder="Ex: Governo do Estado do Tocantins..."></div>
+                <div class="fg"><label class="flabel" for="fEsferaPub">Esfera de governo</label>
+                  <select id="fEsferaPub" name="esferaPub" class="fc">
+                    <option value="">Selecione...</option>
+                    <option value="federal">Federal</option>
+                    <option value="estadual">Estadual</option>
+                    <option value="municipal">Municipal</option>
+                    <option value="multigoverno">Multigovernamental</option>
+                    <option value="nao_governamental">Não-governamental</option>
+                  </select></div>
+                <div class="fg g-full"><label class="flabel" for="fPublicoAlvo">Público-alvo</label><input type="text" id="fPublicoAlvo" name="publicoAlvo" class="fc" placeholder="Ex: Cidadãos tocantinenses, servidores públicos..."></div>
+              </div>
+            </div>
+            <div id="acessoPrivadoDetail" style="display:none;width:100%;padding:.85rem 1rem;border:1.5px solid rgba(124,58,237,.2);border-radius:8px;background:rgba(124,58,237,.03);">
+              <div style="font-size:.75rem;font-weight:700;color:var(--roxo);margin-bottom:.65rem;text-transform:uppercase;letter-spacing:.06em;">🔐 Controle de Acesso Privado</div>
+              <div class="grid" style="gap:.75rem;">
+                <div class="fg"><label class="flabel" for="fMecanismoAuth">Mecanismo de autenticação</label>
+                  <select id="fMecanismoAuth" name="mecanismoAuth" class="fc">
+                    <option value="">Selecione...</option>
+                    <option value="govbr">gov.br / Login Único</option>
+                    <option value="ad">Active Directory / LDAP</option>
+                    <option value="local">Usuário local</option>
+                    <option value="certificado">Certificado digital</option>
+                    <option value="outro">Outro</option>
+                  </select></div>
+                <div class="fg"><label class="flabel" for="fGestorAcesso">Gestor de acesso</label><input type="text" id="fGestorAcesso" name="gestorAcesso" class="fc" placeholder="Ex: ATI — GESEC..."></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fg g-full">
+          <label class="flabel">Número(s) do Processo
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Processos administrativos relacionados ao sistema no SGD.</span></span>
+          </label>
+          <div id="processosContainer">
+            <div class="multi-item">
+              <input type="text" class="fc" name="processo[]" placeholder="Nº do processo no SGD">
+              <button type="button" class="btn-rm-item" onclick="rmMulti(this,'processosContainer')" title="Remover">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn-add-item" onclick="addMulti('processosContainer','processo[]','Nº do processo no SGD')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar processo
+          </button>
+        </div>
+        <div class="fg g-full">
+          <label class="flabel">Integra com quais sistemas?</label>
+          <div class="integ-grid">
+            <div class="integ-box">
+              <div class="integ-head">🏛️ Internos <span class="ibadge ibadge-int">Gov. Tocantins</span></div>
+              <input class="integ-search" placeholder="🔍 Buscar..." oninput="filtInteg(this,'int')">
+              <div class="integ-list" id="list-int"></div>
+
+              <div class="integ-tags" id="tags-int"></div>
+            </div>
+            <div class="integ-box">
+              <div class="integ-head">🌐 Externos <span class="ibadge ibadge-ext">Outros / Federal</span></div>
+              <input class="integ-search" placeholder="🔍 Buscar..." oninput="filtInteg(this,'ext')">
+              <div class="integ-list" id="list-ext"></div>
+              <div class="integ-tags" id="tags-ext"></div>
+            </div>
+          </div>
+          <div class="sgd-chart-wrap" id="sgdChartWrap" style="display:none;">
+            <div class="sgd-chart-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--azul)"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+              Pré-visualização — Fluxo SGD
+            </div>
+            <div class="sgd-flow" id="sgdFlow"></div>
+            <div class="sgd-stat-grid" id="sgdStats"></div>
+          </div>
+        </div>
+
+        <div class="sub-sec">
+        <div class="sub-sec-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--azul-claro)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          Observações Técnicas
+        </div>
+        <div class="fg g-full">
+          <label class="flabel">Observações adicionais sobre dados internos</label>
+          <textarea class="fc" name="observacoesDados" rows="2" placeholder="Informações complementares sobre dados internos, integrações ou propriedades..."></textarea>
+        </div>
+      </div>
+      </div>
+
+      <div class="sub-sec">
+        <div class="sub-sec-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--amarelo)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          LGPD — Integração com Sistema ATI
+        </div>
+        <div class="lgpd-section">
+          <div class="lgpd-section-title">🔒 Registros LGPD (Sistema ATI)</div>
+          <p style="font-size:.78rem;color:var(--texto-terciario);margin-bottom:.9rem;">Selecione os registro(s) LGPD cadastrados pelo órgão/ATI aplicáveis a este sistema.</p>
+          <div class="lgpd-cadastros-list" id="lgpdCadastrosList">
+            <label class="lgpd-item"><input type="checkbox" name="lgpdRegistro[]" value="lgpd-001"><div class="lgpd-item-info"><div class="lgpd-item-nome">LGPD-001 — Dados de Identificação Pessoal</div><div class="lgpd-item-desc">CPF, RG, nome, data nascimento · Base legal: Obrigação legal</div></div><span class="lgpd-badge lgpd-badge-ativo">✓ Ativo</span></label>
+            <label class="lgpd-item"><input type="checkbox" name="lgpdRegistro[]" value="lgpd-002"><div class="lgpd-item-info"><div class="lgpd-item-nome">LGPD-002 — Dados Funcionais</div><div class="lgpd-item-desc">Cargo, matrícula, lotação · Base legal: Contrato de trabalho</div></div><span class="lgpd-badge lgpd-badge-ativo">✓ Ativo</span></label>
+            <label class="lgpd-item"><input type="checkbox" name="lgpdRegistro[]" value="lgpd-003"><div class="lgpd-item-info"><div class="lgpd-item-nome">LGPD-003 — Dados de Saúde</div><div class="lgpd-item-desc">Prontuário, diagnósticos, tratamentos · Base legal: Proteção da vida</div></div><span class="lgpd-badge lgpd-badge-pendente">⏳ Pendente</span></label>
+            <label class="lgpd-item"><input type="checkbox" name="lgpdRegistro[]" value="lgpd-004"><div class="lgpd-item-info"><div class="lgpd-item-nome">LGPD-004 — Dados Financeiros</div><div class="lgpd-item-desc">Renda, movimentações bancárias · Base legal: Obrigação legal</div></div><span class="lgpd-badge lgpd-badge-ativo">✓ Ativo</span></label>
+          </div>
+          <button type="button" class="btn-add-item verde" onclick="addLgpdRegistro()" style="margin-top:0;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Cadastrar novo registro LGPD
+          </button>
+          <div id="lgpdNovoContainer"></div>
+          <div style="margin-top:.75rem;">
+            <label class="flabel">Finalidade do Tratamento de Dados</label>
+            <textarea class="fc" name="lgpdFinalidade" rows="2" placeholder="Descreva a finalidade do tratamento dos dados pessoais..." style="margin-top:.35rem;"></textarea>
+          </div>
+          <div class="grid" style="gap:.75rem;margin-top:.75rem;">
+            <div class="fg"><label class="flabel">Responsável pelo Tratamento (DPO/Encarregado)</label><input type="text" class="fc" name="lgpdDpo" placeholder="Ex: João da Silva — ATI"></div>
+            <div class="fg"><label class="flabel">Prazo de Retenção dos Dados</label><input type="text" class="fc" name="lgpdRetencao" placeholder="Ex: 5 anos, Indeterminado..."></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-3">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">4</span> Informações do Ambiente</h3>
+      <p style="font-size:.83rem;color:var(--texto-terciario);margin-bottom:1rem;">Selecione os ambientes e preencha os dados de cada um.</p>
+      <div class="amb-pills" id="ambPills">
+        <label class="apill" data-v="producao"><input type="checkbox" name="ambiente" value="producao"><span>🟢 Produção</span></label>
+        <label class="apill" data-v="homologacao"><input type="checkbox" name="ambiente" value="homologacao"><span>🟡 Homologação</span></label>
+        <label class="apill" data-v="desenvolvimento"><input type="checkbox" name="ambiente" value="desenvolvimento"><span>🟣 Desenvolvimento</span></label>
+        <label class="apill" data-v="teste"><input type="checkbox" name="ambiente" value="teste"><span>🔴 Teste</span></label>
+      </div>
+      <div id="ambBlocks"></div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-4">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">5</span> Propriedades Técnicas</h3>
+      <div class="grid grid-3">
+        <div class="fg"><label class="flabel" for="fTipoMaint">Órgão responsável pela manutenção <span class="req">*</span></label>
+          <select id="fTipoMaint" class="fc" required onchange="updMaint()">
+            <option value="">Selecione...</option>
+            <option value="ati">ATI</option>
+            <option value="orgao">Órgão</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flabel" for="fFormaMaint">Forma de Manutenção <span class="req">*</span></label>
+          <select id="fFormaMaint" class="fc" required onchange="updForma()">
+            <option value="">— Selecione o Tipo —</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flabel" for="fDptoMaint">Departamento Responsável</label>
+          <input type="text" id="fDptoMaint" class="fc" placeholder="Ex: GDS, Diretoria de TI...">
+        </div>
+        <div class="fg g-full">
+          <label class="flabel" for="fReqMaint">Requisitos para Manutenção
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Requisitos técnicos para manutenção: acesso VPN, ferramentas específicas, dependências de infra, etc.</span></span>
+          </label>
+          <textarea id="fReqMaint" name="requisitosMaintencao" class="fc" rows="2" placeholder="Ex: Acesso VPN corporativa, JDK 17+, Maven 3.8, acesso ao repositório GitLab interno..."></textarea>
+        </div>
+        <div class="empresa-block g-full" id="empresaBlock">
+          <p style="font-size:.78rem;font-weight:700;color:var(--texto-terciario);text-transform:uppercase;margin-bottom:.75rem;">📄 Dados da Empresa Terceirizada</p>
+          <div class="grid grid-3">
+            <div class="fg"><label class="flabel" for="fEmpresa">Nome da Empresa <span class="req">*</span></label><input type="text" id="fEmpresa" class="fc" placeholder="Razão social"></div>
+            <div class="fg"><label class="flabel" for="fContrato">Número do Contrato <span class="req">*</span></label><input type="text" id="fContrato" class="fc" placeholder="Ex: Contrato nº 001/2024"></div>
+          </div>
+        </div>
+        <div class="fg g-full dyn-field" id="df-ling">
+          <label class="flabel">Linguagem(s) <span class="req">*</span>
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Adicione todas as linguagens utilizadas. Os frameworks disponíveis respondem à linguagem selecionada.</span></span>
+          </label>
+          <div id="linguagensContainer"></div>
+          <button type="button" class="btn-add-item" onclick="addLinguagem()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar linguagem
+          </button>
+        </div>
+        <div class="fg g-full dyn-field" id="df-fw">
+          <label class="flabel">Framework(s)
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Os frameworks disponíveis dependem das linguagens selecionadas.</span></span>
+          </label>
+          <div id="frameworksContainer"></div>
+          <button type="button" class="btn-add-item" onclick="addFramework()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar framework
+          </button>
+        </div>
+        <div class="sub-sec" style="margin-top:1.8rem;" id="df-git-plugins">
+          <div class="sub-sec-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--verde)"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            Plugins pelo Git
+          </div>
+          <p style="font-size:.78rem;color:var(--texto-terciario);margin-bottom:.9rem;">Informe os repositórios Git dos plugins, frameworks ou bibliotecas utilizados no sistema, com suas respectivas versões.</p>
+          <div id="gitPluginsContainer"></div>
+          <button type="button" class="btn-add-item verde" onclick="addGitPlugin()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar repositório Git
+          </button>
+          <div style="margin-top:1.2rem; padding:1rem 1.2rem; background:rgba(255,180,0,0.08); border:1px dashed rgba(255,180,0,0.3); border-radius:10px;">
+            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
+              <input type="checkbox" id="semGitPluginCheck" style="accent-color:var(--laranja); width:18px; height:18px;" onchange="toggleAddPluginManual(this)">
+              <span style="font-size:.82rem; color:var(--texto-secundario);">Não possui plugin pelo Git</span>
+            </label>
+            <div id="addPluginManualBox" style="display:none; margin-top:0.8rem;">
+              <div style="display:flex; gap:0.5rem; align-items:flex-end; flex-wrap:wrap;">
+                <div style="flex:1; min-width:160px;">
+                  <label style="font-size:.72rem; color:var(--texto-secundario); margin-bottom:.25rem; display:block;">Nome do Plugin/Framework/Biblioteca</label>
+                  <input type="text" id="nomePluginManual" class="fc" placeholder="Nome do plugin ou framework">
+                </div>
+                <div style="width:120px;">
+                  <label style="font-size:.72rem; color:var(--texto-secundario); margin-bottom:.25rem; display:block;">Versão</label>
+                  <input type="text" id="versaoPluginManual" class="fc" placeholder="Ex: 2.1.0">
+                </div>
+                <div style="width:150px;">
+                  <label style="font-size:.72rem; color:var(--texto-secundario); margin-bottom:.25rem; display:block;">Licença de Uso</label>
+                  <select id="licencaPluginManual" class="fc">
+                    <option value="">Selecione</option>
+                    <option value="MIT">MIT</option>
+                    <option value="GPL">GPL</option>
+                    <option value="Apache">Apache</option>
+                    <option value="BSD">BSD</option>
+                    <option value="LGPL">LGPL</option>
+                    <option value="Proprietaria">Proprietária</option>
+                    <option value="Outra">Outra</option>
+                  </select>
+                </div>
+                <button type="button" class="btn-add-item verde" onclick="adicionarPluginManual()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <div id="pluginsManuaisContainer" style="margin-top:0.6rem;"></div>
+            </div>
+          </div>
+        </div>
+
+                <div class="fg dyn-field hidden" id="df-cms">
+          <label class="flabel" for="fCms">CMS</label>
+          <select id="fCms" class="fc" onchange="updCmsFields()">
+            <option value="">Selecione...</option>
+            <option value="wordpress">WordPress</option>
+            <option value="joomla">Joomla</option>
+            <option value="drupal">Drupal</option>
+            <option value="nenhum">Sem CMS</option>
+          </select>
+        </div>
+        <div class="fg dyn-field hidden" id="df-cms-versao">
+          <label class="flabel" for="fCmsVersao">Versão do CMS</label>
+          <input type="text" id="fCmsVersao" name="cmsVersao" class="fc" placeholder="Ex: 6.4.3">
+        </div>
+        <div class="fg g-full dyn-field hidden" id="df-cms-plugins">
+          <label class="flabel">Versão dos Plugins
+            <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Informe a versão de cada plugin instalado no CMS.</span></span>
+          </label>
+          <div id="cmsPluginsContainer"></div>
+          <button type="button" class="btn-add-item purple" onclick="addCmsPlugin()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar plugin do CMS
+          </button>
+        </div>
+        <div class="fg g-full dyn-field hidden" id="df-bd-confirma">
+          <label class="flabel" style="color:var(--verde);font-weight:700;">
+            <input type="checkbox" name="bdConfirmacao" value="1" style="margin-right:.5rem;">
+            ✓ Confirmação: O Banco de Dados é o mesmo da versão indicada?
+          </label>
+          <p style="font-size:.75rem;color:var(--texto-terciario);margin-top:.25rem;">Marque apenas se o BD em produção corresponde exatamente à versão do sistema informada.</p>
+        </div>
+        <div class="fg g-full dyn-field hidden" id="df-nav">
+          <label class="flabel">Navegador de Preferência <span class="req">*</span></label>
+          <div class="opts-group" style="flex-direction:column;gap:.5rem;align-items:flex-start;">
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
+              <label class="olabel"><input type="checkbox" name="navegador" value="chrome"> Google Chrome</label>
+              <label class="olabel"><input type="checkbox" name="navegador" value="firefox"> Mozilla Firefox</label>
+              <label class="olabel"><input type="checkbox" name="navegador" value="edge"> Microsoft Edge</label>
+              <label class="olabel"><input type="checkbox" name="navegador" value="safari"> Safari</label>
+              <label class="olabel"><input type="checkbox" name="navegador" value="opera"> Opera</label>
+            </div>
+            <div style="width:100%;padding-top:.6rem;border-top:1px dashed var(--cinza-borda);">
+              <input type="text" name="navegadorObs" class="fc" placeholder="Notas de compatibilidade...">
+            </div>
+          </div>
+          <span class="ferr" id="errNav" style="display:none;">Selecione ao menos um navegador.</span>
+        </div>
+        <div class="fg g-full dyn-field hidden" id="df-bi">
+          <label class="flabel" for="fBiPlat">Plataforma de BI / Analytics</label>
+          <select id="fBiPlat" name="biPlataforma" class="fc">
+            <option value="">Selecione...</option>
+            <option value="powerbi">Microsoft Power BI</option>
+            <option value="tableau">Tableau</option>
+            <option value="metabase">Metabase</option>
+            <option value="superset">Apache Superset</option>
+            <option value="looker">Looker / Looker Studio</option>
+            <option value="qlik">Qlik Sense</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="fg dyn-field hidden" id="df-plat"><label class="flabel">Plataforma Mobile</label>
+          <div class="opts-group">
+            <label class="olabel"><input type="checkbox" name="platMob" value="android" onchange="updLojaLinks()"> Android</label>
+            <label class="olabel"><input type="checkbox" name="platMob" value="ios" onchange="updLojaLinks()"> iOS</label>
+            <label class="olabel"><input type="checkbox" name="platMob" value="ambos" onchange="updLojaLinks()"> Cross-platform</label>
+          </div>
+        </div>
+        <div class="fg g-full dyn-field hidden" id="df-loja"><label class="flabel">Link(s) na Loja de Apps</label>
+          <div id="lojaLinksContainer"></div>
+        </div>
+        <div class="fg g-2"><label class="flabel" for="fFonte">Link do Código Fonte</label><input type="url" id="fFonte" class="fc" placeholder="GitLab, GitHub..."></div>
+        <div class="fg g-2"><label class="flabel" for="fDoc">Link da Documentação</label><input type="url" id="fDoc" class="fc" placeholder="Swagger, Confluence..."></div>
+      </div>
+
+      <div class="sub-sec" id="subsecPlugins" style="display:none;">
+        <div class="sub-sec-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--roxo)"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/></svg>
+          Plugins Instalados
+          <span style="font-size:.68rem;background:rgba(124,58,237,.1);color:var(--roxo);padding:1px 7px;border-radius:8px;font-weight:700;">CMS detectado</span>
+        </div>
+        <div id="pluginsContainer"></div>
+        <button type="button" class="btn-add-item purple" onclick="addPlugin()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar plugin
+        </button>
+      </div>
+
+      <div class="sub-sec">
+        <div class="sub-sec-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--azul-claro)"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+          Bibliotecas / Dependências
+        </div>
+        <div id="bibliotecasContainer"></div>
+        <button type="button" class="btn-add-item" onclick="addBiblioteca()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar biblioteca
+        </button>
+      </div>
+
+      <div class="sub-sec">
+        <div class="sub-sec-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--roxo)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          Licenças de Software (Sistema / Dados)
+        </div>
+        <div id="licencasContainer"></div>
+        <button type="button" class="btn-add-item purple" onclick="addLicenca()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar licença
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-5">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">6</span> Propriedades de Controle</h3>
+      <div class="grid">
+        <div class="fg"><label class="flabel">Visibilidade <span class="req">*</span></label>
+          <div class="opts-group" id="grpVis">
+            <label class="olabel"><input type="radio" name="visibilidade" value="interno" required> Interno</label>
+            <label class="olabel"><input type="radio" name="visibilidade" value="externo"> Externo</label>
+            <label class="olabel"><input type="radio" name="visibilidade" value="restrito"> Restrito</label>
+          </div>
+          <span class="ferr" id="errVis">Campo obrigatório.</span>
+        </div>
+        <div class="fg"><label class="flabel">O sistema é legado? <span class="req">*</span></label>
+          <div class="opts-group">
+            <label class="olabel"><input type="radio" name="legado" value="sim" required> Sim</label>
+            <label class="olabel"><input type="radio" name="legado" value="nao"> Não</label>
+          </div>
+          <span class="ferr" id="errLeg">Campo obrigatório.</span>
+        </div>
+        <div class="fg">
+          <label class="flabel">Possui dados pessoais? <span class="req">*</span></label>
+          <div class="opts-group">
+            <label class="olabel"><input type="radio" name="dadosPessoais" value="sim" required> Sim</label>
+            <label class="olabel"><input type="radio" name="dadosPessoais" value="nao" checked> Não</label>
+          </div>
+          <div id="dpNote" style="display:none;margin-top:.5rem;font-size:.78rem;color:var(--texto-terciario);padding:.45rem .75rem;background:rgba(245,200,0,.06);border-radius:6px;border-left:3px solid var(--amarelo);">
+            ⚠️ Registre os dados pessoais tratados na seção LGPD (Aba 3).
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flabel">Possui dados sensíveis?</label>
+          <div class="opts-group">
+            <label class="olabel"><input type="radio" name="dadosSensiveis" value="sim"> Sim</label>
+            <label class="olabel"><input type="radio" name="dadosSensiveis" value="nao" checked> Não</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-tab-pane" id="pane-6">
+    <div class="fsec">
+      <h3 class="sec-title"><span class="sec-num">7</span> Log de Auditoria</h3>
+      <p style="font-size:.83rem;color:var(--texto-secundario);margin-bottom:1rem;">Registro de todas as alterações realizadas neste cadastro. O log é gerado automaticamente e não pode ser editado.</p>
+      <div class="log-auditoria-wrap" id="logAuditoriaContainer" style="background:var(--cinza-card);border:1.5px solid var(--cinza-borda);border-radius:12px;padding:1rem;max-height:400px;overflow-y:auto;">
+        <div class="log-entry" style="display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px dashed var(--cinza-borda);font-size:.82rem;">
+          <span style="color:var(--texto-terciario);font-size:.72rem;white-space:nowrap;">17/06/2025 10:47:17</span>
+          <span style="background:var(--verde);color:#fff;font-size:.65rem;padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap;">CRIACAO</span>
+          <span style="color:var(--texto-principal);">Cadastro inicial do sistema</span>
+          <span style="margin-left:auto;color:var(--texto-terciario);font-size:.72rem;">por: Administrador</span>
+        </div>
+        <div class="log-entry" style="display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px dashed var(--cinza-borda);font-size:.82rem;">
+          <span style="color:var(--texto-terciario);font-size:.72rem;white-space:nowrap;">17/06/2025 09:15:33</span>
+          <span style="background:var(--azul);color:#fff;font-size:.65rem;padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap;">EDICAO</span>
+          <span style="color:var(--texto-principal);">Atualização de versão do framework Laravel</span>
+          <span style="margin-left:auto;color:var(--texto-terciario);font-size:.72rem;">por: João Silva</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-nav-footer">
+    <div class="tab-progress">
+      <div class="tab-progress-dots" id="tabDots"></div>
+      <span id="tabProgressLabel" style="margin-left:.5rem;"></span>
+    </div>
+    <div class="tab-nav-btns">
+      <button type="button" class="btn-prev" id="btnPrev" onclick="goTab(currentTab-1)" style="display:none;">
+        ← Anterior
+      </button>
+      <button type="button" class="btn-next" id="btnNext" onclick="goTab(currentTab+1)">
+        Próximo →
+      </button>
+      <button type="submit" class="btn-submit-final" id="btnSubmit" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Cadastrar Sistema
+      </button>
+    </div>
+  </div>
+  </form>
+  </div>
+</main>
+
+<div class="overlay" id="modalDup">
+  <div class="modal-box">
+    <div class="modal-ico">🔄</div>
+    <div class="modal-title">Sistema já cadastrado</div>
+    <div class="modal-body" id="modalDupBody"></div>
+    <div class="modal-acts">
+      <button class="btn-sec" onclick="closeModalDup(false)">Não, cadastrar do zero</button>
+      <button class="btn-pri" onclick="closeModalDup(true)">Sim, reutilizar dados</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="modalAviso">
+  <div class="modal-box">
+    <div class="modal-ico">⚠️</div>
+    <div class="modal-title">Sistema já existente</div>
+    <div class="modal-body" id="modalAvisoBody"></div>
+    <div class="modal-acts">
+      <button class="btn-pri" onclick="document.getElementById('modalAviso').classList.remove('show')">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalPrograma">
+  <div class="modal-box">
+    <div class="modal-ico">🏛️</div>
+    <div class="modal-title">Cadastrar Programa Governamental</div>
+    <div class="modal-body">
+      <div class="fg" style="margin-bottom:.85rem;">
+        <label class="flabel">Nome do Programa <span class="req">*</span></label>
+        <input type="text" id="novoProgNome" class="fc" placeholder="Ex: Programa Tocantins Digital">
+      </div>
+      <div class="fg">
+        <label class="flabel">Nº do PG (Programa Governamental)</label>
+        <input type="text" id="novoProgPG" class="fc" placeholder="Ex: PG 2024.0012">
+      </div>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-sec" onclick="closeCadastroPrograma()">Cancelar</button>
+      <button class="btn-pri" onclick="salvarPrograma()">Salvar Programa</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalER">
+  <div class="modal-box modal-er">
+    <div class="er-header">
+      <div class="er-header-info">
+        <div class="er-entity-crown">📋 Documento de Entidade e Relacionamento</div>
+        <div class="er-header-title" id="erHeaderTitle">—</div>
+        <div class="er-header-sub" id="erHeaderSub">Portal de Sistemas · Gov. Estado do Tocantins</div>
+        <div class="er-header-meta" id="erHeaderMeta"></div>
+      </div>
+    </div>
+    <div class="er-tabs">
+      <button class="er-tab active" onclick="switchErTab('visao-geral',this)">📄 Visão Geral</button>
+      <button class="er-tab" onclick="switchErTab('tecnico',this)">⚙️ Técnico</button>
+      <button class="er-tab" onclick="switchErTab('relacionamentos',this)">🔗 Relacionamentos</button>
+      <button class="er-tab" onclick="switchErTab('versoes',this)">🏷️ Versões</button>
+      <button class="er-tab" onclick="switchErTab('diagrama',this)">📊 Diagrama ER</button>
+      <button class="er-tab" onclick="switchErTab('sgd',this)" id="tabSgd" style="display:none">🗂️ SGD</button>
+      <button class="er-tab" onclick="switchErTab('ecossistema',this)" id="tabEco" style="display:none">🌐 Ecossistema</button>
+    </div>
+
+    <div id="panel-visao-geral" class="er-panel active">
+      <div class="er-main-entity">
+        <div class="er-entity-crown">ENTIDADE PRINCIPAL</div>
+        <div class="er-entity-name" id="erEntityName">—</div>
+        <div class="er-entity-sigla" id="erEntitySigla">—</div>
+        <div class="er-entity-tags" id="erEntityTags"></div>
+      </div>
+      <div class="er-attr-grid" id="erAttrGrid"></div>
+      <div style="font-size:.75rem;color:var(--texto-terciario);margin-top:1rem;padding:.65rem .9rem;background:var(--cinza-bg);border-radius:8px;border-left:3px solid var(--azul-claro);">
+        <strong>Cardinalidade padrão:</strong> 1:N para integrações internas · N:N para externas.
+      </div>
+    </div>
+
+    <div id="panel-tecnico" class="er-panel">
+      <div class="er-attr-grid" id="erAttrTecGrid"></div>
+    </div>
+
+    <div id="panel-relacionamentos" class="er-panel">
+      <div class="er-rel-section" id="erIntSecao" style="display:none">
+        <div class="er-rel-title">🏛️ Integrações Internas — Gov. Tocantins</div>
+        <div class="er-rel-grid" id="erIntGrid"></div>
+      </div>
+      <div class="er-rel-section" id="erExtSecao" style="display:none">
+        <div class="er-rel-title">🌐 Integrações Externas / Federais</div>
+        <div class="er-rel-grid" id="erExtGrid"></div>
+      </div>
+      <div id="erRelEmpty" class="er-empty" style="display:none">Nenhuma integração informada.</div>
+    </div>
+
+    <div id="panel-versoes" class="er-panel">
+      <div style="font-size:.83rem;color:var(--texto-terciario);margin-bottom:1rem;">Histórico de versões do sistema cadastradas no Portal.</div>
+      <table class="ver-table" id="erVerTable">
+        <thead><tr><th>Versão</th><th>Data</th><th>Responsável</th><th>Changelog</th><th>Notas</th></tr></thead>
+        <tbody id="erVerBody"></tbody>
+      </table>
+    </div>
+
+    <div id="panel-diagrama" class="er-panel">
+      <p style="font-size:.82rem;color:var(--texto-terciario);margin-bottom:1rem;">Diagrama ER gerado automaticamente das integrações cadastradas.</p>
+      <div class="er-diagram-wrap"><div id="mermaidContainer"></div></div>
+    </div>
+
+    <div id="panel-sgd" class="er-panel">
+      <div class="sgd-er-wrap">
+        <div class="sgd-er-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Integração com o SGD
+        </div>
+        <div id="sgdErFlowFull"></div>
+        <div class="sgd-stat-grid" id="sgdErStats"></div>
+      </div>
+    </div>
+
+    <div id="panel-ecossistema" class="er-panel">
+      <div id="ecoHeroWrap"></div>
+      <div id="ecoMembersSection"></div>
+      <div id="ecoFlowSection"></div>
+    </div>
+
+    <div class="er-footer">
+      <div class="er-footer-meta" id="erFooterMeta"></div>
+      <div class="er-footer-acts">
+        <button class="btn-download" onclick="downloadER()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar JSON
+        </button>
+        <button class="btn-pri" onclick="closeER()">Concluir e Novo Cadastro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ══ TEMA ══ */
+const tt=document.getElementById('themeToggle');
+if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-theme');tt.textContent='☀️ Claro';}
+tt.addEventListener('click',()=>{
+  document.body.classList.toggle('dark-theme');
+  const d=document.body.classList.contains('dark-theme');
+  localStorage.setItem('theme',d?'dark':'light');
+  tt.textContent=d?'☀️ Claro':'🌙 Escuro';
+});
+
+/* ══ TABS DO FORMULÁRIO ══ */
+const TOTAL_TABS=7;
+let currentTab=0;
+const tabLabels=['Natureza & Situação','Informações Básicas','Dados Internos & LGPD','Ambientes','Técnico','Controle','Auditoria'];
+
+function buildDots(){
+  const wrap=document.getElementById('tabDots');
+  wrap.innerHTML='';
+  for(let i=0;i<TOTAL_TABS;i++){
+    const d=document.createElement('div');
+    d.className='tab-dot'+(i===currentTab?' active':i<currentTab?' done':'');
+    wrap.appendChild(d);
+  }
+  document.getElementById('tabProgressLabel').textContent=`${currentTab+1} de ${TOTAL_TABS} — ${tabLabels[currentTab]}`;
+}
+
+function goTab(idx){
+  if(idx<0||idx>=TOTAL_TABS)return;
+  // Mark current as done
+  const tabs=document.querySelectorAll('.ftab');
+  tabs[currentTab].classList.add('done');
+  // Deactivate all
+  document.querySelectorAll('.form-tab-pane').forEach(p=>p.classList.remove('active'));
+  tabs.forEach(t=>t.classList.remove('active'));
+  currentTab=idx;
+  document.getElementById('pane-'+idx).classList.add('active');
+  tabs[idx].classList.add('active');
+  tabs[idx].classList.remove('done'); // active tab shows number not check
+  // Show/hide buttons
+  document.getElementById('btnPrev').style.display=idx>0?'':'none';
+  document.getElementById('btnNext').style.display=idx<TOTAL_TABS-1?'':'none';
+  document.getElementById('btnSubmit').style.display=idx===TOTAL_TABS-1?'':'none';
+  buildDots();
+  // Scroll to top of content
+  window.scrollTo({top:document.getElementById('formTabsBar').offsetTop-80,behavior:'smooth'});
+}
+
+// Init tabs UI
+(function initTabs(){
+  buildDots();
+  document.getElementById('btnPrev').style.display='none';
+})();
+
+/* ══ RICH EDITOR ══ */
+function rc(id,cmd){document.getElementById('ed-'+id).focus();document.execCommand(cmd,false,null);}
+function setBlock(id,tag){const ed=document.getElementById('ed-'+id);ed.focus();document.execCommand('formatBlock',false,tag);}
+function insLink(id){const u=prompt('URL:');if(u){document.getElementById('ed-'+id).focus();document.execCommand('createLink',false,u);}}
+
+let passoCounter={};
+function insPasso(id){
+  passoCounter[id]=(passoCounter[id]||0)+1;
+  const n=passoCounter[id];
+  const html=`<div class="rt-passo"><span class="rt-passo-num">${n}</span><div class="rt-passo-body"><strong>Título do passo</strong><br>Descreva esta etapa...</div></div><p><br></p>`;
+  const ed=document.getElementById('ed-'+id);ed.focus();
+  document.execCommand('insertHTML',false,html);
+}
+function insCard(id){
+  const html=`<div class="rt-card">📌 <strong>Título do item</strong>Descreva aqui...</div>`;
+  const ed=document.getElementById('ed-'+id);ed.focus();
+  document.execCommand('insertHTML',false,html);
+}
+function insNota(id){
+  const html=`<div class="rt-nota">ℹ️ <strong>Nota:</strong> escreva aqui uma observação importante...</div><p><br></p>`;
+  const ed=document.getElementById('ed-'+id);ed.focus();
+  document.execCommand('insertHTML',false,html);
+}
+
+/* ══ SITUAÇÃO PILLS ══ */
+document.querySelectorAll('.spill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.spill').forEach(x=>x.classList.remove('on'));
+    p.querySelector('input').checked=true;p.classList.add('on');
+    document.getElementById('consultaNote').style.display=p.dataset.v==='consulta'?'block':'none';
+  });
+});
+
+/* ══ DADOS PESSOAIS ══ */
+document.querySelectorAll('input[name="dadosPessoais"]').forEach(r=>{
+  r.addEventListener('change',()=>{document.getElementById('dpNote').style.display=r.value==='sim'?'block':'none';});
+});
+
+/* ══ PORTAL DB ══ */
+const portalSistemas=[
+  {nome:'SIAFTO',sigla:'SIAFTO',natureza:'web',orgao:'sefaz',ecosistema:'SIAFTO',dataHom:'2023-11-15',tipoIntegracaoSGD:'REST API'},
+  {nome:'ADA',sigla:'ADA',natureza:'web',orgao:'seduc',ecosistema:'ADA',dataHom:'2024-02-20',tipoIntegracaoSGD:'Webservice SOAP'},
+  {nome:'SGD',sigla:'SGD',natureza:'web',orgao:'ati',ecosistema:'SGD',dataHom:'2022-06-01',tipoIntegracaoSGD:null,ehSGD:true},
+  {nome:'SIGA',sigla:'SIGA',natureza:'web',orgao:'secad',ecosistema:'SIGA',dataHom:'2023-07-10',tipoIntegracaoSGD:'REST API'},
+  {nome:'Portal Transparência',sigla:'PT',natureza:'web',orgao:'secad',ecosistema:'PortalTransparencia',dataHom:'2023-03-05'},
+  {nome:'Portal Transparência Mobile',sigla:'PT-MOB',natureza:'mobile',orgao:'secad',ecosistema:'PortalTransparencia',homologado:false},
+  {nome:'e-Proc',sigla:'EPROC',natureza:'web',orgao:'ssp',ecosistema:'eProc',dataHom:'2024-01-18',tipoIntegracaoSGD:'REST API'},
+  {nome:'SSP-CICCTO',sigla:'CICCTO',natureza:'web',orgao:'ssp',ecosistema:'SSP-CICCTO',dataHom:'2024-04-22',tipoIntegracaoSGD:'Integração via barramento'},
+  {nome:'SEDUC-SIED',sigla:'SIED',natureza:'web',orgao:'seduc',ecosistema:'SEDUC',dataHom:'2023-09-14',tipoIntegracaoSGD:'REST API'},
+  {nome:'SESAU-SISREG',sigla:'SISREG',natureza:'web',orgao:'sesau',ecosistema:'SESAU',homologado:false},
+  {nome:'AGERH',sigla:'AGERH',natureza:'web',orgao:'semarh',ecosistema:'AGERH',dataHom:'2024-03-12'},
+  {nome:'SEGPLAN',portal:false,homologado:false},{nome:'DIOE-TO',portal:false,homologado:false},{nome:'IGESTO',portal:false,homologado:false},
+];
+const sistemasExt=[
+  {nome:'e-Social',portal:false},{nome:'SEFAZ Federal',portal:false},{nome:'SIAPE',portal:false},
+  {nome:'SIAFI',portal:false},{nome:'Receita Federal (CNPJ)',portal:false},{nome:'Receita Federal (CPF)',portal:false},
+  {nome:'gov.br',portal:false},{nome:'SERPRO',portal:false},{nome:'NF-e',portal:false},
+  {nome:'RENAJUD',portal:false},{nome:'SINESP',portal:false},{nome:'CadUnico',portal:false},
+  {nome:'NIS/CNIS',portal:false},{nome:'INSS',portal:false},{nome:'IBGE',portal:false},
+];
+
+/* ══ MERMAID ══ */
+mermaid.initialize({startOnLoad:false,theme:'default',er:{diagramPadding:20,layoutDirection:'LR',minEntityWidth:100,minEntityHeight:75,entityPadding:15,useMaxWidth:true},fontFamily:'"DM Sans",sans-serif',fontSize:13});
+function sanitizeId(s){if(!s)return'ENTIDADE';return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,'_').replace(/^(\d)/,'_$1').replace(/_{2,}/g,'_').replace(/^_+|_+$/g,'')||'ENTIDADE';}
+
+/* ══ PROGRAMAS GOVERNAMENTAIS ══ */
+const programasGovernamentais=[
+  'Programa Tocantins Digital — PT 2024.0012',
+  'Programa Mais Saúde — PT 2024.0034',
+  'Programa Educação Conectada — PT 2024.0021',
+];
+function populaProgramasDatalist(){
+  const dl=document.getElementById('programasGovList');
+  if(!dl)return;
+  dl.innerHTML=programasGovernamentais.map(p=>`<option value="${p.replace(/"/g,'&quot;')}"></option>`).join('');
+}
+populaProgramasDatalist();
+function openCadastroPrograma(){
+  document.getElementById('novoProgNome').value='';
+  document.getElementById('novoProgPT').value='';
+  document.getElementById('modalPrograma').classList.add('show');
+}
+function closeCadastroPrograma(){document.getElementById('modalPrograma').classList.remove('show');}
+function salvarPrograma(){
+  const nome=document.getElementById('novoProgNome').value.trim();
+  const pt=document.getElementById('novoProgPT').value.trim();
+  if(!nome){toast('Informe o nome do programa.','err');return;}
+  const completo=pt?`${nome} — ${pt}`:nome;
+  if(!programasGovernamentais.includes(completo))programasGovernamentais.push(completo);
+  populaProgramasDatalist();
+  const inputs=[...document.querySelectorAll('input[name="programaGoverno[]"]')];
+  const vazio=inputs.find(i=>!i.value.trim());
+  if(vazio){
+    vazio.value=completo;vazio.classList.add('hl');setTimeout(()=>vazio.classList.remove('hl'),2000);
+  }else{
+    addMulti('progContainer','programaGoverno[]','Ex: Programa Tocantins Digital — PT 2024.0013');
+    const all=[...document.querySelectorAll('input[name="programaGoverno[]"]')];
+    const last=all[all.length-1];
+    last.value=completo;last.classList.add('hl');setTimeout(()=>last.classList.remove('hl'),2000);
+  }
+  toast('Programa "'+completo+'" cadastrado! 🎉','ok');
+  closeCadastroPrograma();
+}
+
+/* ══ ECOSSISTEMAS ══ */
+function populaEcossistemas(){
+  const sel=document.getElementById('fEcossistema');
+  const ecos={};
+  portalSistemas.filter(s=>s.portal&&s.ecosistema).forEach(s=>{if(!ecos[s.ecosistema])ecos[s.ecosistema]=[];ecos[s.ecosistema].push(s);});
+  Object.keys(ecos).forEach(eco=>{const opt=document.createElement('option');opt.value=eco;opt.textContent=`${eco} (${ecos[eco].length} sistema${ecos[eco].length>1?'s':''})`;sel.appendChild(opt);});
+  const sep=document.createElement('option');sep.value='__novo__';sep.textContent='+ Criar novo ecossistema...';sel.appendChild(sep);
+}
+populaEcossistemas();
+function onEcossistemaChange(){
+  const val=document.getElementById('fEcossistema').value;
+  const pw=document.getElementById('papelEcoWrap'),pv=document.getElementById('ecoPreview');
+  if(!val){pw.style.display='none';pv.style.display='none';return;}
+  if(val==='__novo__'){pw.style.display='flex';pv.style.display='block';pv.innerHTML='<strong>Novo ecossistema</strong> será criado com o nome do sistema.';return;}
+  pw.style.display='flex';
+  const membros=portalSistemas.filter(s=>s.portal&&s.ecosistema===val);
+  pv.style.display='block';
+  pv.innerHTML=`<strong>Ecossistema "${val}":</strong><br>${membros.map(m=>`• ${m.nome} <em style="color:var(--texto-terciario)">(${m.natureza})</em>`).join('<br>')}`;
+}
+
+/* ══ NATUREZA PILLS ══ */
+document.querySelectorAll('.npill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.npill').forEach(x=>x.classList.remove('on'));
+    p.querySelector('input').checked=true;p.classList.add('on');
+    updDynFields();setTimeout(checkAti,150);
+  });
+});
+document.querySelectorAll('.tpill').forEach(p=>{p.addEventListener('click',()=>{const i=p.querySelector('input');i.checked=!i.checked;p.classList.toggle('on',i.checked);});});
+function getNat(){return document.querySelector('.npill.on')?.dataset.v||'';}
+
+function updDynFields(){
+  const n=getNat();
+  const isHot=n==='hotsite',isMob=n==='mobile',isBI=n==='bi',isWeb=n==='web';
+  showF('df-url',isWeb||isHot||isMob);
+  showF('df-ling',!isHot&&!isBI);
+  showF('df-fw',!isHot&&!isBI);
+  showF('df-cms',isHot);
+  showF('df-plat',isMob);
+  showF('df-loja',isMob);
+  showF('df-nav',isWeb);
+  showF('df-bi',isBI);
+  updCmsFields();
+  if(isMob)updLojaLinks();
+  if(!isHot&&!isBI&&document.getElementById('linguagensContainer').children.length===0) addLinguagem();
+  if(!isHot&&!isBI&&document.getElementById('frameworksContainer').children.length===0) addFramework();
+}
+function showF(id,v){const el=document.getElementById(id);if(el)el.classList.toggle('hidden',!v);}
+
+/* ══ LINGUAGENS ══ */
+const linguagemOpcoes=[
+  {value:'',label:'Selecione...'},
+  {value:'java',label:'Java'},{value:'php',label:'PHP'},{value:'js',label:'JavaScript / TypeScript'},
+  {value:'python',label:'Python'},{value:'csharp',label:'C#'},{value:'go',label:'Go'},
+  {value:'swift',label:'Swift'},{value:'kotlin',label:'Kotlin'},{value:'dart',label:'Dart / Flutter'},
+  {value:'ruby',label:'Ruby'},{value:'rust',label:'Rust'},{value:'outra',label:'Outra'},
+];
+let lingCount=0;
+function addLinguagem(){
+  lingCount++;
+  const c=document.getElementById('linguagensContainer');
+  const div=document.createElement('div');div.className='tech-row';div.dataset.lingId=lingCount;
+  const opts=linguagemOpcoes.map(o=>`<option value="${o.value}">${o.label}</option>`).join('');
+  div.innerHTML=`<div class="tech-row-grid">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Linguagem</label>
+      <select class="fc" name="linguagem[]" onchange="syncFrameworkLingOptions()">${opts}</select></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Versão</label>
+      <input type="text" class="fc" name="linguagemVersao[]" placeholder="Ex: 17, 3.11, ES2022"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Uso principal</label>
+      <select class="fc" name="linguagemUso[]">
+        <option value="backend">Backend</option><option value="frontend">Frontend</option>
+        <option value="fullstack">Full-stack</option><option value="scripts">Scripts / Automação</option>
+        <option value="mobile">Mobile</option>
+      </select></div>
+    <button type="button" class="btn-rm-item" onclick="rmLinguagem(this)" style="margin-top:1.4rem;" title="Remover">✕</button>
+  </div>`;
+  c.appendChild(div);
+}
+function rmLinguagem(btn){
+  const item=btn.closest('.tech-row'),c=document.getElementById('linguagensContainer');
+  if(c.querySelectorAll('.tech-row').length>1)item.remove();
+  else item.querySelectorAll('select,input').forEach(el=>{if(el.tagName==='SELECT')el.value='';else el.value='';});
+  syncFrameworkLingOptions();
+}
+
+/* ══ FRAMEWORKS ══ */
+const frameworksMap={
+  java:['Spring Boot','Quarkus','Micronaut','Jakarta EE','Struts','Hibernate','Outro'],
+  php:['Laravel','Symfony','CodeIgniter','Zend / Laminas','CakePHP','Outro'],
+  js:['React / Next.js','Angular','Vue.js / Nuxt','Express.js','NestJS','Svelte','Outro'],
+  python:['Django','FastAPI','Flask','Pyramid','Tornado','Outro'],
+  csharp:['.NET / ASP.NET Core','Blazor','MAUI','Unity','Outro'],
+  go:['Gin','Echo','Fiber','Chi','Outro'],
+  swift:['SwiftUI','UIKit','Vapor','Outro'],
+  kotlin:['Ktor','Spring Boot (Kotlin)','Outro'],
+  dart:['Flutter','Outro'],
+  ruby:['Ruby on Rails','Sinatra','Outro'],
+  rust:['Actix-web','Rocket','Axum','Outro'],
+  outra:['Outro'],
+};
+let fwCount=0;
+function getSelectedLinguagens(){
+  return [...document.querySelectorAll('#linguagensContainer select[name="linguagem[]"]')].map(s=>s.value).filter(v=>v);
+}
+function addFramework(){
+  fwCount++;
+  const c=document.getElementById('frameworksContainer');
+  const div=document.createElement('div');div.className='tech-row';div.dataset.fwId=fwCount;
+  div.innerHTML=buildFrameworkRowHTML(fwCount,getSelectedLinguagens());
+  c.appendChild(div);
+}
+function buildFrameworkRowHTML(id,langs){
+  const allFws=new Set();
+  if(langs.length===0)Object.values(frameworksMap).flat().forEach(f=>allFws.add(f));
+  else langs.forEach(l=>(frameworksMap[l]||frameworksMap.outra).forEach(f=>allFws.add(f)));
+  const opts=['<option value="">Selecione...</option>',...[...allFws].map(f=>`<option value="${f}">${f}</option>`)].join('');
+  const licOpts=buildLicOpts();
+  return `<div style="display:grid;grid-template-columns:1.2fr .7fr 1fr auto;gap:.65rem;align-items:end;">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Framework</label>
+      <select class="fc" name="framework[]">${opts}</select></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Versão</label>
+      <input type="text" class="fc" name="frameworkVersao[]" placeholder="Ex: 3.2.4"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Licença</label>
+      <select class="fc" name="frameworkLicenca[]" onchange="togLicOutro(this,'fw-lic-${id}')">${licOpts}</select>
+      <div id="fw-lic-${id}" style="display:none;margin-top:.35rem;">
+        <input type="text" class="fc" name="frameworkLicencaOutro[]" placeholder="Descreva a licença..."></div></div>
+    <button type="button" class="btn-rm-item" onclick="rmFramework(this)" style="margin-top:1.4rem;" title="Remover">✕</button>
+  </div>`;
+}
+function rmFramework(btn){
+  const item=btn.closest('.tech-row'),c=document.getElementById('frameworksContainer');
+  if(c.querySelectorAll('.tech-row').length>1)item.remove();
+  else item.querySelectorAll('select,input').forEach(el=>{if(el.tagName==='SELECT')el.value='';else el.value='';});
+}
+function syncFrameworkLingOptions(){
+  const langs=getSelectedLinguagens();
+  document.querySelectorAll('#frameworksContainer .tech-row').forEach(row=>{
+    const fwId=row.dataset.fwId;
+    const sel=row.querySelector('select[name="framework[]"]');if(!sel)return;
+    const cur=sel.value;
+    const allFws=new Set();
+    if(langs.length===0)Object.values(frameworksMap).flat().forEach(f=>allFws.add(f));
+    else langs.forEach(l=>(frameworksMap[l]||frameworksMap.outra).forEach(f=>allFws.add(f)));
+    sel.innerHTML=['<option value="">Selecione...</option>',...[...allFws].map(f=>`<option value="${f}"${f===cur?' selected':''}>${f}</option>`)].join('');
+  });
+}
+
+/* ══ LICENÇA HELPER ══ */
+function buildLicOpts(){
+  return`<option value="">Selecione...</option>
+  <option value="mit">MIT</option><option value="apache2">Apache 2.0</option>
+  <option value="bsd3">BSD (3-Clause)</option><option value="gpl3">GNU GPL v3</option>
+  <option value="agpl3">GNU AGPL v3</option><option value="mpl2">MPL 2.0</option>
+  <option value="proprietaria">Proprietária / Comercial</option><option value="freeware">Freeware</option>
+  <option value="saas">SaaS (Assinatura)</option><option value="governo">Licença Governamental</option>
+  <option value="cessao">Cessão de Uso</option><option value="outro">Outro</option>`;
+}
+function togLicOutro(sel,outroId){const el=document.getElementById(outroId);if(el)el.style.display=sel.value==='outro'?'block':'none';}
+
+/* ══ CMS PLUGINS ══ */
+let cmsPluginCount=0;
+function addCmsPlugin(){
+  cmsPluginCount++;
+  const c=document.getElementById('cmsPluginsContainer');
+  const div=document.createElement('div');div.className='tech-row';div.id='cmspl-'+cmsPluginCount;
+  div.innerHTML=`<div style="display:grid;grid-template-columns:1.5fr .7fr 1fr auto;gap:.65rem;align-items:end;">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Nome do Plugin</label>
+      <input type="text" class="fc" name="cmsPluginNome[]" placeholder="Ex: WooCommerce..."></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Versão</label>
+      <input type="text" class="fc" name="cmsPluginVersao[]" placeholder="Ex: 8.2.1"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Licença</label>
+      <select class="fc" name="cmsPluginLicenca[]" onchange="togLicOutro(this,'cmspl-lic-${cmsPluginCount}')">${buildLicOpts()}</select>
+      <div id="cmspl-lic-${cmsPluginCount}" style="display:none;margin-top:.35rem;"><input type="text" class="fc" name="cmsPluginLicencaOutro[]" placeholder="Descreva..."></div></div>
+    <button type="button" class="btn-rm-item" onclick="rmRow(this,'cmsPluginsContainer')" style="margin-top:1.4rem;" title="Remover">✕</button>
+  </div>`;
+  c.appendChild(div);
+}
+
+/* ══ PLUGINS GERAIS ══ */
+let pluginCount=0;
+function addPlugin(){
+  pluginCount++;
+  const c=document.getElementById('pluginsContainer');
+  const div=document.createElement('div');div.className='tech-row';
+  div.innerHTML=`<div style="display:grid;grid-template-columns:1.5fr .7fr .8fr 1fr auto;gap:.65rem;align-items:end;">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Nome do Plugin</label>
+      <input type="text" class="fc" name="pluginNome[]" placeholder="Ex: Yoast SEO..."></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Versão</label>
+      <input type="text" class="fc" name="pluginVersao[]" placeholder="Ex: 20.4.1"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Situação</label>
+      <select class="fc" name="pluginStatus[]"><option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="desconhecido">Desconhecido</option></select></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Licença</label>
+      <select class="fc" name="pluginLicenca[]" onchange="togLicOutro(this,'pl-${pluginCount}')">${buildLicOpts()}</select>
+      <div id="pl-${pluginCount}" style="display:none;margin-top:.35rem;"><input type="text" class="fc" name="pluginLicencaOutro[]" placeholder="Descreva..."></div></div>
+    <button type="button" class="btn-rm-item" onclick="rmRow(this,'pluginsContainer')" style="margin-top:1.4rem;" title="Remover">✕</button>
+  </div>`;
+  c.appendChild(div);
+}
+
+/* ══ PLUGINS GIT ══ */
+let gitPluginCount = 0;
+function addGitPlugin() {
+  gitPluginCount++;
+  const c = document.getElementById('gitPluginsContainer');
+  const div = document.createElement('div');
+  div.className = 'tech-row';
+  div.id = 'gitpl-' + gitPluginCount;
+
+  div.innerHTML = `
+  <div style="display:flex; flex-direction:column; gap:.85rem;">
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:.65rem;">
+      <div class="fg">
+        <label class="flabel" style="font-size:.74rem;">Nome / Dependência</label>
+        <input type="text" class="fc" name="gitPluginNome[]" placeholder="Ex: plugin-sgp, lib-utils...">
+      </div>
+      <div class="fg">
+        <label class="flabel" style="font-size:.74rem;">URL do Repositório</label>
+        <input type="url" class="fc" name="gitPluginUrl[]" placeholder="https://github.com/org/repo...">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:.65rem; align-items:end;">
+      <div class="fg">
+        <label class="flabel" style="font-size:.74rem;">Versão / Branch</label>
+        <input type="text" class="fc" name="gitPluginVersao[]" placeholder="Ex: v2.1.0, main...">
+      </div>
+      <div class="fg">
+        <label class="flabel" style="font-size:.74rem;">Tipo</label>
+        <select class="fc" name="gitPluginTipo[]">
+          <option value="">Selecione...</option>
+          <option value="plugin">Plugin</option>
+          <option value="framework">Framework</option>
+          <option value="biblioteca">Biblioteca</option>
+          <option value="componente">Componente</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="flabel" style="font-size:.74rem;">Licença</label>
+        <select class="fc" name="gitPluginLicenca[]" onchange="togLicOutro(this,'gitpl-lic-${gitPluginCount}')">
+          ${buildLicOpts()}
+        </select>
+      </div>
+      <button type="button" class="btn-rm-item" onclick="rmRow(this,'gitPluginsContainer')" style="height:38px; display:flex; align-items:center; justify-content:center; gap:0.4rem;" title="Remover">
+        ✕ Remover
+      </button>
+    </div>
+
+    <div id="gitpl-lic-${gitPluginCount}" style="display:none;">
+      <input type="text" class="fc" name="gitPluginLicencaOutro[]" placeholder="Descreva a licença...">
+    </div>
+  </div>`;
+
+  c.appendChild(div);
+}
+
+/* ══ BIBLIOTECAS ══ */
+let bibCount=0;
+function addBiblioteca(){
+  bibCount++;
+  const c=document.getElementById('bibliotecasContainer');
+  const div=document.createElement('div');div.className='tech-row';
+  div.innerHTML=`<div style="display:grid;grid-template-columns:1.5fr .8fr 1fr auto;gap:.65rem;align-items:end;">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Biblioteca / Dependência</label>
+      <input type="text" class="fc" name="bibNome[]" placeholder="Ex: Lombok, Pandas, Axios..."></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Versão</label>
+      <input type="text" class="fc" name="bibVersao[]" placeholder="Ex: 1.18.30"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Licença</label>
+      <select class="fc" name="bibLicenca[]" onchange="togLicOutro(this,'bib-${bibCount}')">${buildLicOpts()}</select>
+      <div id="bib-${bibCount}" style="display:none;margin-top:.35rem;"><input type="text" class="fc" name="bibLicencaOutro[]" placeholder="Descreva..."></div></div>
+    <button type="button" class="btn-rm-item" onclick="rmRow(this,'bibliotecasContainer')" style="margin-top:1.4rem;" title="Remover">✕</button>
+  </div>`;
+  c.appendChild(div);
+}
+
+function rmRow(btn,containerId){
+  const item=btn.closest('.tech-row'),c=document.getElementById(containerId);
+  if(c.querySelectorAll('.tech-row').length>1)item.remove();
+  else item.querySelectorAll('input,select').forEach(el=>{if(el.tagName==='SELECT')el.value=el.options[0]?.value||'';else el.value='';});
+}
+
+/* ══ LICENÇAS GERAIS ══ */
+let licCount=0;
+function addLicenca(){
+  licCount++;
+  const uid='lic-'+licCount;
+  const c=document.getElementById('licencasContainer');
+  const div=document.createElement('div');div.className='licenca-block';
+  div.innerHTML=`<div class="licenca-header">
+    <span class="licenca-num">🔐 Licença #${licCount}</span>
+    <button type="button" class="btn-remove-lic" onclick="this.closest('.licenca-block').remove()">✕ Remover</button>
+  </div>
+  <div class="grid grid-3">
+    <div class="fg"><label class="flabel">Escopo</label>
+      <select class="fc" name="licEscopo[]"><option value="">Selecione...</option><option value="sistema">Sistema (geral)</option><option value="dados">Dados / Base de dados</option><option value="componente">Componente específico</option></select></div>
+    <div class="fg g-full"><label class="flabel">Tipo de Licença</label>
+      <select class="fc" name="licTipo[]" onchange="togLicOutro(this,'${uid}-outro')">${buildLicOpts()}</select>
+      <div id="${uid}-outro" style="display:none;margin-top:.55rem;"><textarea class="fc" name="licTipoOutro[]" rows="2" placeholder="Descreva a licença..."></textarea></div></div>
+    <div class="fg"><label class="flabel">Nome / Produto</label><input type="text" class="fc" name="licNome[]" placeholder="Ex: Oracle DB 19c..."></div>
+    <div class="fg"><label class="flabel">Referência / Nº</label><input type="text" class="fc" name="licChave[]" placeholder="Número de série ou referência"></div>
+    <div class="fg"><label class="flabel">Validade</label><input type="date" class="fc" name="licValidade[]"></div>
+    <div class="fg"><label class="flabel">Qtd. Usuários / Instâncias</label><input type="text" class="fc" name="licQtd[]" placeholder="Ex: 50 usuários, Ilimitado"></div>
+    <div class="fg"><label class="flabel">Custo Anual (R$)</label><input type="number" class="fc" name="licCusto[]" placeholder="0,00" min="0" step="0.01"></div>
+    <div class="fg g-full"><label class="flabel">Observações</label><input type="text" class="fc" name="licObs[]" placeholder="Renovação automática, contato do fornecedor..."></div>
+  </div>`;
+  c.appendChild(div);
+}
+
+/* ══ LGPD NOVO ══ */
+let lgpdCount=0;
+function addLgpdRegistro(){
+  lgpdCount++;
+  const c=document.getElementById('lgpdNovoContainer');
+  const div=document.createElement('div');
+  div.style.cssText='background:var(--cinza-card);border:1.5px solid var(--cinza-borda);border-radius:8px;padding:.85rem 1rem;margin-bottom:.65rem;animation:fadeIn .2s ease;';
+  div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.65rem;">
+    <span style="font-size:.75rem;font-weight:700;color:var(--verde);">+ Novo Registro LGPD #${lgpdCount}</span>
+    <button type="button" class="btn-rm-item" onclick="this.parentElement.parentElement.remove()">✕</button>
+  </div>
+  <div class="grid grid-3" style="gap:.65rem;">
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Código / Identificador</label><input type="text" class="fc" name="lgpdNovoId[]" placeholder="Ex: LGPD-005"></div>
+    <div class="fg g-full"><label class="flabel" style="font-size:.74rem;">Nome do Registro</label><input type="text" class="fc" name="lgpdNovoNome[]" placeholder="Ex: Dados de Contato"></div>
+    <div class="fg g-full"><label class="flabel" style="font-size:.74rem;">Dados tratados</label><input type="text" class="fc" name="lgpdNovoDados[]" placeholder="Ex: E-mail, telefone, endereço"></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Base legal</label>
+      <select class="fc" name="lgpdNovoBase[]"><option value="">Selecione...</option><option value="consentimento">Consentimento</option><option value="obrigacao_legal">Obrigação legal</option><option value="contrato">Execução de contrato</option><option value="interesse_publico">Interesse público</option><option value="protecao_vida">Proteção da vida</option><option value="legitimo_interesse">Legítimo interesse</option></select></div>
+    <div class="fg"><label class="flabel" style="font-size:.74rem;">Situação</label>
+      <select class="fc" name="lgpdNovoStatus[]"><option value="ativo">Ativo</option><option value="pendente">Pendente de aprovação</option><option value="inativo">Inativo</option></select></div>
+  </div>`;
+  c.appendChild(div);
+}
+
+/* ══ OUTROS HELPERS ══ */
+function togArtefatoOutro(){
+  const hasOutro=document.querySelector('input[name="artefato"][value="outro_artefato"]')?.checked;
+  document.getElementById('artefatoOutroWrap').style.display=hasOutro?'block':'none';
+}
+function updCmsFields(){
+  const n=getNat(),isHot=n==='hotsite';
+  const v=document.getElementById('fCms').value;
+  const hasCms=isHot&&v&&v!=='nenhum';
+  showF('df-cms-versao',hasCms);
+  showF('df-cms-plugins',hasCms);
+  showF('df-bd-confirma',hasCms);
+  const sp=document.getElementById('subsecPlugins');
+  if(sp){sp.style.display=hasCms?'block':'none';if(hasCms&&document.getElementById('pluginsContainer').children.length===0)addPlugin();}
+  if(hasCms&&document.getElementById('cmsPluginsContainer').children.length===0)addCmsPlugin();
+}
+function updLojaLinks(){
+  const c=document.getElementById('lojaLinksContainer');if(!c)return;
+  const android=document.querySelector('input[name="platMob"][value="android"]')?.checked;
+  const ios=document.querySelector('input[name="platMob"][value="ios"]')?.checked;
+  const ambos=document.querySelector('input[name="platMob"][value="ambos"]')?.checked;
+  c.innerHTML='';
+  if(!android&&!ios&&!ambos){c.innerHTML='<p style="font-size:.78rem;color:var(--texto-terciario);font-style:italic;">Selecione uma plataforma acima.</p>';return;}
+  if(android||ambos){const r=document.createElement('div');r.className='loja-link-row';r.innerHTML='<span class="loja-link-badge loja-android">🤖 Android</span><input type="url" class="fc" name="lojaAndroid" placeholder="https://play.google.com/store/apps/details?id=...">';c.appendChild(r);}
+  if(ios||ambos){const r=document.createElement('div');r.className='loja-link-row';r.innerHTML='<span class="loja-link-badge loja-ios"> iOS</span><input type="url" class="fc" name="lojaIos" placeholder="https://apps.apple.com/app/...">';c.appendChild(r);}
+}
+function updAcessoFields(){
+  const v=document.querySelector('input[name="tipoAcesso"]:checked')?.value;
+  document.getElementById('acessoPublicoDetail').style.display=v==='publico'?'block':'none';
+  document.getElementById('acessoPrivadoDetail').style.display=v==='privado'?'block':'none';
+}
+function addMulti(containerId,name,placeholder,listId){
+  const c=document.getElementById(containerId);
+  const div=document.createElement('div');div.className='multi-item';
+  const listAttr=listId?` list="${listId}"`:(name==='programaGoverno[]'?' list="programasGovList"':'');
+  div.innerHTML=`<input type="text" class="fc" name="${name}"${listAttr} placeholder="${placeholder}"><button type="button" class="btn-rm-item" onclick="rmMulti(this,'${containerId}')" title="Remover">✕</button>`;
+  c.appendChild(div);
+}
+function rmMulti(btn,containerId){
+  const item=btn.closest('.multi-item'),c=document.getElementById(containerId);
+  if(c.querySelectorAll('.multi-item').length>1)item.remove();
+  else item.querySelector('input').value='';
+}
+function updMaint(){
+  const tipo=document.getElementById('fTipoMaint').value;
+  const sel=document.getElementById('fFormaMaint');
+  sel.innerHTML='<option value="">Selecione...</option>';
+  if(tipo)sel.innerHTML+='<option value="equipe_interna">Equipe Interna</option><option value="empresa_terceirizada">Empresa Terceirizada</option>';
+  document.getElementById('empresaBlock').classList.remove('show');
+}
+function updForma(){document.getElementById('empresaBlock').classList.toggle('show',document.getElementById('fFormaMaint').value==='empresa_terceirizada');}
+
+/* ══ AMBIENTES ══ */
+const ambConfig={
+  producao:{label:'Produção',badge:'amb-prod',icon:'🟢'},
+  homologacao:{label:'Homologação',badge:'amb-hmg',icon:'🟡'},
+  desenvolvimento:{label:'Desenvolvimento',badge:'amb-dev',icon:'🟣'},
+  teste:{label:'Teste',badge:'amb-tst',icon:'🔴'}
+};
+document.querySelectorAll('.apill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    const i=p.querySelector('input');i.checked=!i.checked;
+    p.classList.toggle('on',i.checked);renderAmbBlocks();
+  });
+});
+function renderAmbBlocks(){
+  const container=document.getElementById('ambBlocks');container.innerHTML='';
+  document.querySelectorAll('.apill.on').forEach(p=>{
+    const v=p.dataset.v,cfg=ambConfig[v];
+    const div=document.createElement('div');div.className='amb-env-block';
+    div.innerHTML=`<div class="amb-env-title">${cfg.icon} <span>${cfg.label}</span> <span class="amb-badge ${cfg.badge}">${cfg.label.toUpperCase()}</span></div>
+    <div class="amb-env-grid">
+      <div class="fg"><label class="flabel">URL (${cfg.label})</label><input type="url" class="fc" name="amb_${v}_url" placeholder="https://..."></div>
+      <div class="fg"><label class="flabel">Porta</label><input type="number" class="fc" name="amb_${v}_porta" placeholder="Ex: 8080, 443, 3000" min="1" max="65535"></div>
+      <div class="fg"><label class="flabel">IP do Servidor Web</label><input type="text" class="fc" name="amb_${v}_ip_web" placeholder="192.168.0.x"></div>
+      <div class="fg"><label class="flabel">SO do Servidor Web</label>
+        <select class="fc" name="amb_${v}_so_web"><option value="">Selecione...</option><option value="linux">Linux</option><option value="windows">Windows Server</option><option value="outro">Outro</option></select></div>
+      <div class="fg"><label class="flabel">Versão do SO</label><input type="text" class="fc" name="amb_${v}_so_versao" placeholder="Ex: Ubuntu 22.04 LTS, Windows Server 2019"></div>
+      <div class="fg"><label class="flabel">Servidor Web (Software)</label>
+        <select class="fc" name="amb_${v}_servidor_web"><option value="">Selecione...</option><option value="apache">Apache HTTP Server</option><option value="nginx">Nginx</option><option value="iis">IIS</option><option value="tomcat">Apache Tomcat</option><option value="node">Node.js / PM2</option><option value="wildfly">WildFly / JBoss</option><option value="outro">Outro</option></select></div>
+      <div class="fg"><label class="flabel">Versão do Servidor Web</label><input type="text" class="fc" name="amb_${v}_servidor_web_versao" placeholder="Ex: 2.4.58, 1.25.3"></div>
+      <div class="fg"><label class="flabel">Banco de Dados</label>
+        <select class="fc" name="amb_${v}_bd"><option value="">Selecione...</option><option value="postgres">PostgreSQL</option><option value="mysql">MySQL / MariaDB</option><option value="oracle">Oracle</option><option value="sqlserver">SQL Server</option><option value="mongodb">MongoDB</option><option value="sem">Sem BD</option></select></div>
+      <div class="fg"><label class="flabel">Versão do BD</label><input type="text" class="fc" name="amb_${v}_bd_versao" placeholder="Ex: 15.3, 8.0.36"></div>
+      <div class="fg"><label class="flabel">Nome do Banco</label><input type="text" class="fc" name="amb_${v}_nome_bd" placeholder="Ex: db_sistema_${v}"></div>
+      <div class="fg"><label class="flabel">Porta do BD</label><input type="number" class="fc" name="amb_${v}_porta_bd" placeholder="Ex: 5432, 3306, 1521" min="1" max="65535"></div>
+      <div class="fg"><label class="flabel">IP do Servidor BD</label><input type="text" class="fc" name="amb_${v}_ip_bd" placeholder="192.168.0.y"></div>
+      <div class="fg g-full"><label class="flabel">Portas e Endpoints
+        <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">Portas de serviço, URLs de API, endpoints de integração, etc.</span></span>
+      </label><textarea class="fc" name="amb_${v}_portas" rows="2" placeholder="Ex: 8080 (app), 5432 (BD), /api/v1, /health..."></textarea></div>
+      <div class="fg g-full"><label class="flabel">Requisitos para Execução
+        <span class="tip-wrap"><span class="tip-ico" tabindex="0">?</span><span class="tip-box">O que o sistema precisa para ser executado neste ambiente (ex: Java 8, Ubuntu 20.04, Node.js 18+)</span></span>
+      </label><textarea class="fc" name="amb_${v}_requisitos_exec" rows="2" placeholder="Ex: Java 8+, Ubuntu 20.04 LTS, 4GB RAM, Docker 24+..."></textarea></div>
+    </div>`;
+    container.appendChild(div);
+  });
+}
+
+/* ══ INTEGRAÇÕES ══ */
+const selI={int:new Set(),ext:new Set()};
+function portalBadgeHTML(){return`<span class="portal-badge"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Portal</span>`;}
+function buildI(type){
+  const list=document.getElementById('list-'+type);list.innerHTML='';
+  const source=type==='int'?portalSistemas:sistemasExt;
+  const sorted=[...source].sort((a,b)=>{if(a.portal&&!b.portal)return-1;if(!a.portal&&b.portal)return 1;return(a.nome||'').localeCompare(b.nome||'');});
+  sorted.forEach(s=>{
+    if(!s.nome)return;
+    const d=document.createElement('div');d.className='iitem'+(s.portal?' portal-registered':'');
+    d.dataset.n=s.nome.toLowerCase();
+    const id=`ig-${type}-${sanitizeId(s.nome)}`;
+    const hmBadge=s.homologado?`<span style="font-size:.6rem;background:rgba(16,185,129,.12);color:var(--verde);padding:1px 5px;border-radius:4px;font-weight:700;">✓</span>`:'';
+    d.innerHTML=`<input type="checkbox" id="${id}" value="${s.nome}" onchange="togI('${type}','${s.nome.replace(/'/g,"\\'")}',this.checked)"><label class="iitem-label" for="${id}">${s.nome}</label>${hmBadge}${s.portal?portalBadgeHTML():''}`;
+    list.appendChild(d);
+  });
+}
+function filtInteg(inp,type){const q=inp.value.toLowerCase();document.querySelectorAll(`#list-${type} .iitem`).forEach(el=>{el.style.display=el.dataset.n.includes(q)?'':'none';});}
+function togI(type,name,chk){
+  if(chk)selI[type].add(name);else selI[type].delete(name);
+  rendTags(type);updSgdChart();
+}
+function rendTags(type){
+  const w=document.getElementById('tags-'+type);w.innerHTML='';
+  selI[type].forEach(n=>{
+    const t=document.createElement('span');t.className=`itag ${type}`;
+    t.innerHTML=`${n}<button type="button" onclick="rmI('${type}','${n.replace(/'/g,"\\'")}')">×</button>`;
+    w.appendChild(t);
+  });
+}
+function rmI(type,name){selI[type].delete(name);const cb=document.getElementById(`ig-${type}-${sanitizeId(name)}`);if(cb)cb.checked=false;rendTags(type);updSgdChart();}
+
+/* ══ SGD CHART ══ */
+function updSgdChart(){
+  const wrap=document.getElementById('sgdChartWrap');
+  const hasSGD=[...selI.int].some(n=>n==='SGD');
+  if(!hasSGD){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const nomeSistema=document.getElementById('fNome').value.trim()||'Este Sistema';
+  const outrasInt=[...selI.int].filter(n=>n!=='SGD');
+  const flow=document.getElementById('sgdFlow');flow.innerHTML='';
+  flow.appendChild(nodeBox(nomeSistema,'active-node','Cadastro','Novo'));
+  flow.appendChild(seta('bidirectional'));
+  flow.appendChild(nodeBox('SGD','sgd-hub','Gestão de Documentos','ATI'));
+  if(outrasInt.length){flow.appendChild(seta('right'));flow.appendChild(nodeBox(outrasInt.length+' outros','','Internos',outrasInt.slice(0,2).join(', ')));}
+  const sgdReg=portalSistemas.find(s=>s.ehSGD);
+  document.getElementById('sgdStats').innerHTML=[
+    statCard('Integração',sgdReg?.tipoIntegracaoSGD||'Não especificado','Protocolo'),
+    statCard('SGD','✅ Homologado','Jun/2022 · ATI'),
+    statCard('Via SGD',outrasInt.length.toString(),'Outros sistemas'),
+  ].join('');
+}
+function nodeBox(nome,cls,sub,sub2){
+  const div=document.createElement('div');div.className='sgd-node';
+  div.innerHTML=`<div class="sgd-box${cls?' '+cls:''}">${nome}<div class="sgd-box-sub">${sub||''}</div>${sub2?`<div class="sgd-box-sub" style="font-size:.6rem;opacity:.7;">${sub2}</div>`:''}</div>`;
+  return div;
+}
+function seta(tipo){const div=document.createElement('div');div.className='sgd-arrow';div.textContent=tipo==='bidirectional'?'⇄':'→';return div;}
+function statCard(label,value,sub){return`<div class="sgd-stat-card"><div class="sgd-stat-label">${label}</div><div class="sgd-stat-value">${value}</div>${sub?`<div class="sgd-stat-sub">${sub}</div>`:''}</div>`;}
+
+/* ══ ATI CHECK ══ */
+let atiDebounce=null;
+function debounceAtiCheck(){clearTimeout(atiDebounce);atiDebounce=setTimeout(checkAti,600);}
+function checkAti(){
+  const nome=(document.getElementById('fNome').value||'').trim().toUpperCase();
+  const sigla=(document.getElementById('fSigla').value||'').trim().toUpperCase();
+  const nat=getNat();
+  const alert=document.getElementById('alertAti');
+  if(!nome&&!sigla){alert.className='alert-ati';return;}
+  const exato=portalSistemas.find(s=>s.portal&&(s.nome?.toUpperCase()===nome||s.sigla?.toUpperCase()===sigla)&&(!nat||s.natureza===nat));
+  const outraNat=portalSistemas.find(s=>s.portal&&(s.nome?.toUpperCase()===nome||s.sigla?.toUpperCase()===sigla)&&nat&&s.natureza!==nat);
+  if(exato){setAlert('bloqueado','🚫 Sistema já cadastrado',`<strong>${exato.nome}</strong> (${exato.natureza?.toUpperCase()}) já está no Portal — ${exato.homologado?'homologado em '+new Date(exato.dataHom).toLocaleDateString('pt-BR'):'não homologado'}. Não é possível duplicar.`,[{tipo:'usuario',label:'👤 Operador notificado'},{tipo:'infra',label:'🏗️ INFRA notificada'}],exato.homologado?`Hom.: ${exato.dataHom}`:'Pendente hom.');return;}
+  if(outraNat&&outraNat.homologado){setAlert('aviso','⚠️ Variante de sistema homologado',`<strong>${outraNat.nome}</strong> já existe como <strong>${outraNat.natureza?.toUpperCase()}</strong>, homologado em ${new Date(outraNat.dataHom).toLocaleDateString('pt-BR')}. Esta variante (${nat.toUpperCase()}) precisará de homologação.`,[{tipo:'usuario',label:'👤 Operador ciente'},{tipo:'infra',label:'🏗️ INFRA notificada ao salvar'},{tipo:'atl',label:'✅ Pai: aprovado'}],`Ref.: ${outraNat.dataHom}`);return;}
+  if(nome.length>=3){setAlert('info','ℹ️ Novo sistema — verificação necessária',`<strong>${nome||sigla}</strong> não localizado nos sistemas homologados. Ao salvar, a equipe INFRA será notificada.`,[{tipo:'usuario',label:'👤 Operador informado'},{tipo:'infra',label:'🏗️ INFRA notificada ao salvar'}],'Sem registro prévio');}
+  else{alert.className='alert-ati';}
+}
+function setAlert(tipo,titulo,corpo,notifs,ref){
+  const alert=document.getElementById('alertAti');
+  alert.className=`alert-ati ${tipo} show`;
+  document.getElementById('alertAtiIco').textContent={bloqueado:'🚫',aviso:'⚠️',info:'ℹ️'}[tipo]||'•';
+  document.getElementById('alertAtiTitulo').textContent=titulo;
+  document.getElementById('alertAtiBody').innerHTML=corpo;
+  document.getElementById('alertAtiRef').textContent=ref||'';
+  document.getElementById('alertNotifRow').innerHTML=notifs.map(n=>`<span class="notif-chip ${n.tipo}">${n.label}</span>`).join('');
+}
+
+/* ══ DUPLICATA ══ */
+const sistemasPadrao=[{nome:'ADA',sigla:'ADA',natureza:'web',descCurta:'Administração de Diárias e Auxílio Financeiro',categoria:'edu',orgao:'seduc',departamento:'Diretoria de Gestão de Pessoas',telefone:'(63) 3218-1500'}];
+let pendingData=null;
+function checkDup(){
+  const nome=document.getElementById('fNome').value.trim().toUpperCase();if(!nome||nome.length<2)return;
+  const nat=getNat();
+  const match=sistemasPadrao.find(s=>s.nome.toUpperCase()===nome||s.sigla.toUpperCase()===nome);if(!match)return;
+  if(!nat||nat===match.natureza){document.getElementById('modalAvisoBody').innerHTML=`<strong>${match.nome}</strong> já existe como <strong>${match.natureza.toUpperCase()}</strong>.`;document.getElementById('modalAviso').classList.add('show');return;}
+  pendingData=match;
+  document.getElementById('modalDupBody').innerHTML=`<strong>${match.nome}</strong> já cadastrado como <strong>${match.natureza.toUpperCase()}</strong>.<br>Você está cadastrando como <strong>${nat.toUpperCase()}</strong>.<br><br>Deseja reutilizar as informações compartilháveis?`;
+  document.getElementById('modalDup').classList.add('show');
+}
+document.getElementById('fNome').addEventListener('blur',checkDup);
+function closeModalDup(load){
+  document.getElementById('modalDup').classList.remove('show');
+  if(!load||!pendingData){pendingData=null;return;}
+  const d=pendingData;
+  setField('fSigla',d.sigla);setField('fDescCurta',d.descCurta);setField('fCat',d.categoria);setField('fOrgao',d.orgao);setField('fDepto',d.departamento||'');setField('fTel',d.telefone||'');
+  toast('Dados de "'+d.nome+'" carregados! 🎉','ok');pendingData=null;
+}
+function setField(id,val){const el=document.getElementById(id);if(!el)return;el.value=val;el.classList.add('hl');setTimeout(()=>el.classList.remove('hl'),2000);}
+
+/* ══ TOAST ══ */
+function toast(msg,type='ok'){
+  const w=document.getElementById('toastWrap'),t=document.createElement('div');
+  t.className='toast'+(type==='err'?' err':type==='warn'?' warn':'');
+  t.innerHTML=`<span>${{ok:'✓',err:'✕',warn:'⚠'}[type]||'•'}</span> ${msg}`;w.appendChild(t);
+  setTimeout(()=>{t.style.animation='slideInR .3s ease reverse';setTimeout(()=>t.remove(),300);},4000);
+}
+
+/* ══ DESC CURTA COUNTER ══ */
+document.getElementById('fDescCurta').addEventListener('input',function(){
+  const len=this.value.length,max=200;
+  document.getElementById('descCurtaCounter').textContent=`${len} / ${max}`;
+  const pct=len/max*100,bar=document.getElementById('descCurtaProgress');
+  bar.style.width=pct+'%';bar.style.background=pct<60?'var(--verde)':pct<85?'var(--laranja)':'var(--vermelho)';
+});
+
+/* ══ PHONE MASK ══ */
+document.getElementById('fTel').addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);
+  if(v.length>9)v=v.slice(0,9)+'-'+v.slice(9);
+  this.value=v;
+});
+
+/* ══ LABELS HELPERS ══ */
+function getOrgaoLabel(v){return{ati:'ATI',seduc:'SEDUC',sefaz:'SEFAZ',secad:'SECAD',ssp:'SSP',sesau:'SESAU',semarh:'SEMARH'}[v]||v||'—';}
+function getNatLabel(v){return{web:'🌐 Web',mobile:'📱 Mobile',desktop:'🖥️ Desktop',api:'🔌 API/Serviço',barramento:'🔄 Barramento',hotsite:'📢 Hotsite',bi:'📊 BI/Analytics'}[v]||v||'—';}
+function getVisLabel(v){return{interno:'Interno 🔒',externo:'Externo 🌍',restrito:'Restrito 🚫'}[v]||v||'—';}
+function getSitLabel(v){return{ativo:'✅ Ativo',inativo:'🔴 Inativo',desenvolvimento_ati:'🔵 Desenv. ATI',desenvolvimento_orgao:'🟣 Desenv. Órgão',consulta:'🔍 Apenas Consulta'}[v]||v||'—';}
+
+
+/* ══ ER DOCUMENT ══ */
+let lastERData=null;
+
+function buildERDocument(data){
+  const{nome,sigla,natureza,orgao,depto,cat,vis,linguagens,frameworks,intInt,intExt,eco,dadosPessoais,dadosSensiveis,legado,ambientes,situacao,tipoAcesso,entePub,esferaPub,versao,linkVersao,servidor,programas,reqMaint}=data;
+  const now=new Date();
+  const dataStr=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  // Header
+  document.getElementById('erHeaderTitle').textContent=nome+(sigla?` — ${sigla}`:'')+(versao?` v${versao}`:'');
+  document.getElementById('erHeaderSub').textContent=`Portal de Sistemas · Gov. Estado do Tocantins · ${dataStr}`;
+  const metaDiv=document.getElementById('erHeaderMeta');
+  metaDiv.innerHTML=[
+    natureza?`<span class="er-meta-chip">${getNatLabel(natureza)}</span>`:'',
+    orgao?`<span class="er-meta-chip"><span>Órgão:</span> ${getOrgaoLabel(orgao)}</span>`:'',
+    vis?`<span class="er-meta-chip">${getVisLabel(vis)}</span>`:'',
+    situacao?`<span class="er-meta-chip">${getSitLabel(situacao)}</span>`:'',
+    versao?`<span class="er-meta-chip">🏷️ v${versao}${linkVersao?` <a href="${linkVersao}" target="_blank" rel="noopener" style="color:rgba(255,255,255,.7);text-decoration:underline;font-size:.68rem;">↗</a>`:''}</span>`:'',
+    legado==='sim'?`<span class="er-meta-chip" style="background:rgba(239,68,68,.25);color:#fca5a5;">⚠️ Legado</span>`:'',
+    dadosPessoais==='sim'?`<span class="er-meta-chip" style="background:rgba(245,200,0,.2);color:var(--amarelo);">🔒 LGPD</span>`:'',
+  ].join('');
+
+  // Entity
+  document.getElementById('erEntityName').textContent=nome;
+  document.getElementById('erEntitySigla').textContent=sigla?`[${sigla}]`:'';
+  document.getElementById('erEntityTags').innerHTML=[
+    natureza?`<span class="er-entity-tag ertag-nat">${getNatLabel(natureza)}</span>`:'',
+    orgao?`<span class="er-entity-tag ertag-org">${getOrgaoLabel(orgao)}</span>`:'',
+    vis?`<span class="er-entity-tag ertag-vis">${getVisLabel(vis)}</span>`:'',
+    versao?`<span class="er-entity-tag ertag-ver">v${versao}</span>`:'',
+  ].join('');
+
+  const acessoLabel=tipoAcesso==='publico'?`Público — ${entePub||'Ente não informado'}${esferaPub?' ('+esferaPub+')':''}`:tipoAcesso==='privado'?'Privado (credenciado)':'—';
+  const lingLabel=linguagens.length?linguagens.join(', '):'—';
+  const fwLabel=frameworks.length?frameworks.join(', '):'—';
+
+  // Visão Geral
+  const attrs=[
+    {label:'Órgão',val:getOrgaoLabel(orgao)},{label:'Departamento',val:depto||'—'},
+    {label:'Situação',val:getSitLabel(situacao)},{label:'Natureza',val:getNatLabel(natureza)},
+    {label:'Tipo de Acesso',val:acessoLabel},{label:'Programas / PT',val:programas||'—'},
+    {label:'Categoria',val:cat||'—'},{label:'Dados Pessoais',val:dadosPessoais==='sim'?'Sim (LGPD)':'Não'},
+    {label:'Dados Sensíveis',val:dadosSensiveis==='sim'?'Sim':'Não'},{label:'Sistema Legado',val:legado==='sim'?'Sim':'Não'},
+    {label:'Ambientes',val:ambientes.length?ambientes.join(', '):'—'},{label:'Data Cadastro',val:dataStr},
+  ];
+  document.getElementById('erAttrGrid').innerHTML=attrs.map(a=>`<div class="er-attr-card"><div class="er-attr-label">${a.label}</div><div class="er-attr-value${(!a.val||a.val==='—')?' empty':''}">${a.val||'—'}</div></div>`).join('');
+
+  // Técnico
+  const versaoDisplay=versao?(linkVersao?`<a href="${linkVersao}" target="_blank" rel="noopener" style="color:var(--azul-claro);font-weight:700;">v${versao} ↗</a>`:`<strong style="color:var(--roxo);">v${versao}</strong>`):'—';
+  const attrsTec=[
+    {label:'Linguagem(s)',val:lingLabel},{label:'Framework(s)',val:fwLabel},
+    {label:'Versão atual',val:versaoDisplay,raw:true},{label:'Link de Versionamento',val:linkVersao?`<a href="${linkVersao}" target="_blank" rel="noopener">Ver releases / changelog ↗</a>`:'—',raw:true},
+    {label:'Req. Manutenção',val:reqMaint||'—'},{label:'Servidor Responsável',val:servidor||'—'},
+  ];
+  document.getElementById('erAttrTecGrid').innerHTML=attrsTec.map(a=>`<div class="er-attr-card"><div class="er-attr-label">${a.label}</div><div class="er-attr-value${(!a.val||a.val==='—')?' empty':''}">${a.val||'—'}</div></div>`).join('');
+
+  // Relacionamentos
+  const intList=[...intInt],extList=[...intExt];
+  const intS=document.getElementById('erIntSecao'),extS=document.getElementById('erExtSecao');
+  const erRE=document.getElementById('erRelEmpty');
+  if(intList.length){intS.style.display='block';document.getElementById('erIntGrid').innerHTML=intList.map(n=>{const pi=portalSistemas.find(s=>s.nome===n);return`<div class="er-rel-card int"><div class="er-rel-cardinality">1:N</div><div class="er-rel-type int">🏛️ Interno</div><div class="er-rel-name">${n}</div><div class="er-rel-card-role">${pi?.portal?'<span style="color:var(--azul-claro);font-size:.7rem;font-weight:700;">📋 Portal</span><br>':''}${pi?.orgao?getOrgaoLabel(pi.orgao)+' · ':''} Int. interna</div></div>`;}).join('');}else intS.style.display='none';
+  if(extList.length){extS.style.display='block';document.getElementById('erExtGrid').innerHTML=extList.map(n=>`<div class="er-rel-card ext"><div class="er-rel-cardinality">N:N</div><div class="er-rel-type ext">🌐 Externo</div><div class="er-rel-name">${n}</div><div class="er-rel-card-role">Federal / terceiro</div></div>`).join('');}else extS.style.display='none';
+  erRE.style.display=(!intList.length&&!extList.length)?'block':'none';
+
+  // Versões
+  const verBody=document.getElementById('erVerBody');verBody.innerHTML='';
+  const verRow=document.createElement('tr');verRow.className='ver-current';
+  const verCellVersao=versao?(linkVersao?`<strong><a href="${linkVersao}" target="_blank" rel="noopener" style="color:var(--azul-claro);text-decoration:underline;">v${versao} ↗</a></strong>`:`<strong>v${versao}</strong>`):'—';
+  const verLink=linkVersao?`<a href="${linkVersao}" target="_blank" rel="noopener">Ver changelog ↗</a>`:'—';
+  verRow.innerHTML=`<td>${verCellVersao}</td><td>${now.toLocaleDateString('pt-BR')}</td><td>${servidor||'—'}</td><td>${verLink}</td><td>Cadastro inicial</td>`;
+  verBody.appendChild(verRow);
+
+  // SGD
+  const hasSGD=intList.includes('SGD');
+  const tabSgd=document.getElementById('tabSgd');
+  if(hasSGD){
+    tabSgd.style.display='';
+    const sgdReg=portalSistemas.find(s=>s.ehSGD);
+    const outrasInt=intList.filter(n=>n!=='SGD');
+    document.getElementById('sgdErFlowFull').innerHTML=`<div style="display:flex;flex-direction:column;gap:1rem;">
+      <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+        <div class="sgd-box active-node" style="min-width:140px;text-align:center;">${nome}<div class="sgd-box-sub">Sistema em cadastro</div></div>
+        <div class="sgd-arrow" style="font-size:1.5rem;">⇄</div>
+        <div class="sgd-box sgd-hub" style="min-width:140px;text-align:center;">SGD<div class="sgd-box-sub">Gestão de Documentos · ATI</div></div>
+        ${outrasInt.length?`<div class="sgd-arrow" style="font-size:1.5rem;">→</div><div class="sgd-box" style="min-width:120px;text-align:center;">${outrasInt.length} Sistema(s)<div class="sgd-box-sub">${outrasInt.slice(0,3).join(', ')}</div></div>`:''}
+      </div>
+      <div style="background:rgba(4,76,184,.05);border:1px solid rgba(4,76,184,.15);border-radius:8px;padding:.85rem 1rem;font-size:.82rem;color:var(--texto-secundario);">
+        <strong>Tipo de integração:</strong> ${sgdReg?.tipoIntegracaoSGD||'Não especificado'}<br>
+        <strong>Homologação SGD:</strong> ✅ Jun/2022 · ATI<br>
+        <strong>Fluxo:</strong> ${nome} ↔ SGD ${outrasInt.length?'→ '+outrasInt.join(', '):'(sem redirecionamento)'}
+      </div>
+    </div>`;
+    document.getElementById('sgdErStats').innerHTML=[statCard('Tipo Integração',sgdReg?.tipoIntegracaoSGD||'—','Protocolo'),statCard('SGD','✅ Homologado','ATI · Jun/2022'),statCard('Via cadeia',outrasInt.length.toString(),'Outros sistemas')].join('');
+  }else tabSgd.style.display='none';
+
+  // ══ ECOSSISTEMA — REESCRITO ══
+  buildEcosistemaPanel(data, nome, natureza);
+
+  // Diagrama
+  buildMermaidDiagram(nome,sigla,intList,extList,eco,natureza);
+
+  const totalRels=intList.length+extList.length;
+  document.getElementById('erFooterMeta').textContent=`${nome}${sigla?' ('+sigla+')':''} · ${versao?'v'+versao+' · ':''} ${totalRels} integração${totalRels!==1?'s':''} · ${dataStr}`;
+  lastERData=data;
+}
+
+function buildEcosistemaPanel(data, nomeNovo, naturezaNova){
+  const eco=data.eco;
+  const tabEco=document.getElementById('tabEco');
+  const heroWrap=document.getElementById('ecoHeroWrap');
+  const membrosSection=document.getElementById('ecoMembersSection');
+  const flowSection=document.getElementById('ecoFlowSection');
+
+  // Se nenhum ecossistema foi escolhido
+  if(!eco){
+    tabEco.style.display='none';
+    heroWrap.innerHTML='<div class="er-empty">Nenhum ecossistema vinculado. O sistema foi cadastrado como independente.</div>';
+    membrosSection.innerHTML='';flowSection.innerHTML='';
+    return;
+  }
+
+  tabEco.style.display='';
+
+  const isNovo = eco==='__novo__';
+  const ecoNome = isNovo ? nomeNovo : eco;
+
+  // Busca membros existentes no portal (excluindo o sistema que está sendo cadastrado agora)
+  const membrosExistentes = isNovo
+    ? []
+    : portalSistemas.filter(s=>s.portal && s.ecosistema===eco && s.nome!==nomeNovo);
+
+  const totalMembros = membrosExistentes.length + 1; // +1 = o novo
+
+  // ── Hero ──
+  heroWrap.innerHTML=`<div class="eco-panel-hero">
+    <div class="eco-panel-label">🌐 Ecossistema</div>
+    <div class="eco-panel-name">${ecoNome}</div>
+    <div class="eco-panel-count">${totalMembros} aplicação${totalMembros!==1?'s':''} · Gov. Estado do Tocantins</div>
+  </div>`;
+
+  // ── Grid de membros ──
+  let membrosHtml='<div class="eco-members-grid">';
+
+  // Membros existentes
+  membrosExistentes.forEach(m=>{
+    const hmBadge=m.homologado?`<span style="font-size:.6rem;background:rgba(16,185,129,.12);color:var(--verde);padding:1px 5px;border-radius:5px;font-weight:700;">✓ Hom.</span>`:'<span style="font-size:.6rem;background:rgba(245,158,11,.12);color:var(--laranja);padding:1px 5px;border-radius:5px;font-weight:700;">⏳ Pend.</span>';
+    membrosHtml+=`<div class="eco-member-card card-existing">
+      <div class="eco-member-badge badge-existing">✓ No Portal</div>
+      <div class="eco-member-name">${m.nome}</div>
+      <div class="eco-member-nat">${getNatLabel(m.natureza)} · ${getOrgaoLabel(m.orgao)}</div>
+      <div style="margin-top:.45rem;">${hmBadge}</div>
+    </div>`;
+  });
+
+  // O novo sistema
+  membrosHtml+=`<div class="eco-member-card card-new">
+    <div class="eco-member-badge badge-new">⭐ Novo</div>
+    <div class="eco-member-name">${nomeNovo||'—'}</div>
+    <div class="eco-member-nat">${getNatLabel(naturezaNova)} · ${getOrgaoLabel(data.orgao)}</div>
+    <div style="margin-top:.45rem;font-size:.6rem;background:rgba(4,76,184,.1);color:var(--azul);padding:1px 7px;border-radius:5px;font-weight:700;display:inline-block;">Em cadastro</div>
+    <div class="eco-member-star">⭐</div>
+  </div>`;
+
+  membrosHtml+='</div>';
+
+  if(isNovo){
+    membrosHtml=`<div style="background:rgba(245,200,0,.06);border:1.5px dashed rgba(245,200,0,.4);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:.83rem;color:var(--texto-secundario);">
+      🆕 <strong>Novo ecossistema criado:</strong> <em>${ecoNome}</em> — este é o primeiro membro. Novos sistemas poderão ser vinculados a ele.
+    </div>`+membrosHtml;
+  }
+
+  membrosSection.innerHTML=membrosHtml;
+
+  // ── Fluxo visual ──
+  let flowNodes='';
+  membrosExistentes.forEach(m=>{
+    flowNodes+=`<div class="eco-flow-node">
+      <div class="eco-flow-box node-existing">${m.sigla||m.nome}</div>
+      <div class="eco-flow-label">${getNatLabel(m.natureza)}</div>
+    </div>
+    <div class="eco-flow-sep">—</div>`;
+  });
+  flowNodes+=`<div class="eco-flow-node">
+    <div class="eco-flow-box node-new">⭐ ${data.sigla||nomeNovo}</div>
+    <div class="eco-flow-label">${getNatLabel(naturezaNova)} · Novo</div>
+  </div>`;
+
+  flowSection.innerHTML=`<div class="eco-flow-wrap">
+    <div class="eco-flow-title">Estrutura do Ecossistema "${ecoNome}"</div>
+    <div class="eco-flow-nodes">${flowNodes}</div>
+  </div>`;
+}
+
+function buildMermaidDiagram(nome,sigla,intList,extList,eco,natureza){
+  const id=sanitizeId(sigla||nome);
+  let lines=['erDiagram'];
+  lines.push(`  ${id} {string nome string natureza string orgao string versao boolean dados_pessoais}`);
+  intList.forEach(n=>{const nid=sanitizeId(n);lines.push(`  ${nid} {string nome string tipo}`);lines.push(`  ${id} ||--o{ ${nid} : "integra"`);});
+  extList.forEach(n=>{const nid=sanitizeId(n);lines.push(`  ${nid} {string nome string esfera}`);lines.push(`  ${id} }o--o{ ${nid} : "consome"`);});
+  if(eco&&eco!=='__novo__'){
+    portalSistemas.filter(s=>s.portal&&s.ecosistema===eco&&s.nome!==nome).forEach(m=>{
+      const mid=sanitizeId(m.sigla||m.nome);lines.push(`  ${mid} {string plataforma}`);lines.push(`  ${id} ||--|| ${mid} : "ecossistema"`);
+    });
+  }
+  const src=lines.join('\n');
+  const container=document.getElementById('mermaidContainer');container.innerHTML='';
+  const dark=document.body.classList.contains('dark-theme');
+  mermaid.initialize({startOnLoad:false,theme:dark?'dark':'default',er:{diagramPadding:20,layoutDirection:'LR',minEntityWidth:100,minEntityHeight:75,entityPadding:15,useMaxWidth:true},fontFamily:'"DM Sans",sans-serif',fontSize:13});
+  mermaid.render('mer-'+Date.now(),src).then(({svg})=>{container.innerHTML=svg;}).catch(()=>{
+    container.innerHTML=`<pre style="font-size:.75rem;padding:1rem;background:var(--cinza-bg);border-radius:8px;overflow:auto;">${src}</pre>`;
+  });
+}
+
+function switchErTab(panelId,btn){
+  document.querySelectorAll('.er-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.er-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+panelId).classList.add('active');
+  if(panelId==='diagrama'&&lastERData)
+    buildMermaidDiagram(lastERData.nome,lastERData.sigla,[...lastERData.intInt],[...lastERData.intExt],lastERData.eco,lastERData.natureza);
+}
+
+function downloadER(){
+  if(!lastERData)return;
+  const exp={...lastERData,intInt:[...lastERData.intInt],intExt:[...lastERData.intExt]};
+  const b=new Blob([JSON.stringify(exp,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`ER_${sanitizeId(lastERData.sigla||lastERData.nome)}_v${lastERData.versao||'1-0-0'}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function closeER(){
+  document.getElementById('modalER').classList.remove('show');
+  document.getElementById('fForm').reset();
+  selI.int.clear();selI.ext.clear();rendTags('int');rendTags('ext');
+  document.querySelectorAll('.rich-ed').forEach(ed=>ed.innerHTML='');
+  document.querySelectorAll('.npill,.tpill,.apill,.spill').forEach(p=>p.classList.remove('on'));
+  document.getElementById('fEcossistema').value='';onEcossistemaChange();
+  ['licencasContainer','pluginsContainer','bibliotecasContainer','linguagensContainer','frameworksContainer','lgpdNovoContainer','gitPluginsContainer','cmsPluginsContainer'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.innerHTML='';
+  });
+  licCount=0;pluginCount=0;bibCount=0;lingCount=0;fwCount=0;lgpdCount=0;gitPluginCount=0;cmsPluginCount=0;
+  document.getElementById('consultaNote').style.display='none';
+  document.getElementById('acessoPublicoDetail').style.display='none';
+  document.getElementById('acessoPrivadoDetail').style.display='none';
+  document.getElementById('ambBlocks').innerHTML='';
+  document.getElementById('alertAti').className='alert-ati';
+  document.getElementById('sgdChartWrap').style.display='none';
+  updDynFields();
+  document.querySelectorAll('.er-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.er-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  // Reset tabs
+  goTab(0);
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('done'));
+}
+
+/* ══ VALIDATE + SUBMIT ══ */
+function valR(name,errId){
+  const ok=!!document.querySelector(`input[name="${name}"]:checked`);
+  const el=document.getElementById(errId);
+  if(el)el.classList.toggle('show',!ok);
+  return ok;
+}
+
+document.getElementById('fForm').addEventListener('submit',function(e){
+  e.preventDefault();let ok=true;
+
+  ['desc','abr','qpu','cu'].forEach(id=>{
+    const ed=document.getElementById('ed-'+id);
+    const inp=document.getElementById('inp-'+id);
+    if(ed&&inp)inp.value=ed.innerHTML;
+  });
+
+  const nomeEl=document.getElementById('fNome');const nomeVal=nomeEl.value.trim();
+  if(!nomeVal){nomeEl.classList.add('err');document.getElementById('errNome').classList.add('show');ok=false;goTab(1);}
+  else{nomeEl.classList.remove('err');document.getElementById('errNome').classList.remove('show');}
+
+  if(!valR('visibilidade','errVis'))ok=false;
+  if(!valR('legado','errLeg'))ok=false;
+  if(!getNat()){toast('Selecione a Natureza da Solução (Aba 1).','err');ok=false;}
+
+  const situacaoVal=document.querySelector('input[name="situacaoSistema"]:checked')?.value||'';
+  if(!situacaoVal){document.getElementById('errSituacao').classList.add('show');toast('Selecione a Situação do Sistema (Aba 1).','err');ok=false;}
+  else document.getElementById('errSituacao').classList.remove('show');
+
+  const nat=getNat();
+  if(nat==='web'){
+    const navSel=document.querySelectorAll('input[name="navegador"]:checked').length;
+    if(!navSel){document.getElementById('errNav').style.display='block';toast('Selecione ao menos um navegador (Aba 5).','err');ok=false;}
+    else document.getElementById('errNav').style.display='none';
+  }
+  if(!ok){return;}
+
+  const novaSigla=document.getElementById('fSigla').value.trim();
+  const novaOrgao=document.getElementById('fOrgao').value;
+  const novoEco=document.getElementById('fEcossistema').value;
+  const ecoFinal=novoEco==='__novo__'?nomeVal:(novoEco||nomeVal);
+  const versao=document.getElementById('fVersao').value.trim();
+  const linkVersao=document.getElementById('fLinkVersao').value.trim();
+  const servidor=document.getElementById('fServidor').value.trim();
+
+  if(!portalSistemas.find(s=>s.nome?.toLowerCase()===nomeVal.toLowerCase())){
+    portalSistemas.push({nome:nomeVal,sigla:novaSigla||nomeVal,natureza:getNat(),orgao:novaOrgao,ecosistema:ecoFinal,homologado:false,dataHom:null});
+    buildI('int');
+  }
+
+  const ambAtivos=[...document.querySelectorAll('.apill.on')].map(p=>ambConfig[p.dataset.v]?.label||p.dataset.v);
+  const tipoAcesso=document.querySelector('input[name="tipoAcesso"]:checked')?.value||'';
+  const lingVals=[...document.querySelectorAll('#linguagensContainer select[name="linguagem[]"]')].map(s=>s.value).filter(v=>v);
+  const fwVals=[...document.querySelectorAll('#frameworksContainer select[name="framework[]"]')].map(s=>s.value).filter(v=>v);
+  const progVals=[...document.querySelectorAll('input[name="programaGoverno[]"]')].map(i=>i.value).filter(v=>v).join('; ');
+
+  buildERDocument({
+    nome:nomeVal,sigla:novaSigla,natureza:getNat(),orgao:novaOrgao,
+    depto:document.getElementById('fDepto').value,
+    cat:document.getElementById('fCat').value,
+    vis:document.querySelector('input[name="visibilidade"]:checked')?.value||'',
+    legado:document.querySelector('input[name="legado"]:checked')?.value||'',
+    dadosPessoais:document.querySelector('input[name="dadosPessoais"]:checked')?.value||'nao',
+    dadosSensiveis:document.querySelector('input[name="dadosSensiveis"]:checked')?.value||'nao',
+    situacao:situacaoVal,tipoAcesso,
+    entePub:document.getElementById('fEntePub').value.trim(),
+    esferaPub:document.getElementById('fEsferaPub').value,
+    linguagens:lingVals,frameworks:fwVals,
+    versao,linkVersao,servidor,
+    intInt:new Set(selI.int),intExt:new Set(selI.ext),
+    eco:novoEco,ambientes:ambAtivos,
+    programas:progVals,
+    reqMaint:document.getElementById('fReqMaint').value.trim(),
+    timestamp:new Date().toISOString(),
+  });
+
+  document.getElementById('modalER').classList.add('show');
+  toast('Sistema cadastrado com sucesso! 🎉','ok');
+  setTimeout(()=>toast('📧 Equipe INFRA notificada sobre novo sistema.','warn'),1200);
+});
+
+/* ══ INIT ══ */
+updDynFields();
+buildI('int');
+buildI('ext');
+
+function toggleSub(e, id) {
+  e.preventDefault();
+  var sub = document.getElementById(id);
+  if (sub) sub.classList.toggle('open');
+}
+
+/* ══ PLUGIN MANUAL (quando nao ha Git) ══ */
+function toggleAddPluginManual(checkbox){
+  document.getElementById('addPluginManualBox').style.display=checkbox.checked?'block':'none';
+  if(!checkbox.checked){
+    document.getElementById('nomePluginManual').value='';
+    document.getElementById('versaoPluginManual').value='';
+    document.getElementById('licencaPluginManual').value='';
+    document.getElementById('pluginsManuaisContainer').innerHTML='';
+  }
+}
+function adicionarPluginManual(){
+  const nome=document.getElementById('nomePluginManual').value.trim();
+  const versao=document.getElementById('versaoPluginManual').value.trim();
+  const licenca=document.getElementById('licencaPluginManual').value;
+  if(!nome){alert('Informe o nome do plugin/framework/biblioteca.');return;}
+  const container=document.getElementById('pluginsManuaisContainer');
+  const div=document.createElement('div');div.className='git-plugin-row';
+  div.innerHTML=`<div style="display:flex;align-items:center;gap:.6rem;flex:1;">
+    <div style="background:var(--laranja);color:#fff;padding:.2rem .45rem;border-radius:6px;font-size:.68rem;font-weight:700;">MANUAL</div>
+    <div><strong>${nome}</strong>${versao?' <span style="color:var(--texto-terciario);font-size:.78rem;">v'+versao+'</span>':''}${licenca?' <span style="color:var(--azul);font-size:.75rem;">('+licenca+')</span>':''}</div>
+  </div>
+  <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--texto-terciario);cursor:pointer;font-size:1rem;">&times;</button>`;
+  container.appendChild(div);
+  document.getElementById('nomePluginManual').value='';
+  document.getElementById('versaoPluginManual').value='';
+  document.getElementById('licencaPluginManual').value='';
+}
+
+/* ══ CONSULTA BI VALIDAÇÃO ══ */
+function showConsultaBIDialog(){
+  document.getElementById('modalConsultaBI').style.display='flex';
+}
+function closeConsultaBIDialog(){
+  document.getElementById('modalConsultaBI').style.display='none';
+}
+function saveConsultaBITipo(){
+  const tipo=document.querySelector('input[name="consulta_bi_tipo"]:checked');
+  if(!tipo){alert('Selecione o tipo de acesso para consulta.');return;}
+  document.getElementById('consultaBIConfirmacao').value=tipo.value;
+  closeConsultaBIDialog();
+}
+
+</script>
+
+<div id="modalConsultaBI" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+  <div style="background:var(--card);border-radius:16px;padding:2rem;width:100%;max-width:520px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);border:1px solid var(--cinza-borda);margin:1rem;">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--laranja)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      <h3 style="margin:0;font-size:1.15rem;color:var(--texto-principal);">Validação — Sistema de Apenas Consulta</h3>
+    </div>
+    <p style="font-size:.85rem;color:var(--texto-secundario);margin-bottom:1.2rem;line-height:1.5;">Este sistema foi marcado como <strong>"Apenas Consulta"</strong>. Por favor, selecione o tipo de acesso para consulta:</p>
+    <div style="display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.5rem;">
+      <label style="display:flex;align-items:center;gap:.7rem;padding:1rem;background:rgba(6,182,212,0.05);border:2px solid rgba(6,182,212,0.2);border-radius:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='rgba(6,182,212,0.5)';" onmouseout="this.style.borderColor='rgba(6,182,212,0.2)';">
+        <input type="radio" name="consulta_bi_tipo" value="interface" style="width:18px;height:18px;accent-color:var(--azul-claro);">
+        <div>
+          <strong style="color:var(--azul-claro);font-size:.9rem;">Interface Web/Visual</strong>
+          <p style="font-size:.78rem;color:var(--texto-terciario);margin:.15rem 0 0;">O sistema possui interface visual para consulta (telas, relatórios, dashboards)</p>
+        </div>
+      </label>
+      <label style="display:flex;align-items:center;gap:.7rem;padding:1rem;background:rgba(16,185,129,0.05);border:2px solid rgba(16,185,129,0.2);border-radius:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='rgba(16,185,129,0.5)';" onmouseout="this.style.borderColor='rgba(16,185,129,0.2)';">
+        <input type="radio" name="consulta_bi_tipo" value="mysql" style="width:18px;height:18px;accent-color:var(--verde);">
+        <div>
+          <strong style="color:var(--verde);font-size:.9rem;">Banco de Dados — MySQL</strong>
+          <p style="font-size:.78rem;color:var(--texto-terciario);margin:.15rem 0 0;">A consulta é feita diretamente no banco de dados MySQL</p>
+        </div>
+      </label>
+      <label style="display:flex;align-items:center;gap:.7rem;padding:1rem;background:rgba(245,158,11,0.05);border:2px solid rgba(245,158,11,0.2);border-radius:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='rgba(245,158,11,0.5)';" onmouseout="this.style.borderColor='rgba(245,158,11,0.2)';">
+        <input type="radio" name="consulta_bi_tipo" value="outro_bd" style="width:18px;height:18px;accent-color:var(--laranja);">
+        <div>
+          <strong style="color:var(--laranja);font-size:.9rem;">Outro Banco de Dados</strong>
+          <p style="font-size:.78rem;color:var(--texto-terciario);margin:.15rem 0 0;">A consulta é feita via outro SGBD (PostgreSQL, Oracle, SQL Server, etc.)</p>
+        </div>
+      </label>
+    </div>
+    <input type="hidden" id="consultaBIConfirmacao" name="consultaBITipo" value="">
+    <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+      <button type="button" onclick="closeConsultaBIDialog()" style="background:var(--cinza-borda);color:var(--texto-principal);border:none;padding:.55rem 1.1rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-weight:600;">Cancelar</button>
+      <button type="button" onclick="saveConsultaBITipo()" style="background:linear-gradient(135deg,var(--azul),var(--azul-claro));color:#fff;border:none;padding:.55rem 1.1rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-weight:600;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

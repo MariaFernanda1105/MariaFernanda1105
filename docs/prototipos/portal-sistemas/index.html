@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Sistemas — Governo do Tocantins</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amarelo: #F5C800;
+    --azul: #044CB8;
+    --azul-escuro: #042F7A;
+    --azul-medio: #1565C0;
+    --azul-claro: #1976D2;
+    --cinza-bg: #F4F6FA;
+    --cinza-card: #FFFFFF;
+    --cinza-borda: #E2E8F0;
+    --texto-principal: #0D1B3E;
+    --texto-secundario: #4A5568;
+    --texto-terciario: #718096;
+    --verde-status: #22C55E;
+    --sombra-card: 0 2px 12px rgba(4,44,120,0.07);
+    --sombra-hover: 0 8px 32px rgba(4,44,120,0.16);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --bg-transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Variáveis do Modo Escuro */
+  body.dark-theme {
+    --cinza-bg: #0F172A;
+    --cinza-card: #1E293B;
+    --cinza-borda: #334155;
+    --texto-principal: #F8FAFC;
+    --texto-secundario: #CBD5E1;
+    --texto-terciario: #94A3B8;
+    --sombra-card: 0 4px 15px rgba(0,0,0,0.3);
+    --sombra-hover: 0 8px 30px rgba(0,0,0,0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Foco acessível para navegação por teclado */
+  *:focus-visible {
+    outline: 3px solid var(--amarelo);
+    outline-offset: 2px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cinza-bg);
+    color: var(--texto-principal);
+    transition: var(--bg-transition);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Animação suave para os cards */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-card {
+    animation: fadeUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    background: var(--azul-escuro);
+    padding: 0 2rem;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.03em;
+  }
+  .topbar span { color: rgba(255,255,255,0.5); }
+  .topbar-actions { display: flex; align-items: center; gap: 1.5rem; }
+  .topbar-actions a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+  .topbar-actions a:hover { color: var(--amarelo); }
+  .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 4px; padding: 2px 8px; cursor: pointer; transition: 0.2s; font-size: 0.8rem;}
+  .btn-theme:hover { background: rgba(255,255,255,0.1); border-color: var(--amarelo); }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    background: var(--cinza-card);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 var(--cinza-borda);
+    height: 68px;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    gap: 2rem;
+    transition: var(--bg-transition);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; flex-shrink: 0; }
+  .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--azul) 60%, var(--azul-escuro)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 0.95rem; color: #fff; position: relative; overflow: hidden; }
+  .logo-icon::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: var(--amarelo); border-radius: 0 0 10px 10px; }
+  .logo-text strong { display: block; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--texto-principal); line-height: 1.1; }
+  .logo-text span { font-size: 0.72rem; color: var(--texto-terciario); font-weight: 400; }
+
+  .nav-search { flex: 1; max-width: 440px; position: relative; }
+  .nav-search input { width: 100%; height: 40px; border: 1.5px solid var(--cinza-borda); border-radius: 20px; padding: 0 1rem 0 2.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--texto-principal); background: var(--cinza-bg); transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  .nav-search input:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(4,76,184,0.12); background: var(--cinza-card); }
+  .nav-search input::placeholder { color: var(--texto-terciario); }
+  .nav-search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--texto-terciario); font-size: 1rem; pointer-events: none; }
+
+  .nav-links { display: flex; gap: 0.25rem; margin-left: auto; }
+  .nav-links a { padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--texto-secundario); transition: background 0.2s, color 0.2s; }
+  .nav-links a:hover { background: var(--cinza-bg); color: var(--azul); }
+
+  .btn-entrar { display: flex; align-items: center; gap: 0.5rem; background: var(--azul-escuro); color: #fff; padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; font-family: 'Sora', sans-serif; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+  .btn-entrar:hover { background: var(--azul); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero { background: linear-gradient(125deg, var(--azul-escuro) 0%, var(--azul) 55%, #1E5BB5 100%); position: relative; overflow: hidden; padding: 4rem 2rem 3.5rem; }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -120px; width: 480px; height: 480px; background: radial-gradient(circle, rgba(245,200,0,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: start; position: relative; z-index: 1; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 600; color: var(--amarelo); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .hero-badge::before { content: '●'; font-size: 0.5rem; }
+  .hero-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2rem, 3.5vw, 3.2rem); line-height: 1.1; color: #fff; margin-bottom: 1rem; }
+  .hero-title em { color: var(--amarelo); font-style: normal; }
+  .hero-subtitle { font-size: 1.05rem; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 500px; margin-bottom: 2rem; font-weight: 300; }
+  
+  .hero-search-row { display: flex; gap: 0.75rem; max-width: 540px; margin-bottom: 2.5rem; }
+  .hero-search { flex: 1; height: 54px; border: none; border-radius: 10px; padding: 0 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: #0D1B3E; background: rgba(255,255,255,0.97); outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .btn-buscar { height: 54px; padding: 0 1.75rem; background: var(--amarelo); color: var(--azul-escuro); border: none; border-radius: 10px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(245,200,0,0.3); }
+  .btn-buscar:hover { background: #FFD700; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245,200,0,0.4); }
+
+  .hero-right { display: flex; flex-direction: column; gap: 1rem; min-width: 280px; }
+  .hero-stats-big { display: flex; gap: 0.75rem; margin-bottom: 0.25rem; }
+  .stat-big-card { flex: 1; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 1rem; text-align: center; backdrop-filter: blur(8px); }
+  .stat-big-num { font-family: 'Sora', sans-serif; font-size: 1.75rem; font-weight: 800; color: var(--amarelo); line-height: 1; }
+  .stat-big-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { max-width: 1240px; margin: 0 auto; padding: 3rem 2rem; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .section-title { font-family: 'Sora', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--texto-principal); display: flex; align-items: center; gap: 0.75rem; }
+  .section-title::before { content: ''; display: block; width: 4px; height: 1.4em; background: var(--amarelo); border-radius: 2px; }
+  .ver-todos { font-size: 0.875rem; font-weight: 600; color: var(--azul); text-decoration: none; display: flex; align-items: center; gap: 0.25rem; transition: gap 0.2s; }
+  .ver-todos:hover { gap: 0.5rem; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 3rem; }
+  .sys-card { background: var(--cinza-card); border: 1px solid var(--cinza-borda); border-radius: var(--radius); padding: 1.5rem; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; overflow: hidden; cursor: default; }
+  .sys-card:hover { border-color: rgba(4,76,184,0.25); box-shadow: var(--sombra-hover); transform: translateY(-3px); }
+  .sys-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+  .sys-card-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--texto-principal); line-height: 1.3; flex: 1; padding-right: 0.5rem; }
+  .status-dot { width: 10px; height: 10px; background: var(--verde-status); border-radius: 50%; margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+  .sys-card-desc { font-size: 0.85rem; color: var(--texto-secundario); line-height: 1.5; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .sys-card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .tag { background: var(--cinza-bg); border: 1px solid var(--cinza-borda); color: var(--texto-secundario); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 20px; }
+  .sys-card-actions { display: flex; gap: 0.75rem; opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; }
+  .sys-card:hover .sys-card-actions, .sys-card:focus-within .sys-card-actions { opacity: 1; transform: translateY(0); }
+  .btn-detalhes { flex: 1; height: 38px; border: 1.5px solid var(--cinza-borda); border-radius: 8px; background: transparent; color: var(--texto-secundario); text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: border-color 0.2s, color 0.2s, background 0.2s; }
+  .btn-detalhes:hover, .btn-detalhes:focus { border-color: var(--azul); color: var(--azul); background: rgba(4,76,184,0.04); }
+  .btn-abrir { flex: 1; height: 38px; border: none; border-radius: 8px; background: var(--azul-escuro); color: #fff; text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: background 0.2s, transform 0.15s; }
+  .btn-abrir:hover, .btn-abrir:focus { background: var(--azul); transform: scale(1.02); }
+
+  /* ─── CATEGORIAS & ORGAOS ─── */
+/* ─── ESPAÇAMENTO E RITMO VISUAL DAS SECTIONS ─── */
+  
+  /* 1. Aumentamos o respiro (espaço em branco) geral entre as áreas */
+  .section { 
+    margin-bottom: 5.5rem; 
+    scroll-margin-top: 100px; /* Evita que o menu fixo cubra o título ao clicar nas âncoras da Navbar */
+  }
+
+  /* 2. Categorias: Fundo envelopado suave */
+  /* Cria um contraste amigável e demarca a área sem roubar a atenção do banner de APIs */
+  #categorias {
+    background: rgba(4, 76, 184, 0.03); 
+    border: 1px dashed rgba(4, 76, 184, 0.15);
+    padding: 3.5rem 3rem;
+    border-radius: 24px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.01);
+  }
+  
+  /* Adaptação das categorias para o Modo Escuro */
+  body.dark-theme #categorias {
+    background: rgba(4, 76, 184, 0.08);
+    border-color: rgba(4, 76, 184, 0.2);
+  }
+
+  /* Ajuste de padding para não espremer no celular */
+  @media (max-width: 768px) {
+    #categorias {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+  }
+
+  /* 3. Órgãos: Divisor superior elegante */
+  /* ─── ESPAÇAMENTO E RITMO VISUAL DAS SECTIONS ─── */
+  
+  .section { 
+    margin-bottom: 5.5rem; 
+    scroll-margin-top: 100px; 
+  }
+
+  /* 2. Categorias: Bloco Elevado Institucional */
+  /* Cria uma base sólida e limpa, com uma sombra elegante e a barra com as cores do Estado */
+  /* 2. Categorias: Bloco Elevado Institucional */
+  /* Cria uma base sólida e limpa, com sombra elegante e bordas superior e inferior azuis */
+  #categorias {
+    background: var(--cinza-card);
+    padding: 3.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(4, 44, 120, 0.04);
+    border-top: 4px solid var(--azul);
+    border-bottom: 4px solid var(--azul);
+    position: relative;
+  }
+
+  /* Como o fundo da section agora é o mesmo do card original, 
+     invertemos levemente a cor dos cards internos para gerar contraste */
+  #categorias .cat-card {
+    background: var(--cinza-bg);
+    border: 1px solid var(--cinza-borda);
+    box-shadow: none;
+  }
+  
+  #categorias .cat-card:hover {
+    background: var(--cinza-card);
+    border-color: var(--azul);
+    box-shadow: 0 8px 24px rgba(4, 76, 184, 0.12);
+  }
+
+  /* Adaptação para o Modo Escuro */
+  body.dark-theme #categorias {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+  body.dark-theme #categorias .cat-card:hover {
+    background: var(--cinza-card);
+  }
+
+  /* Ajuste de espaçamento para telas menores */
+  @media (max-width: 768px) {
+    #categorias {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  /* Adaptação para o Modo Escuro */
+  body.dark-theme #categorias {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+  body.dark-theme #categorias .cat-card:hover {
+    background: var(--cinza-card);
+  }
+
+  /* Ajuste de espaçamento para telas menores */
+  @media (max-width: 768px) {
+    #categorias {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  /* 3. Órgãos: Linha divisória minimalista */
+  /* Dá um respiro após as categorias e inicia os órgãos com uma linha guia sofisticada */
+  #orgaos {
+    position: relative;
+    padding-top: 3.5rem;
+    margin-top: 2rem;
+  }
+  
+  #orgaos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, var(--cinza-borda), transparent);
+  }
+  
+  #orgaos::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: var(--amarelo);
+    border-radius: 3px;
+  }
+  .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+  .cat-card { background: var(--cinza-card); border: 1px solid var(--cinza-borda); border-radius: var(--radius); padding: 1.5rem 1.25rem; text-align: center; cursor: pointer; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; text-decoration: none; }
+  .cat-card:hover { border-color: rgba(4,76,184,0.3); box-shadow: var(--sombra-hover); transform: translateY(-3px); }
+  .cat-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 1rem; }
+  .cat-name { font-family: 'Sora', sans-serif; font-size: 0.78rem; font-weight: 700; color: var(--texto-principal); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+
+  .orgaos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .orgao-card { background: var(--cinza-card); border: 1px solid var(--cinza-borda); border-radius: var(--radius); padding: 1.25rem; cursor: pointer; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; text-decoration: none; }
+  .orgao-card:hover { border-color: rgba(4,76,184,0.3); box-shadow: var(--sombra-hover); transform: translateY(-2px); }
+  .orgao-sigla { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--azul); margin-bottom: 0.35rem; }
+  .orgao-nome { font-size: 0.78rem; color: var(--texto-secundario); line-height: 1.4; }
+
+  /* ─── FOOTER ─── */
+  footer { background: var(--azul-escuro); color: rgba(255,255,255,0.7); padding: 3rem 2rem 1.5rem; margin-top: 2rem; }
+  .footer-inner { max-width: 1240px; margin: 0 auto; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+  .footer-brand .logo-icon-sm { width: 44px; height: 44px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-weight: 800; color: #fff; font-size: 0.9rem; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.15); }
+  .footer-brand p { font-size: 0.82rem; line-height: 1.6; max-width: 280px; color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
+  .footer-brand-name { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+  .footer-brand-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
+  .footer-col h4 { font-family: 'Sora', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--amarelo); margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul li a { font-size: 0.82rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: #fff; }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+  .footer-flag { display: flex; align-items: center; gap: 0.75rem; }
+  .flag-bar { display: flex; height: 20px; border-radius: 4px; overflow: hidden; width: 36px; }
+  .flag-bar span:first-child { background: var(--amarelo); flex: 1; }
+  .flag-bar span:last-child { background: var(--azul); flex: 1; }
+
+  /* ─── SECTION APIs / CONECTATO ─── */
+  .api-banner {
+    background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul) 100%);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--sombra-card);
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .api-banner:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-hover);
+  }
+  .api-banner::after {
+    content: '🔌';
+    position: absolute;
+    right: -20px;
+    bottom: -40px;
+    font-size: 10rem;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  .api-banner-content {
+    position: relative;
+    z-index: 1;
+  }
+  .api-banner-content h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--amarelo);
+  }
+  .api-banner-content p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  .btn-conecta {
+    background: var(--amarelo);
+    color: var(--azul-escuro);
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 1;
+  }
+  .api-banner:hover .btn-conecta {
+    background: #FFD700;
+    transform: scale(1.05);
+  }
+  
+  /* Adaptação Mobile para o banner */
+  @media (max-width: 768px) {
+    .api-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem;
+    }
+    .btn-conecta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>Governo do Estado do Tocantins — ATI</span>
+  <div class="topbar-actions">
+    <a href="#" aria-label="Acessibilidade">Acessibilidade</a>
+    <a href="mapa-do-site.html" aria-label="Mapa do site">Mapa do site</a>
+    <a href="#" aria-label="Ir para gov.br">gov.br</a>
+    <button class="btn-theme" id="themeToggle" aria-label="Alternar Modo Escuro" data-testid="btn-theme-toggle">🌙 Escuro</button>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo" aria-label="Ir para a página inicial do Portal de Sistemas">
+    <div class="logo-icon" aria-hidden="true">PS</div>
+    <div class="logo-text">
+      <strong>Portal de Sistemas</strong>
+      <span>Governo do Tocantins</span>
+    </div>
+  </a>
+
+  <div class="nav-search">
+    <span class="nav-search-icon" aria-hidden="true">🔍</span>
+    <input type="text" placeholder="Buscar sistemas, órgãos, categorias..." aria-label="Campo de busca global" data-testid="input-global-search">
+  </div>
+
+  <div class="nav-links">
+    <a href="#sistemas" data-testid="link-nav-sistemas">Sistemas</a>
+    <a href="#categorias" data-testid="link-nav-categorias">Categorias</a>
+    <a href="#orgaos" data-testid="link-nav-orgaos">Órgãos</a>
+  </div>
+
+  <a href="#" class="btn-entrar" data-testid="btn-login">→ Entrar</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-badge">Governo do Tocantins · ATI</div>
+      <h1 class="hero-title">Acesse os sistemas<br>do <em>Estado</em> em um lugar</h1>
+      <p class="hero-subtitle">Encontre rapidamente qualquer sistema governamental por nome, sigla, órgão ou categoria.</p>
+
+      <div class="hero-search-row">
+        <input class="hero-search" type="text" placeholder="Ex: SIAFTO, Diárias, SEDUC..." aria-label="Busca de destaque" data-testid="input-hero-search">
+        <button class="btn-buscar" data-testid="btn-hero-search">🔍 Buscar</button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-stats-big">
+        <div class="stat-big-card animate-card" style="animation-delay: 0.1s;">
+          <div class="stat-big-num" data-testid="stat-sistemas-count">330+</div>
+          <div class="stat-big-label">Sistemas</div>
+        </div>
+        <div class="stat-big-card animate-card" style="animation-delay: 0.2s;">
+          <div class="stat-big-num" data-testid="stat-orgaos-count">40+</div>
+          <div class="stat-big-label">Órgãos</div>
+        </div>
+        <div class="stat-big-card animate-card" style="animation-delay: 0.3s;">
+          <div class="stat-big-num" data-testid="stat-categorias-count">8</div>
+          <div class="stat-big-label">Categorias</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="main">
+
+  <section class="section" id="sistemas">
+    <div class="section-header">
+      <h2 class="section-title">Mais recentes</h2>
+      <a href="#" class="ver-todos" aria-label="Ver todos os sistemas">Ver todos →</a>
+    </div>
+
+    <div class="cards-grid">
+      <div class="sys-card animate-card" style="animation-delay: 0.1s;" data-testid="card-sys-ada">
+        <div class="sys-card-header">
+          <div class="sys-card-title">ADA - Administração de Diárias</div>
+          <div class="status-dot" aria-label="Status Operacional"></div>
+        </div>
+        <p class="sys-card-desc">Administra a solicitação e pagamento de diárias e auxílio financeiro para servidores e não servidores...</p>
+        <div class="sys-card-tags">
+          <span class="tag">Pesquisa e Educação</span>
+          <span class="tag">SEDUC</span>
+        </div>
+        <div class="sys-card-actions">
+          <a href="sistema-detalhes.html" class="btn-detalhes" data-testid="btn-detalhes-ada">☰ Mais Detalhes</a>
+          <a href="#" class="btn-abrir" data-testid="btn-abrir-ada">↗ Abrir</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="apis">
+    <div class="section-header">
+      <h2 class="section-title">Integrações e APIs</h2>
+    </div>
+
+    <a href="https://conectato.to.gov.br" target="_blank" class="api-banner animate-card" style="animation-delay: 0.2s;" data-testid="banner-conectato" aria-label="Acessar o portal ConectaTO para catálogo de APIs">
+      <div class="api-banner-content">
+        <h3>Portal ConectaTO</h3>
+        <p>Descubra, explore e integre-se aos serviços digitais do Governo do Estado. O ConectaTO é a plataforma centralizada para consulta e consumo do catálogo de APIs governamentais.</p>
+      </div>
+      <div class="btn-conecta" aria-hidden="true">Acessar ConectaTO ↗</div>
+    </a>
+  </section>
+
+  <section class="section" id="categorias">
+    <div class="section-header">
+      <h2 class="section-title">Categorias</h2>
+      <a href="#" class="ver-todos" aria-label="Ver todas as categorias">Ver todas →</a>
+    </div>
+
+    <div class="categories-grid">
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.1s;" data-testid="cat-corporativo">
+        <div class="cat-icon" style="background:#EDE9FE;">👥</div>
+        <div class="cat-name">Corporativo</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.2s;" data-testid="cat-desenvolvimento">
+        <div class="cat-icon" style="background:#DCFCE7;">📈</div>
+        <div class="cat-name">Desenvolvimento Econômico e Social</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.3s;" data-testid="cat-fazendario">
+        <div class="cat-icon" style="background:#FEF9C3;">🏛️</div>
+        <div class="cat-name">Fazendário</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.4s;" data-testid="cat-governanca">
+        <div class="cat-icon" style="background:#DBEAFE;">📋</div>
+        <div class="cat-name">Governança e Gestão</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.5s;" data-testid="cat-infraestrutura">
+        <div class="cat-icon" style="background:#FEE2E2;">🔧</div>
+        <div class="cat-name">Infraestrutura e Transportes</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.6s;" data-testid="cat-pesquisa">
+        <div class="cat-icon" style="background:#FCE7F3;">🎓</div>
+        <div class="cat-name">Pesquisa e Educação</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.7s;" data-testid="cat-planejamento">
+        <div class="cat-icon" style="background:#E0F2FE;">📊</div>
+        <div class="cat-name">Planejamento e Orçamento</div>
+      </a>
+      <a href="#" class="cat-card animate-card" style="animation-delay: 0.8s;" data-testid="cat-rural">
+        <div class="cat-icon" style="background:#DCFCE7;">🌿</div>
+        <div class="cat-name">Rural e Ambiental</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="orgaos">
+    <div class="section-header">
+      <h2 class="section-title">Órgãos</h2>
+      <a href="#" class="ver-todos" aria-label="Ver todos os órgãos">Ver todos →</a>
+    </div>
+
+    <div class="orgaos-grid">
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.1s;" data-testid="orgao-adapec">
+        <div class="orgao-sigla">ADAPEC</div>
+        <div class="orgao-nome">Agência de Defesa Agropecuária do Tocantins</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.2s;" data-testid="orgao-agehab">
+        <div class="orgao-sigla">AGEHAB</div>
+        <div class="orgao-nome">Agência de Habitação e Desenvolvimento Urbano</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.3s;" data-testid="orgao-aem">
+        <div class="orgao-sigla">AEM</div>
+        <div class="orgao-nome">Agência de Metrologia, Avaliação e Tecnologia</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.4s;" data-testid="orgao-ameto">
+        <div class="orgao-sigla">AMETO</div>
+        <div class="orgao-nome">Agência de Mineração do Tocantins</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.5s;" data-testid="orgao-ati">
+        <div class="orgao-sigla">ATI-TO</div>
+        <div class="orgao-nome">Agência de Tecnologia da Informação</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.6s;" data-testid="orgao-adetuc">
+        <div class="orgao-sigla">ADETUC</div>
+        <div class="orgao-nome">Agência do Desenvolvimento Turístico e Cultural</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.7s;" data-testid="orgao-atn">
+        <div class="orgao-sigla">ATN</div>
+        <div class="orgao-nome">Agência Tocantinense de Notícias</div>
+      </a>
+      <a href="#" class="orgao-card animate-card" style="animation-delay: 0.8s;" data-testid="orgao-ats">
+        <div class="orgao-sigla">ATS</div>
+        <div class="orgao-nome">Agência Tocantinense de Saneamento</div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+
+<script type="text/javascript" charset="utf-8" src="https://barra.to.gov.br/base.js?k=cl2uex&ati=1"></script>
+
+
+
+<script>
+  
+  // Controle de Modo Escuro e Acessibilidade
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  // Verifica preferência salva
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-theme');
+    themeToggle.textContent = '☀️ Claro';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    if (body.classList.contains('dark-theme')) {
+      localStorage.setItem('theme', 'dark');
+      themeToggle.textContent = '☀️ Claro';
+    } else {
+      localStorage.setItem('theme', 'light');
+      themeToggle.textContent = '🌙 Escuro';
+    }
+  });
+</script>
+</body>
+</html>

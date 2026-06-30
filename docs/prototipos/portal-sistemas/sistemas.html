@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas — Dashboard Administrativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,600;1,9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Cores Institucionais e Base */
+    --amarelo: #F5C800;
+    --azul: #044CB8;
+    --azul-escuro: #042F7A;
+    --azul-claro: #1976D2;
+    --cinza-bg: #F4F6FA;
+    --cinza-card: #FFFFFF;
+    --cinza-borda: #E2E8F0;
+    --texto-principal: #0D1B3E;
+    --texto-secundario: #4A5568;
+    --texto-terciario: #718096;
+    
+    /* Cores de Status */
+    --verde-suave: #D1FAE5;
+    --verde-texto: #065F46;
+    --verde-borda: #A7F3D0;
+    --cinza-suave: #F3F4F6;
+    --cinza-texto: #4B5563;
+    --cinza-borda-status: #E5E7EB;
+
+    /* Variáveis Visuais */
+    --sombra-card: 0 4px 20px rgba(4,44,120,0.06);
+    --sombra-hover: 0 8px 32px rgba(4,44,120,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+    
+    /* Variáveis da Sidebar unificadas */
+    --sb-w: 80px;      /* Largura recolhida */
+    --sb-exp: 252px;   /* Largura expandida */
+    
+    --bg-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Modo Escuro */
+  body.dark-theme {
+    --cinza-bg: #0F172A;
+    --cinza-card: #1E293B;
+    --cinza-borda: #334155;
+    --texto-principal: #F8FAFC;
+    --texto-secundario: #CBD5E1;
+    --texto-terciario: #94A3B8;
+    --sombra-card: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cinza-bg);
+    color: var(--texto-principal);
+    transition: var(--bg-transition);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ═══ SIDEBAR ═══ */
+  .sidebar {
+    width: var(--sb-w);
+    background: var(--azul-escuro);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0;
+    z-index: 200;
+    box-shadow: 2px 0 12px rgba(0,0,0,.14);
+    transition: width .3s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+  .sidebar:hover { width: var(--sb-exp); }
+  
+  .sb-logo { display: flex; align-items: center; gap: .85rem; padding: 0 1.1rem; margin-bottom: 1.75rem; text-decoration: none; overflow: hidden; }
+  .sb-icon { width: 42px; height: 42px; min-width: 42px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-weight: 800; font-size: .85rem; color: #fff; flex-shrink: 0; }
+  .sb-logo-text strong { display: block; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .82rem; color: #fff; white-space: nowrap; }
+  .sb-logo-text span { font-size: .68rem; color: rgba(255,255,255,.4); white-space: nowrap; }
+  
+  .sb-section { padding: 0 .75rem; margin-bottom: .2rem; }
+  .sb-section-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.28); padding: .75rem .5rem .3rem; white-space: nowrap; display: block; }
+  .sb-divider { height: 1px; background: rgba(255,255,255,.07); margin: .5rem .75rem; }
+  
+  .nav-item { display: flex; align-items: center; gap: .85rem; width: 100%; height: 42px; padding: 0 .75rem; border-radius: 9px; color: rgba(255,255,255,.5); text-decoration: none; transition: all .18s; white-space: nowrap; overflow: hidden; border-left: 3px solid transparent; }
+  .nav-item svg { width: 19px; height: 19px; fill: currentColor; flex-shrink: 0; }
+  .nav-label { font-size: .82rem; font-weight: 600; opacity: 0; transition: opacity .15s .05s; }
+  .sidebar:hover .nav-label { opacity: 1; }
+  .nav-item:hover { color: #fff; background: rgba(255,255,255,.09); }
+  .nav-item.active { color: #fff; background: rgba(4,76,184,.3); border-left-color: var(--amarelo); }
+  
+  .sub-nav { overflow: hidden; max-height: 0; transition: max-height .3s ease; background: rgba(0,0,0,.15); }
+  .sub-nav.open { max-height: 200px; }
+  .sub-item { display: flex; align-items: center; gap: .75rem; padding: .55rem 1rem .55rem 2.5rem; color: rgba(255,255,255,.45); text-decoration: none; font-size: .8rem; font-weight: 600; transition: .18s; white-space: nowrap; border-left: 3px solid transparent; }
+  .sub-item:hover { color: #fff; background: rgba(255,255,255,.05); }
+  .sub-item.active { color: var(--amarelo); border-left-color: var(--amarelo); }
+
+  /* ═══ MAIN AREA ═══ */
+  .main-area {
+    margin-left: var(--sb-w);
+    transition: margin-left .3s cubic-bezier(.4,0,.2,1);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .sidebar:hover ~ .main-area { margin-left: var(--sb-exp); }
+
+  /* ═══ HEADER ADMINISTRATIVO ═══ */
+  .admin-header { height: 68px; background: var(--cinza-card); border-bottom: 1px solid var(--cinza-borda); display: flex; align-items: center; justify-content: flex-end; padding: 0 2rem; position: sticky; top: 0; z-index: 90; transition: var(--bg-transition); }
+  .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+  .btn-theme { background: transparent; border: 1.5px solid var(--cinza-borda); color: var(--texto-secundario); border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; transition: 0.2s; font-size: 0.8rem; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+  .btn-theme:hover { border-color: var(--azul); color: var(--azul); }
+  .user-profile { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+  .user-name { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--texto-principal); letter-spacing: 0.05em; text-transform: uppercase; }
+  .user-avatar { width: 36px; height: 36px; background: var(--cinza-borda); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+
+  /* ═══ CONTEÚDO DA PÁGINA ═══ */
+  .page-container { padding: 2.5rem 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+  .page-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+  .page-title { font-family: 'Sora', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 0.25rem; }
+  .breadcrumbs { font-size: 0.85rem; color: var(--texto-terciario); }
+  .breadcrumbs span { color: var(--texto-secundario); font-weight: 500; }
+  
+  .btn-primary { background: var(--azul-escuro); color: #fff; border: none; padding: 0.6rem 1.25rem; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: 0.2s; box-shadow: 0 4px 12px rgba(4,47,122,0.2); text-decoration: none; }
+  .btn-primary:hover { background: var(--azul); transform: translateY(-1px); }
+
+  /* Barra de Filtros */
+  .filters-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+  .search-group { display: flex; max-width: 450px; width: 100%; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--cinza-borda); background: var(--cinza-card); transition: border-color 0.2s; }
+  .search-group:focus-within { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(4,76,184,0.1); }
+  .search-group input { flex: 1; border: none; padding: 0.6rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--texto-principal); background: transparent; outline: none; }
+  .search-group input::placeholder { color: var(--texto-terciario); }
+  .search-group button { background: var(--azul-escuro); color: #fff; border: none; padding: 0 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+  .search-group button:hover { background: var(--azul); }
+  .search-group button svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .btn-outline { background: transparent; border: 1px solid var(--cinza-borda); color: var(--texto-secundario); padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+  .btn-outline:hover { background: var(--cinza-bg); color: var(--texto-principal); }
+
+  /* Container da Tabela */
+  .table-card { background: var(--cinza-card); border: 1px solid var(--cinza-borda); border-radius: var(--radius); box-shadow: var(--sombra-card); padding: 1.5rem; overflow-x: auto; }
+
+  /* Paginação */
+  .pagination { display: flex; align-items: center; gap: 0.25rem; margin-bottom: 1.5rem; }
+  .page-item { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; color: var(--texto-secundario); cursor: pointer; text-decoration: none; transition: 0.2s; }
+  .page-item:hover:not(.disabled) { background: var(--cinza-bg); color: var(--texto-principal); }
+  .page-item.active { background: var(--azul-escuro); color: #fff; }
+  .page-item.disabled { color: var(--texto-terciario); cursor: not-allowed; opacity: 0.5; }
+
+  /* Tabela */
+  .admin-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
+  .admin-table th { padding: 1rem 1rem 1rem 0; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--texto-principal); border-bottom: 2px solid var(--cinza-borda); }
+  .admin-table td { padding: 1.25rem 1rem 1.25rem 0; font-size: 0.9rem; color: var(--texto-secundario); border-bottom: 1px solid var(--cinza-borda); vertical-align: middle; }
+  .admin-table tbody tr { transition: background 0.2s; }
+  .admin-table tbody tr:hover { background: rgba(0,0,0,0.015); }
+  body.dark-theme .admin-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .col-nome { color: var(--texto-principal); font-weight: 500; }
+
+  /* Badges de Categorias Destacados */
+  .badge-cat { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 0.35rem; 
+    background: rgba(4, 76, 184, 0.08); 
+    color: var(--azul-escuro); 
+    padding: 0.4rem 0.75rem; 
+    border-radius: 6px; 
+    font-size: 0.7rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 0.06em; 
+    font-family: 'Sora', sans-serif; 
+    border: 1px solid rgba(4, 76, 184, 0.15); 
+  }
+  .badge-cat::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  body.dark-theme .badge-cat { 
+    background: rgba(245, 200, 0, 0.1); 
+    color: var(--amarelo); 
+    border-color: rgba(245, 200, 0, 0.2); 
+  }
+  
+  /* Badges de Status Semânticos */
+  .badge-status { 
+    display: inline-block; 
+    padding: 0.3rem 0.75rem; 
+    border-radius: 6px; 
+    font-size: 0.7rem; 
+    font-weight: 700; 
+    letter-spacing: 0.05em; 
+    font-family: 'Sora', sans-serif;
+    text-transform: uppercase;
+  }
+  
+  .badge-status.ativo { background: var(--verde-suave); color: var(--verde-texto); border: 1px solid var(--verde-borda); }
+  body.dark-theme .badge-status.ativo { background: rgba(16, 185, 129, 0.15); color: #34D399; border-color: rgba(16, 185, 129, 0.3); }
+
+  .badge-status.inativo { background: var(--cinza-suave); color: var(--cinza-texto); border: 1px solid var(--cinza-borda-status); }
+  body.dark-theme .badge-status.inativo { background: rgba(255, 255, 255, 0.05); color: #9CA3AF; border-color: rgba(255, 255, 255, 0.1); }
+
+  /* Ações da Tabela */
+  .actions-cell { display: flex; gap: 0.5rem; align-items: center; }
+  .btn-action { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--texto-secundario); transition: 0.2s; }
+  .btn-action:hover { background: var(--cinza-bg); color: var(--azul); }
+  .btn-action-primary { background: var(--azul-escuro); color: #fff; }
+  .btn-action-primary:hover { background: var(--azul); color: #fff; }
+  .btn-action svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .dropdown-wrapper { position: relative; }
+  .actions-menu { 
+    position: absolute; right: 0; top: 100%; background: var(--cinza-card); 
+    border: 1px solid var(--cinza-borda); border-radius: var(--radius-sm); 
+    box-shadow: var(--sombra-hover); padding: 0.5rem; display: none; z-index: 10;
+  }
+  .actions-menu.show { display: block; }
+  
+  .menu-item { 
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; 
+    text-decoration: none; font-size: 0.85rem; font-weight: 600; border-radius: 4px; color: var(--texto-secundario);
+  }
+  
+  .menu-item.edit { background: #fff; color: var(--texto-principal); }
+  .menu-item.disable { background: #FEE2E2; color: #B91C1C; }
+  .menu-item.delete { background: #EF4444; color: #fff; }
+  
+  .menu-item:hover { opacity: 0.9; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { width: 0; overflow: hidden; padding: 0; }
+    .main-area { margin-left: 0; }
+    .sidebar:hover ~ .main-area { margin-left: 0; }
+    .page-title { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <a href="admin-dashboard.html" class="sb-logo">
+    <div class="sb-icon">PS</div>
+    <div class="sb-logo-text"><strong>Portal de Sistemas</strong><span>Gov. Tocantins</span></div>
+  </a>
+
+  <div class="sb-section">
+    <span class="sb-section-label">Principal</span>
+    <a href="admin-dashboard.html" class="nav-item" title="Dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="sistemas.html" class="nav-item active" title="Sistemas">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <span class="nav-label">Sistemas</span>
+    </a>
+    <a href="admin-categoria.html" class="nav-item" title="Categorias">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+      <span class="nav-label">Categorias</span>
+    </a>
+    <a href="#" class="nav-item" title="Permissões">
+      <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+      <span class="nav-label">Permissões</span>
+    </a>
+  </div>
+
+  <div class="sb-divider"></div>
+
+  <div class="sb-section">
+    <span class="sb-section-label">Cadastros Base</span>
+    <a href="cadastro-sistemas.html" class="nav-item" title="Cadastrar Sistema">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span class="nav-label">Cad. Sistema</span>
+    </a>
+    <div>
+      <a href="#" class="nav-item" title="Formulários" onclick="toggleSub(event,'sub-form')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span class="nav-label">Formulários ▾</span>
+      </a>
+      <div class="sub-nav" id="sub-form">
+        <a href="cadastro-formulario.html" class="sub-item">Cadastrar Formulário</a>
+        <a href="#" class="sub-item">Listar Formulários</a>
+      </div>
+    </div>
+    <a href="cadastro-sistema-externo.html" class="nav-item" title="Sistemas Externos">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+      <span class="nav-label">Sistemas Externos</span>
+    </a>
+  </div>
+
+  <div class="sb-divider"></div>
+
+  <div class="sb-section">
+    <span class="sb-section-label">Conta</span>
+    <a href="admin-perfil.html" class="nav-item" title="Meu Perfil">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span class="nav-label">Meu Perfil</span>
+    </a>
+  </div>
+</aside>
+
+<main class="main-area">
+  
+  <header class="admin-header">
+    <div class="header-actions">
+      <button class="btn-theme" id="themeToggle">🌙 Modo Escuro</button>
+      <div class="user-profile">
+        <span class="user-name">STEFAN</span>
+        <div class="user-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--texto-terciario)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-container">
+    
+    <div class="page-header-row">
+      <div>
+        <h1 class="page-title">Sistemas</h1>
+        <div class="breadcrumbs">Início &gt; Sistemas &gt; <span>Listagem</span></div>
+      </div>
+      <a href="cadastro-sistemas.html" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Cadastrar
+      </a>
+    </div>
+
+    <div class="filters-bar">
+      <div class="search-group">
+        <input type="text" placeholder="Buscar por nome, categoria ou órgão">
+        <button aria-label="Pesquisar">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </button>
+      </div>
+      <button class="btn-outline">Limpar Busca</button>
+    </div>
+
+    <div class="table-card">
+      
+      <div class="pagination">
+        <a href="#" class="page-item disabled">&lt;</a>
+        <a href="#" class="page-item active">1</a>
+        <a href="#" class="page-item">2</a>
+        <a href="#" class="page-item">3</a>
+        <a href="#" class="page-item">4</a>
+        <a href="#" class="page-item">5</a>
+        <span class="page-item disabled">...</span>
+        <a href="#" class="page-item">&gt;</a>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Órgão</th>
+            <th>Situação</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-nome">Acompanhamento da Execução Orçamentária e do PPA</td>
+            <td><span class="badge-cat">Governança e Gestão</span></td>
+            <td>Controladoria-Geral do Estado</td>
+            <td><span class="badge-status ativo">ATIVO</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action" title="Visualizar">
+                  <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </button>
+                <div class="dropdown-wrapper">
+                  <button class="btn-action btn-action-primary toggle-menu" title="Opções">
+                    <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                  </button>
+                  <div class="actions-menu">
+                    <a href="#" class="menu-item edit"><span>✏️</span> Alterar</a>
+                    <a href="#" class="menu-item disable"><span>⛔</span> Desativar</a>
+                    <a href="#" class="menu-item delete"><span>🗑️</span> Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="col-nome">Administração de Diárias e Auxílio Financeiro</td>
+            <td><span class="badge-cat">Pesquisa e Educação</span></td>
+            <td>Secretaria da Educação, Juventude e Esportes</td>
+            <td><span class="badge-status ativo">ATIVO</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action" title="Visualizar"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+                <div class="dropdown-wrapper">
+                  <button class="btn-action btn-action-primary toggle-menu" title="Opções"><svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+                  <div class="actions-menu">
+                    <a href="#" class="menu-item edit"><span>✏️</span> Alterar</a>
+                    <a href="#" class="menu-item disable"><span>⛔</span> Desativar</a>
+                    <a href="#" class="menu-item delete"><span>🗑️</span> Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="col-nome">Analise CAR - Sistema de Cadastro Ambiental Rural</td>
+            <td><span class="badge-cat">Rural e Ambiental</span></td>
+            <td>Secretaria do Meio Ambiente e Recursos Hídricos</td>
+            <td><span class="badge-status ativo">ATIVO</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action" title="Visualizar"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+                <div class="dropdown-wrapper">
+                  <button class="btn-action btn-action-primary toggle-menu" title="Opções"><svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+                  <div class="actions-menu">
+                    <a href="#" class="menu-item edit"><span>✏️</span> Alterar</a>
+                    <a href="#" class="menu-item disable"><span>⛔</span> Desativar</a>
+                    <a href="#" class="menu-item delete"><span>🗑️</span> Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="col-nome">AVA (Ambiente Virtual de Aprendizagem) - CHAMILO</td>
+            <td><span class="badge-cat">Segurança Pública</span></td>
+            <td>Corpo de Bombeiros Militar do Est do Tocantins</td>
+            <td><span class="badge-status ativo">ATIVO</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action" title="Visualizar">
+                  <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </button>
+                <div class="dropdown-wrapper">
+                  <button class="btn-action btn-action-primary toggle-menu" title="Opções">
+                    <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                  </button>
+                  <div class="actions-menu">
+                    <a href="#" class="menu-item edit"><span>✏️</span> Alterar</a>
+                    <a href="#" class="menu-item disable"><span>⛔</span> Desativar</a>
+                    <a href="#" class="menu-item delete"><span>🗑️</span> Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="col-nome">Avaliação Periódica de Desempenho</td>
+            <td><span class="badge-cat">Saúde</span></td>
+            <td>Secretaria da Saúde</td>
+            <td><span class="badge-status inativo">INATIVO</span></td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn-action" title="Visualizar"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+                <div class="dropdown-wrapper">
+                  <button class="btn-action btn-action-primary toggle-menu" title="Opções"><svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+                  <div class="actions-menu">
+                    <a href="#" class="menu-item edit"><span>✏️</span> Alterar</a>
+                    <a href="#" class="menu-item disable"><span>⛔</span> Desativar</a>
+                    <a href="#" class="menu-item delete"><span>🗑️</span> Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  // ─── THEME TOGGLE ───
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-theme');
+    themeToggle.textContent = '☀️ Modo Claro';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    if (body.classList.contains('dark-theme')) {
+      localStorage.setItem('theme', 'dark');
+      themeToggle.textContent = '☀️ Modo Claro';
+    } else {
+      localStorage.setItem('theme', 'light');
+      themeToggle.textContent = '🌙 Modo Escuro';
+    }
+  });
+
+  // ─── SIDEBAR SUBMENU ───
+  function toggleSub(e, id) {
+    e.preventDefault();
+    document.getElementById(id)?.classList.toggle('open');
+  }
+
+  // ─── DROPDOWN MENUS (AÇÕES DA TABELA) ───
+  document.querySelectorAll('.toggle-menu').forEach(button => {
+    button.addEventListener('click', (e) => {
+      // Fecha todos os outros antes de abrir este
+      document.querySelectorAll('.actions-menu').forEach(m => {
+        if (m !== button.nextElementSibling) m.classList.remove('show');
+      });
+      button.nextElementSibling.classList.toggle('show');
+      e.stopPropagation();
+    });
+  });
+
+  // Fecha os dropdowns ao clicar fora
+  window.addEventListener('click', () => {
+    document.querySelectorAll('.actions-menu').forEach(m => m.classList.remove('show'));
+  });
+</script>
+</body>
+</html>
