@@ -585,6 +585,121 @@ footer {
 }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
+/* ============ TRADUTOR (Google Translate) ============ */
+/* O widget nativo do Google fica 100% oculto — usamos só o motor de tradução dele.
+   A interface visível é o dropdown customizado abaixo. */
+body { position: relative; top: 0 !important; }
+.goog-te-banner-frame.skiptranslate,
+.goog-tooltip, .goog-tooltip:hover,
+.goog-text-highlight,
+body > .skiptranslate:first-child {
+  display: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+#google_translate_element {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Dropdown customizado ---------- */
+.lang-switcher {
+  position: relative;
+  font-family: var(--font-mono);
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 100px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.lang-btn:hover {
+  border-color: var(--accent-green);
+  background: var(--bg-card-hover);
+}
+
+.lang-switcher.open .lang-btn {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.lang-btn .lang-icon { font-size: 14px; line-height: 1; }
+.lang-btn .lang-current { font-weight: 600; letter-spacing: 0.02em; }
+.lang-btn .lang-caret {
+  font-size: 10px;
+  color: var(--text-faint);
+  transition: transform 0.2s;
+}
+.lang-switcher.open .lang-btn .lang-caret { transform: rotate(180deg); color: var(--accent-green); }
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  max-height: 340px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 50px -12px rgba(0,0,0,0.65);
+  padding: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  z-index: 200;
+}
+
+.lang-switcher.open .lang-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.lang-menu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lang-menu li:hover { background: var(--bg-elevated); color: var(--text); }
+
+.lang-menu li.active {
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+}
+
+.lang-menu li .flag { font-size: 15px; }
+
+.lang-menu::-webkit-scrollbar { width: 6px; }
+.lang-menu::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 6px; }
+
+@media (max-width: 680px) {
+  .lang-btn .lang-current-label { display: none; }
+  .lang-menu { right: -10px; }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 880px) {
   .hero-grid, .about-grid { grid-template-columns: 1fr; }
