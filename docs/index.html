@@ -29,6 +29,25 @@
         <li><a href="#contato">contato</a></li>
       </ul>
     </nav>
+    <div class="lang-switcher notranslate" id="langSwitcher" translate="no">
+      <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+        <span class="lang-icon">🌐</span>
+        <span class="lang-current-label"><span class="lang-current" id="langCurrent">PT</span></span>
+        <span class="lang-caret">▾</span>
+      </button>
+      <ul class="lang-menu" id="langMenu" role="listbox">
+        <li role="option" data-lang="pt" class="active"><span class="flag">🇧🇷</span> Português</li>
+        <li role="option" data-lang="en"><span class="flag">🇺🇸</span> English</li>
+        <li role="option" data-lang="es"><span class="flag">🇪🇸</span> Español</li>
+        <li role="option" data-lang="fr"><span class="flag">🇫🇷</span> Français</li>
+        <li role="option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</li>
+        <li role="option" data-lang="it"><span class="flag">🇮🇹</span> Italiano</li>
+        <li role="option" data-lang="zh-CN"><span class="flag">🇨🇳</span> 中文</li>
+        <li role="option" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</li>
+        <li role="option" data-lang="ru"><span class="flag">🇷🇺</span> Русский</li>
+        <li role="option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</li>
+      </ul>
+    </div>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">☰</button>
   </div>
 </header>
@@ -349,5 +368,19 @@
 </footer>
 
 <script src="js/script.js"></script>
+<script src="js/translate.js"></script>
+
+<!-- ============ MOTOR DE TRADUÇÃO (oculto — a UI é o .lang-switcher no header) ============ -->
+<div id="google_translate_element"></div>
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      { pageLanguage: 'pt', autoDisplay: false },
+      'google_translate_element'
+    );
+  }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+
 </body>
 </html>
