@@ -147,21 +147,17 @@ Developed an automated news aggregation solution using Python, involving:
 
 ---
 
+
 ## 📈 Contribution Activity
 
-<div align="center">
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=MariaFernanda1105&theme=tokyo-night&hide_border=true&area=true" alt="GitHub contribution activity graph" width="100%"/>
-
-</div>
+![Contribution Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=MariaFernanda1105&theme=tokyo-night)
 
 ---
 
 ## 🏆 GitHub Achievements
 
-<div align="center">
+![GitHub Profile Trophies](https://github-profile-trophy.vercel.app/?username=MariaFernanda1105&theme=tokyonight)
 
-<img src="https://github-profile-trophy.vercel.app/?username=MariaFernanda1105&theme=tokyonight&no-frame=true&no-bg=true&margin-w=8&column=4" alt="GitHub profile trophies" width="100%"/>
 
 </div>
 
