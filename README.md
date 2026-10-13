@@ -1,167 +1,111 @@
-<div align="center">
+# Hi, I'm Maria Fernanda 👋
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0077B5&height=120&section=header&text=Maria%20Fernanda%20Oliveira&fontSize=36&fontColor=ffffff&fontAlignY=65&animation=fadeIn" width="100%"/>
+### QA Engineer | Software Testing | Test Automation
 
-### Systems for Internet Student · QA Engineer · Product Owner
+I'm a Systems for Internet student at the Federal Institute of Tocantins (IFTO), with hands-on experience in software quality assurance, test automation, requirements engineering, and web development.
 
-*Building quality into software — from requirements to delivery.*
+My experience includes contributing to digital solutions for the Government of Tocantins, collaborating with multidisciplinary teams throughout the software development lifecycle — from understanding business requirements to testing and validating software functionality.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264)
-[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=githubpages&logoColor=white)](https://mariafernanda1105.github.io/MariaFernanda1105/)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your-email@example.com)
-![Profile Views](https://komarev.com/ghpvc/?username=MariaFernanda1105&style=for-the-badge&color=0077B5)
+I'm particularly interested in building reliable software, improving testing processes, identifying risks early, and expanding test automation.
 
-</div>
+## 🔎 Areas of Expertise
 
----
+- 🧪 **Software Testing:** Functional, exploratory, regression, and API testing
+- 🤖 **Test Automation:** Selenium WebDriver, Playwright, and Cypress
+- 🔌 **API Testing:** Postman, Swagger, and REST API validation
+- 📋 **Requirements Engineering:** Business rules, user stories, and acceptance criteria
+- 🚀 **Product & Agile:** Backlog refinement, Scrum, and stakeholder collaboration
+- 💻 **Web Development:** HTML, CSS, JavaScript, and Flask
+- 🎨 **UI/UX:** Prototyping and interface design with Figma
 
-# About me
+## 🚀 Featured Projects
 
-I'm a **Systems for Internet student** with hands-on experience at the **Information Technology Agency of the State of Tocantins (ATI)**, contributing to government digital platforms through **quality assurance, product ownership, requirements engineering, and front-end development**.
+### 🧪 Quality Assurance & Test Automation
 
-I work alongside multidisciplinary teams to transform business needs into reliable digital solutions used by thousands of citizens, participating throughout the software development lifecycle—from requirements gathering and sprint planning to testing, validation, and delivery.
+Projects and practical examples focused on test scenarios, automation, API validation, defect reporting, and software quality.
 
-### What I do
+*More QA projects and documentation will be added as they become available.*
 
-- 🧪 Test automation with Selenium, Playwright and Cypress
-- 📋 Requirements engineering and business analysis
-- 🚀 Product ownership, backlog management and sprint planning
-- 💻 Front-end development for government web portals
-- 🎨 UI/UX prototyping using Figma
-- 🌎 English C1 — professional communication in technical and business environments
+### 🗳️ Consulta Popular
 
----
+A government digital platform designed to support citizen participation in public decision-making.
 
-# Featured projects
-
-## GTM — Government Task Manager
-
-Acted as **Product Owner**, managing the product backlog, defining user stories, writing acceptance criteria, planning sprints, and validating deliveries with stakeholders and development teams.
-
----
-
-## Consulta Popular
-
-Government platform designed to increase citizen participation in public decision-making.
-
-Worked on:
-
-- Requirements engineering
+**My contributions included:**
+- Requirements analysis
 - Functional and regression testing
 - Acceptance validation
-- Product quality assurance
+- Quality assurance
 
----
+### 🩺 Portal de Conscientização sobre Sífilis
 
-## Portal Sífilis
+A public health information platform developed to support access to educational content and information related to syphilis prevention and care.
 
-Public health platform supporting epidemiological surveillance and reporting.
-
-Contributed with:
-
-- Functional testing
-- Bug reporting
-- Validation of business rules
+**My contributions included:**
+- Functional validation
+- Business rule verification
+- Defect identification and reporting
 - Software quality assurance
 
----
+### ⛏️ GTM — Guia de Transporte de Minério
 
-## Amazon News Aggregator ⭐
+Product-related work involving requirements, backlog refinement, stakeholder communication, and functional validation.
 
-Award-winning academic research project recognized by **PPGCOM 2024**.
+**My contributions included:**
+- Requirements analysis and refinement
+- User stories and acceptance criteria
+- Backlog organization
+- Functional validation of deliveries
 
-Developed an automated news aggregation system using Python for:
+### 📰 Amazon News Aggregator
 
-- Web scraping
-- Data processing
-- Content classification
-- Information organization
+An award-winning academic research project recognized by PPGCOM in 2024.
 
----
+Developed an automated news aggregation solution using Python, involving web scraping, data processing, content classification, and information organization.
 
-# Tech Stack
+## 🛠️ Technologies & Tools
 
-## Quality Assurance
+**Quality Assurance**
 
-![Selenium](https://skillicons.dev/icons?i=selenium)
+![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=flat-square&logo=selenium&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white)
 ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=flat-square&logo=cypress&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)
 
-Regression Testing • Functional Testing • API Testing • Test Planning • Test Automation • Bug Reporting
+**Development & Databases**
 
----
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=postgresql&logoColor=white)
 
-## Development
+**Tools & Collaboration**
 
-<p>
-<img src="https://skillicons.dev/icons?i=java,js,html,css,flask,docker,git,github"/>
-</p>
-
-Currently studying:
-
-- Java
-- Spring Boot
-- REST APIs
-- SQL
-- Software Architecture
-
----
-
-## Product & Design
-
+![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
 ![Jira](https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white)
 ![Azure DevOps](https://img.shields.io/badge/Azure_DevOps-0078D7?style=flat-square&logo=azuredevops&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white)
 
-Scrum • User Stories • Requirements Engineering • Sprint Planning • Product Discovery
+## 📚 Currently Learning
+
+- Java and Spring Boot
+- REST API development and testing
+- CI/CD pipelines and GitHub Actions
+- Software architecture and design patterns
+- Performance and load testing
+- Docker and deployment fundamentals
+
+## 🌐 Let's Connect
+
+- 💼 [LinkedIn](https://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264)
+- 🌎 [Portfolio](https://mariafernanda1105.github.io/MariaFernanda1105/)
+
+**English:** Advanced (C1)
+
+I'm interested in opportunities in Quality Assurance, Software Testing, and Test Automation, as well as collaborations that help build better digital products.
 
 ---
 
-# GitHub Stats
-
-<p align="center">
-<img width="49%" src="https://github-readme-stats.vercel.app/api?username=MariaFernanda1105&show_icons=true&theme=transparent&hide_border=true&title_color=0077B5&icon_color=0077B5"/>
-<img width="49%" src="https://github-readme-streak-stats.herokuapp.com/?user=MariaFernanda1105&theme=transparent&hide_border=true&ring=0077B5&fire=0077B5&currStreakLabel=0077B5"/>
-</p>
-
-<p align="center">
-<img width="40%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=MariaFernanda1105&layout=compact&theme=transparent&hide_border=true&title_color=0077B5"/>
-</p>
-
----
-
-# Currently Learning
-
-| Area | Focus |
-|------|------|
-| ☕ Java Backend | Spring Boot & REST APIs |
-| 🔁 CI/CD | GitHub Actions & Pipeline Automation |
-| ⚡ API Testing | REST-assured & Contract Testing |
-| 📐 Software Architecture | Clean Architecture & Design Patterns |
-| 📊 Performance Testing | JMeter & Load Testing |
-| ☁️ DevOps | Docker & Deployment Fundamentals |
-
----
-
-# Contribution Activity
-
-<p align="center">
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=MariaFernanda1105&theme=github-compact&hide_border=true&color=0077B5&line=0077B5"/>
-</p>
-
----
-
-<div align="center">
-
-> *"Quality is built into the process, not inspected in at the end."*
-
-**Systems for Internet Student • QA Engineer • Product Owner**
-
-Open to internships, junior opportunities, remote positions and collaborations.
-
-[![LinkedIn](https://img.shields.io/badge/Let's%20Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maria-fernanda-gomes-oliveira-189984264)
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0077B5&height=80&section=footer" width="100%"/>
-
-</div>
+*Quality is built into the process, not inspected in at the end.*
