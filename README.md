@@ -81,6 +81,14 @@ Functional Testing · Exploratory Testing · Regression Testing · API Testing �
 
 ## 🚀 Featured Projects
 
+<p align="center">
+  <a href="https://github.com/MariaFernanda1105/Dr_Balduino_Aplicacao">
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=MariaFernanda1105&repo=Dr_Balduino_Aplicacao&theme=tokyonight&hide_border=true" />
+  </a>
+</p>
+
+---
+
 ### 🗳️ Consulta Popular
 
 A government digital platform designed to support citizen participation in public decision-making.
@@ -125,15 +133,24 @@ Developed an automated news aggregation solution using Python, involving:
 
 ---
 
-## 📊 GitHub Analytics
+## 🛠️ Technologies & Tools
 
-<div align="center">
+<p align="center">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
+  <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" />
+  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" />
+  <img src="https://img.shields.io/badge/Cypress-17202C?style=for-the-badge&logo=cypress&logoColor=white" />
+  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" />
+  <img src="https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=selenium&logoColor=white" />
+</p>
 
-<img height="180" src="https://github-readme-stats.vercel.app/api?username=MariaFernanda1105&show_icons=true&theme=tokyonight&hide_border=true&rank_icon=github" alt="GitHub statistics"/>
-
-<img height="180" src="https://github-readme-stats.vercel.app/api/top-langs/?username=MariaFernanda1105&layout=compact&theme=tokyonight&hide_border=true&langs_count=8" alt="Most used programming languages"/>
-
-</div>
+---
 
 ---
 
@@ -177,6 +194,18 @@ Developed an automated news aggregation solution using Python, involving:
 | ☁️ DevOps | Docker and deployment fundamentals |
 
 </div>
+
+---
+## 🧪 QA & Testing
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Manual%20Testing-4B8BBE?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Automation%20Testing-6DB33F?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/API%20Testing-FF6C37?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Regression%20Testing-8957E5?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Exploratory%20Testing-DB7093?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" />
+</p>
 
 ---
 
